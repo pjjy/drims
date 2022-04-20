@@ -70,6 +70,27 @@
 			    });
 			});	
 
+			
+
+			$('#dash_province').on('change',function(){
+			   var province_id = $('#dash_province option:selected').val();
+			 	 $.ajax({
+		            url:'dash_get_city_r',
+		            method:'POST',
+		            cache: false,
+		            data:{
+		              post_province_id:province_id
+		            },
+		            success:function(data)
+		            { 
+		              if(data){
+		              	$("#municipality").html(data);
+		              }
+		            }
+			    });
+			});	
+
+
 		
 			$('#save_bt').on('click',function(){
 

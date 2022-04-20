@@ -57,6 +57,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['hudleboard_r']	= 'drimscontroller/hudleboard_ctrl';
 // $route['chart_r']	= 'drimscontroller/chart_ctrl';
 $route['dash_view_det_r'] = 'drimscontroller/dash_view_det_ctrl';
+$route['dash_get_city_r'] = 'drimscontroller/dash_get_city_ctrl';
 $route['my_profile_r']	= 'drimscontroller/my_profile_ctrl';
 $route['search_r']	= 'drimscontroller/search_ctrl';
 //hudleboard

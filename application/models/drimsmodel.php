@@ -7,7 +7,7 @@
 
 
 		public function get_incident_mod(){
-				$this->db->select('*');
+			$this->db->select('*');
 	    	$this->db->from('incident as inci');
 	    	$this->db->order_by('inci.id', 'asc'); 
 	    	$query = $this->db->get();
@@ -15,7 +15,7 @@
 		}
 
 		public function get_requester(){
-				$this->db->select('*');
+			$this->db->select('*');
 	    	$this->db->from('requester as req');
 	    	$this->db->order_by('req.id', 'asc'); 
 	    	$query = $this->db->get();
@@ -23,7 +23,7 @@
 		}
 
 		public function get_province_mod(){
-				$this->db->select('*');
+			$this->db->select('*');
     		$this->db->from('refprovince as prov');
     		$this->db->where('prov.active', '1');
     		$query = $this->db->get();
@@ -33,10 +33,29 @@
 		 public function get_default_city_mod($id_sa_bohol){
 	    	$this->db->select('*');
 	    	$this->db->from('refcitymun as city');
-	    	$this->db->where('city.provCode', $id_sa_bohol);
-	    	$query = $this->db->get();
+			$this->db->where('city.provCode', $id_sa_bohol);
+			$query = $this->db->get();
     		return $query->result_array();
 	    }
+
+		
+		
+	    public function dash_get_city_mod($post_province_id){
+			echo $post_province_id;
+	    	$this->db->select('*');
+	    	$this->db->from('refcitymun as city');
+	    	$this->db->where('city.provCode', $post_province_id);
+	    	$query = $this->db->get();
+	    	$data = $query->result_array();
+			echo '<option value="">ALL</option>';
+	   		foreach ($data as $value){
+   				echo 
+   				'
+   				 	<option value='.$value['citymunCode'].'>'.$value['citymunDesc'].'</option>
+   				';
+   			}
+	    }
+
 
 	    public function get_city_mod($post_province_id){
 	    	$this->db->select('*');
@@ -2088,15 +2107,33 @@
 
 							foreach($data as $key => $value){
     		  				$key++;
-       		        		echo '<tr>
+       		        		// echo '<tr>
+							// 		<td><p>'.$key.'.</p></td>
+							// 		<td><p>'.$value['reference_no'].'</p></td>
+							// 		<td><p>'.$value['incidesc'].'</p></td>
+							// 		<td><p>'.$value['reqdesc'].'</p></td>
+							// 		<td><p>'.$value['provDesc'].'</p></td>
+							// 		<td><p>'.$value['citymunDesc'].'</p></td>
+							// 		<td><p><a class="'.$value['drid'].'" target="_blank" href="fetch_more_r">More Details>></a></p></td>
+		               		// 	  </tr>';
+
+							echo '<tr>
 									<td><p>'.$key.'.</p></td>
-									<td><p>'.$value['reference_no'].'</p></td>
-									<td><p>'.$value['incidesc'].'</p></td>
-									<td><p>'.$value['reqdesc'].'</p></td>
 									<td><p>'.$value['provDesc'].'</p></td>
 									<td><p>'.$value['citymunDesc'].'</p></td>
-									<td><p><a class="'.$value['drid'].'" target="_blank" href="fetch_more_r">More Details>></a></p></td>
-		               			  </tr>';
+									<td><p>'.$value['incidesc'].'</p></td>
+									<td><p>1200</p></td>
+									<td><p>'.$value['date_letter_request'].'</p></td>
+									<td><p>Date Letter Request was Received</p></td> 
+									<td><p>Date Response Letter was sent to LGUs</p></td>
+									<td><p>Quantity of FFPs Requested</p></td>
+									<td><p>Quantity of FFPs Released</p></td>
+									<td><p>Released Completed</p></td>
+									<td><p>Food Cost</p></td>
+									<td><p>Cost of Non-Food Items</p></td>
+									<td><p>Cost of Non-Food Items</p></td>
+									<td><p>RDS</p></td>
+								  </tr>';		 
 	    	 		}
 	      	}
 

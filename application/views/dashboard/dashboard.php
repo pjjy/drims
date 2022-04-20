@@ -36,7 +36,7 @@
                       <div class="row">
                                             
                                 <div class="d-sm-flex justify-content-between align-items-start">
-                                    <h4>FILTER REPORTS HERE</h4>
+                                    <h4>FILTER HERE</h4>
                                 </div>
                                 
                                 <hr>
@@ -64,7 +64,7 @@
 																	<div class="col-md-2">
 																		<div class="form-group">
 																			<label for="">PROVINCE</label>
-																				<select class="form-control" id="province">
+																				<select class="form-control" id="dash_province">
                                           <option value="">ALL</option>
 																					<?php
 																						foreach($get_province as $value){ 
@@ -135,9 +135,9 @@
                                      </div>
                                     </div>
 
-                                </div>
-                                 <div class="row">
-                                 	<div class="col-md-2">
+                                   </div>
+                                    <div class="row">
+                                 	   <div class="col-md-2">
                                        <a href="javascript:void(0)" id="cancel_bt" class="btn btn-otline-dark"><i class="icon-trash"></i> Cancel</a>
                                        <a href="javascript:void(0)" id="filter_bt" class="btn btn-otline-dark"><i class="icon-briefcase"></i>Filter</a>
                                     </div>
@@ -201,13 +201,13 @@
                             <p class="statistics-title">Avg. Time on Site</p>
                             <h3 class="rate-percentage">2m:35s</h3>
                           </div>-->
-                         
+                                             
                           <!--<div class="d-none d-md-block">
                             <p class="statistics-title">New Sessions</p>
                             <h3 class="rate-percentage">68.8</h3>
                           </div>-->
                          
-                          <div class="d-none d-md-block">
+                          <div class="d-none d-md-block" style="padding:5px ; border-radius:15px; border: 2px solid white; background-color:yellow;">
                             <p class="statistics-title">STAND BY FUNDS</p>
                             <h3 class="rate-percentage">&#8369; <?php echo number_format($get_latest_fund->fund ,2) ?></h3>
                           </div>
@@ -228,8 +228,10 @@
                                    <div style="overflow-y: auto; overflow-x: hidden; height:500px;"> 
                                     <div class="card-body">
 
-                                     <h4 class="align-baseline"><b>'.$value1['provDesc'].'</b></h4>  <h4 class="align-text-top"><b> &#8369; '.number_format($value1['total_per_lgu'] ,2).'</b></h4>
+                                     <h4 class="align-baseline"><b>'.$value1['provDesc'].'</b></h4> 
                                   
+                                     <h4 class="align-text-top"><b> &#8369; '.number_format($value1['total_per_lgu'] ,2).'</b></h4>
+                                      
                                       <div class="d-sm-flex justify-content-between align-items-start">
                                           <table class="table select-table">
                                           <thead>
@@ -243,6 +245,7 @@
                                                  
                                                   foreach($get_running_data as $key =>  $value){
                                                         // echo $value['total_approv_per_lgu'].  '<br>';
+                                                       
                                                         $statusBar = "";
                                                         $status    = "";
                                                         $text      = "";     
@@ -262,7 +265,6 @@
                                                              $text      = "Completed";
                                                           }
                                                           if($value1['provCode'] == $value['provinceCode']){
-
                                                               $incident_name = $value['incidesc'];
                                                               $requester_name = $value['reqsdesc'];
 
@@ -275,7 +277,7 @@
                                                               }
 
                                                              echo '<tr>
-                                                               <td> 
+                                                                <td> 
                                                                  <h6>'.$value['muniDesc'].'</h6>
                                                                  <p>'.$incident_name.'</p>
                                                                  <p>'.$requester_name.'</p>

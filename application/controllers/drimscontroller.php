@@ -177,26 +177,23 @@ class drimscontroller extends CI_Controller {
 		$sideData['count_processed_dr_mod'] 	= $this->drimsmodel->count_processed_dr_mod();
 		$sideData['count_ris_dr_mod'] 			= $this->drimsmodel->count_ris_dr_mod();
 
-
 		$sideData['cound_drmd_entry']			= $this->drimsmodel->cound_drmd_entry_mod();
 		$sideData['count_ris_dr_mod']			= $this->drimsmodel->count_ris_dr_mod();
-
 
     	$dashData['total_assistance']			= $this->drimsmodel->get_overall_ass_mod();
     	$dashData['total_ffp']			    	= $this->drimsmodel->get_overall_ffp_mod();
     	$dashData['total_to_distribute']		= $this->drimsmodel->get_overall_to_distri_ffp_mod();
     	$dashData['get_segregated_province']	= $this->drimsmodel->get_segregated_province_mod();
-    	$dashData['get_running_data'] 			= $this->drimsmodel->get_running_data_mod();
-    	$dashData['get_cost_food'] 				= $this->drimsmodel->get_cost_food();
-    	$dashData['get_cost_non_food'] 			= $this->drimsmodel->get_cost_non_food();
+    	$dashData['get_running_data'] 		  	= $this->drimsmodel->get_running_data_mod();
+    	$dashData['get_cost_food'] 			  	= $this->drimsmodel->get_cost_food();
+    	$dashData['get_cost_non_food'] 		  	= $this->drimsmodel->get_cost_non_food();
 
-    	$dashData['get_latest_fund'] = $this->drimsmodel->get_latest_fund_mod(); //standby fund
+    	$dashData['get_latest_fund'] 			= $this->drimsmodel->get_latest_fund_mod(); //standby fund
 
-
-		$dashData['get_incident'] 	    	= $this->drimsmodel->get_incident_mod();
-		$dashData['get_province'] 	    	= $this->drimsmodel->get_province_mod();
-		$dashData['get_default_city']   	= $this->drimsmodel->get_default_city_mod('0712');
-		$dashData['get_requester']	    	= $this->drimsmodel->get_requester();
+		$dashData['get_incident'] 	    		= $this->drimsmodel->get_incident_mod();
+		$dashData['get_province'] 	    		= $this->drimsmodel->get_province_mod();
+		// $dashData['get_default_city']   		= $this->drimsmodel->get_default_city_mod('0712');
+		$dashData['get_requester']	    		= $this->drimsmodel->get_requester();
 		
     	if($this->session->userdata('user')['status'] == 1){
 			$this->load->view('header/header');
@@ -262,6 +259,12 @@ class drimscontroller extends CI_Controller {
 
     public function get_city_ctrl(){
 		$this->drimsmodel->get_city_mod($this->input->post('post_province_id'));
+	}
+
+	public function dash_get_city_ctrl(){
+	
+		$this->drimsmodel->dash_get_city_mod($_POST['post_province_id']);
+	  
 	}
 
 	public function save_drmd_ctrl(){
@@ -881,7 +884,7 @@ class drimscontroller extends CI_Controller {
 	public function directories_ctrl(){
 		if(isset($this->session->userdata('user')['user_id'])){
 			$sideData['first_name'] = $this->session->userdata('user')['first_name'];
-			$sideData['user_id']	= $this->session->userdata('user')['user_id'];
+			$sideData['user_id'] = $this->session->userdata('user')['user_id'];
 			$data['get_directory_loc'] = $this->drimsmodel->get_directory_loc_mod();
 			$this->load->view('header/header');
 			$this->load->view('sidebar/rrossidebar', $sideData);
