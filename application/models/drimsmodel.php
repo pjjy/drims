@@ -317,7 +317,7 @@
 
 	    }
 
-	    public function drmd_details_mod($drmd_id){
+	    public function drmd_details_dash_mod($drmd_id){
 	   
 	    	$this->db->select('drmd_req.remarks as drmdremarks,drmd_req.id as drmd_id, drusr.first_name as drf_name, drusr.last_name as drl_name, drmd_req.created as dr_created , usr.first_name as dr_fname,usr.last_name as dr_lname, drs_req.drmd_id as drs_req_id ,drs_req.added_by as drs_by, drs_req.created as drs_created, ros_req.added_by as rs_by,ros_req.created as rs_created,usrs.first_name as rs_fname,usrs.last_name as rs_lname, rros_it.drmd_id as rros_it_drmd_id');
 	    	$this->db->from('drmd_request as drmd_req');
@@ -595,9 +595,7 @@
 				              <div class="col-md-4">
 				                 <small>'.$value['drmd_item_req'].'</small>
 				              	 	 &nbsp;&nbsp;&nbsp;
-				              	 	 '.(($value['drrs_status'] == '1')? '' :'  
-				              	 	 <small><a class="drmd_details_edit_item" data-id='.$value['drid'].' data-id1='.$value['drmdid'].' href="javascript:void(0);" style="color:BLUE">EDIT</a></small>&nbsp;	&nbsp;	&nbsp;
-									 <small><a class="drmd_details_remove_item" data-id='.$value['drid'].' href="javascript:void(0);" style="color:green">REMOVE</a></small>').'
+				              	 	 
 					             </div>	             
 				            <div>';	
 							// <small><a class="drmd_details_add_item" data-id='.$value['drmdid'].' href="javascript:void(0);"  style="color:red">ADD NEW ITEM</a></small>&nbsp;	&nbsp;	&nbsp;
@@ -772,6 +770,462 @@
 
 		          	
 	   }
+
+	   public function drmd_details_mod($drmd_id){
+	   
+		$this->db->select('drmd_req.remarks as drmdremarks,drmd_req.id as drmd_id, drusr.first_name as drf_name, drusr.last_name as drl_name, drmd_req.created as dr_created , usr.first_name as dr_fname,usr.last_name as dr_lname, drs_req.drmd_id as drs_req_id ,drs_req.added_by as drs_by, drs_req.created as drs_created, ros_req.added_by as rs_by,ros_req.created as rs_created,usrs.first_name as rs_fname,usrs.last_name as rs_lname, rros_it.drmd_id as rros_it_drmd_id');
+		$this->db->from('drmd_request as drmd_req');
+		$this->db->join('users as drusr','drusr.user_id = drmd_req.added_by', 'left');
+		// $this->db->join('drrs_disapprove as drrs_disapp','drrs_disapp.drmd_id = drmd_req.id','left');
+		$this->db->join('drrs_request as drs_req','drs_req.drmd_id = drmd_req.id','left');
+		$this->db->join('users as usr','usr.user_id = drs_req.added_by','left');
+		$this->db->join('rros_request as ros_req','ros_req.drmd_id = drmd_req.id','left');
+		$this->db->join('users as usrs','usrs.user_id = ros_req.added_by','left');
+		$this->db->join('rros_items as rros_it','rros_it.drmd_id = drmd_req.id','left');
+		$this->db->where('drmd_req.id', $drmd_id);
+		$query = $this->db->get();
+
+		   $data = $query->row_array();
+
+		   // echo json_encode($data); 
+		   // exit();
+		   $drf_name = $data['drf_name'];
+		   $drl_name = $data['drl_name'];
+		   $dr_created = date('m/d/Y h:i:s a', strtotime($data['dr_created'])); 
+
+			$dr_fname = $data['dr_fname'];
+			$dr_lname = $data['dr_lname'];
+			$drs_created = date('m/d/Y h:i:s a', strtotime($data['drs_created']));
+
+			$rs_fname = $data['rs_fname'];
+			$rs_lname = $data['rs_lname'];
+			$rs_created = date('m/d/Y h:i:s a', strtotime($data['rs_created']));
+			$ris_stat = $data['rros_it_drmd_id'];			
+
+			$ris_btn = '<a class="ris_btn" data-id='.$data['rros_it_drmd_id'].' href="">Click to view RIS</a>';
+
+
+			$years		  = "";
+			$months		  = "";
+			$days		  = "";
+			$hours		  = "";
+			$minuts		  = "";
+			$seconds	  = "";
+
+			$rrosyears	  = "";
+			$rrosmonths	  = "";
+			$rrosdays	  = "";
+			$rroshours	  = "";
+			$rrosminuts	  = "";
+			$rrosseconds  = "";
+
+
+			if($drf_name == null){
+					$drf_name = "";
+			}
+
+			if($drl_name == null){
+					$drl_name = "";
+			}
+			
+			if($dr_created == '01/01/1970 08:00:00 am'){
+					$dr_created = "";
+			}
+			
+			if($dr_fname == null){
+					$dr_fname = "";						
+			}
+			
+			if($dr_lname == null){
+					$dr_lname = "";
+			}
+			
+			if($drs_created == '01/01/1970 08:00:00 am'){
+					$drs_created = "";
+			}
+			
+			if($rs_fname == null){
+					$rs_fname = "";
+			}
+			
+			if($rs_lname == null){
+					$rs_lname = "";
+			}
+
+			if($rs_created == '01/01/1970 08:00:00 am'){
+					$rs_created = "";	
+			}
+
+			if($ris_stat == null){
+					$ris_btn = "";
+			}
+			
+			if($dr_fname != null){
+
+					// $diff = abs(strtotime('01/19/2022 11:25:51 am') - strtotime('01/19/2022 11:12:00 am'));
+
+					$diff = abs(strtotime($drs_created) - strtotime($dr_created)); 
+
+					$years   = floor($diff / (365*60*60*24)); 
+					$months  = floor(($diff - $years * 365*60*60*24) / (30*60*60*24)); 
+					$days    = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24)/ (60*60*24));
+					$hours   = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24)/ (60*60)); 
+					$minuts  = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24 - $hours*60*60)/ 60); 
+					$seconds = floor(($diff - $years * 365*60*60*24 - $months*30*60*60*24 - $days*60*60*24 - $hours*60*60 - $minuts*60)); 
+
+					if($years == 0){
+						$years = "";
+					}else{
+						$years = $years. 'Yrs';
+					}
+
+
+					if($months == 0){
+						$months = "";
+					}else{
+						$months = $months. 'Months';
+					}
+
+
+					if($days == 0){
+						$days = "";
+					}else{
+						$days = $days.' Days';
+					}
+
+
+					if($hours == 0){
+						$hours = "";
+					}else{
+						$hours = $hours.' Hours';
+					}
+
+
+					if($minuts == 0){
+						$minuts = "";
+					}else{
+						$minuts = $minuts.' Minutes';
+					}
+
+
+					if($seconds == 0){
+						$seconds = "";
+					}else{
+						$seconds= $seconds.' Seconds';
+					}
+
+			}
+
+			if($rs_fname != null){
+
+					$diff = abs(strtotime($rs_created) - strtotime($drs_created)); 
+
+					$rrosyears   = floor($diff / (365*60*60*24)); 
+					$rrosmonths  = floor(($diff - $rrosyears * 365*60*60*24) / (30*60*60*24)); 
+					$rrosdays    = floor(($diff - $rrosyears * 365*60*60*24 - $rrosmonths*30*60*60*24)/ (60*60*24));
+					$rroshours   = floor(($diff - $rrosyears * 365*60*60*24 - $rrosmonths*30*60*60*24 - $rrosdays*60*60*24)/ (60*60)); 
+					$rrosminuts  = floor(($diff - $rrosyears * 365*60*60*24 - $rrosmonths*30*60*60*24 - $rrosdays*60*60*24 - $rroshours*60*60)/ 60); 
+					$rrosseconds = floor(($diff - $rrosyears * 365*60*60*24 - $rrosmonths*30*60*60*24 - $rrosdays*60*60*24 - $rroshours*60*60 - $rrosminuts*60)); 
+
+					if($rrosyears == 0){
+						$rrosyears = "";
+					}else{
+						$rrosyears = $rrosyears. 'Yrs';
+					}
+
+
+					if($rrosmonths == 0){
+						$rrosmonths = "";
+					}else{
+						$rrosmonths = $rrosmonths. 'Months';
+					}
+
+
+					if($rrosdays == 0){
+						$rrosdays = "";
+					}else{
+						$rrosdays = $rrosdays.' Days';
+					}
+
+
+					if($rroshours == 0){
+						$rroshours = "";
+					}else{
+						$rroshours = $rroshours.' Hours';
+					}
+
+
+					if($rrosminuts == 0){
+						$rrosminuts = "";
+					}else{
+						$rrosminuts = $rrosminuts.' Minutes';
+					}
+
+
+					if($rrosseconds == 0){
+						$rrosseconds = "";
+					}else{
+						$rrosseconds = $rrosseconds.' Seconds';
+					}
+			}
+
+				echo '<div class="row">
+					  <div class="col-md-4">
+					  <div class="form-group">
+						   <b><label>DRMD</label></b>
+						</div>
+					  </div>
+					  <div class="col-md-4">
+						 <div class="form-group">
+						   <b><label>DRRS</label></b>
+						</div>
+					  </div>
+					  <div class="col-md-4">
+						 <div class="form-group">
+						   <b><label>RROS</label></b>
+						</div>
+					  </div>
+					<div>';
+			   echo '<div class="row">
+							   <div class="col-md-4">    
+								 <small>'.$drf_name.' '.$drl_name.'</small><br>
+								 <small>'.$dr_created.'</small>
+								 </div>
+							   <div class="col-md-4">
+
+							<small>'.$dr_fname.' '.$dr_lname.'</small><br>
+							<small>'.$drs_created.'</small><br>
+							<small>'.$years.' '.$months.' '.$days.' '.$hours.' '.$minuts.' '.$seconds.'</small><br>
+						
+						</div>
+						<div class="col-md-4">
+							<small>'.$rs_fname.' '.$rs_lname.'</small><br>
+							<small>'.$rs_created.'</small><br>
+							<small>'.$rrosyears.' '.$rrosmonths.' '.$rrosdays.' '.$rroshours.' '.$rrosminuts.' '.$rrosseconds.'</small>
+						</div>
+				 <div>';		
+
+				
+				echo '<p>Remarks: '.$data['drmdremarks'].'</p>'; 
+				echo '<hr>';
+				$this->db->select('*,drmd_itms.id as drid, drmd_itms.drmd_id as drmdid ,itms.description as spec_items,drmd_itms.item as drsItm , drmd_itms.item_requested as drmd_item_req, uom_desc.description as uom_description');
+				$this->db->from('drmd_items as drmd_itms');
+				$this->db->join('drmd_request as drmd_req','drmd_req.id = drmd_itms.drmd_id','inner');
+				   $this->db->join('items as itms','itms.id = drmd_itms.item','inner');
+				   $this->db->join('uom as uom_desc','uom_desc.id = drmd_itms.item_uom','inner');
+				   $this->db->where('drmd_itms.drmd_id', $drmd_id);
+				   // $this->db->where('drmd_itms.isdeleted !=','yes');
+				   $this->db->order_by('itms.type', 'desc');
+					$query = $this->db->get();
+				  $data = $query->result_array();
+				   echo '<div class="row">
+							<div class="col-md-3">
+							  <div class="form-group">
+								<b><label>ITEMS</label></b>
+							 </div>
+							</div>
+
+								  <div class="col-md-3">
+							  <div class="form-group">
+								<b><label>UOM</label></b>
+							 </div>
+							</div>
+						   
+							<div class="col-md-3">
+							  <div class="form-group">
+								<b><label>QTY REQUESTED</label></b>
+							 </div>
+							</div>
+					 <div>';
+
+					foreach($data as $value){     
+						   echo '<div class="row">
+									  <div class="col-md-3">                                        
+							  <small>'.$value['spec_items'].'</small>
+						  </div>
+							 <div class="col-md-3">
+							 <small>'.$value['uom_description'].'</small>
+						  </div>
+						  <div class="col-md-4">
+							 <small>'.$value['drmd_item_req'].'</small>
+									&nbsp;&nbsp;&nbsp;
+									'.(($value['drrs_status'] == '1')? '' :'  
+									<small><a class="drmd_details_edit_item" data-id='.$value['drid'].' data-id1='.$value['drmdid'].' href="javascript:void(0);" style="color:BLUE">EDIT</a></small>&nbsp;	&nbsp;	&nbsp;
+								 <small><a class="drmd_details_remove_item" data-id='.$value['drid'].' href="javascript:void(0);" style="color:green">REMOVE</a></small>').'
+							 </div>	             
+						<div>';	
+						// <small><a class="drmd_details_add_item" data-id='.$value['drmdid'].' href="javascript:void(0);"  style="color:red">ADD NEW ITEM</a></small>&nbsp;	&nbsp;	&nbsp;
+				   }
+
+
+				   echo '<hr>';
+				$this->db->select('*,drmd_itms.id as drrsid ,itms.description as spec_items,drmd_itms.item as drsItm , drmd_itms.item_requested as drmd_item_req, uom_desc.description as uom_description');
+				$this->db->from('drrs_items as drmd_itms');
+				   $this->db->join('items as itms','itms.id = drmd_itms.drmd_id','inner');
+				   $this->db->join('uom as uom_desc','uom_desc.id = drmd_itms.item_uom','inner');
+				   $this->db->where('drmd_itms.drmd_id', $drmd_id);
+				   $this->db->order_by('itms.type', 'desc');
+					$query = $this->db->get();
+				  $data1 = $query->result_array();
+				   echo '<div class="row">
+						   <div class="col-md-9">
+							  <div class="form-group">
+								<b><label></label></b>
+								 </div>
+							</div>
+							<div class="col-md-3">
+							  <div class="form-group">
+								<b><label>QTY ARPPROVED</label></b>
+							 </div>
+						   </div>
+					<div>';
+					$status = "";
+					foreach($data1 as $value1){     
+							echo '<div class="row">
+									 <div class="col-md-9">                                        
+								  </div>
+									 <div class="col-md-3">
+									 <small>'.$value1['item_qty'].'</small>
+									 '.(($this->session->userdata('user')['role'] != '4')? '' : '
+											 <small>  <a class="drrs_edit_qty" data-id='.$value1['drrsid'].' data-id1='.$value1['item_qty'].' href="javascript:void(0);" style="color:BLUE">EDIT</a></small>').'
+											</div>	           	     
+								 </div>';	
+				   }
+
+				 echo "<script>
+						 $('.drmd_details_remove_item').on('click', function(){
+								var drid = $(this).attr('data-id');								
+								bootbox.confirm({
+								title: 'Warning!',
+								message: 'Please review you entry before removing, thank you',
+								buttons: {
+									cancel: {
+										label: 'Cancel'
+									},
+									confirm: {
+										label: 'Confirm'
+									}
+								},
+								callback: function (result){
+									 if(result){
+										 $.ajax({
+												url:'drmd_remove_r',
+												method:'POST',
+												cache: false,
+												data:{
+													drid:drid
+												},
+												success: function(data)
+												{
+												   bootbox.alert({
+														message: 'Your entry was successfully removed!',
+														callback: function(){
+														   location.reload();
+														}
+													});
+												},
+											});		
+								   }
+								}
+							});
+						});
+
+					$('.drrs_edit_qty').on('click',function(){
+						var drrsid = $(this).attr('data-id');
+						var quantity = $(this).attr(' data-id1');
+						bootbox.prompt({
+							title: 'Update quantiy',
+							inputType: 'number',
+							min: '0',
+							required: true,
+							callback: function(quantity){
+							if(quantity){
+								$.ajax({
+								url: 'drrs_update_quatity_r',
+								method: 'POST',
+								cache: false,
+								data:{
+									drrsid:drrsid,
+									quantity:quantity
+								},
+								success:function(quantity)
+								{ 
+									 bootbox.alert({
+										message: 'Quantity was successfully updated',
+										callback: function(){
+										   location.reload();
+										}
+									 });
+								} 
+							  });	
+							 }
+						   }
+						});
+
+					});
+
+					$('.drmd_details_edit_item').on('click', function(){
+						var drid = $(this).attr('data-id');
+							
+						$.ajax({
+							  url: 'drmd_details_edit_item_r',
+							 method: 'POST',
+							 cache: false,
+							 data:{
+								 drid:drid
+							 },
+							 success:function(data)
+							 {
+								 bootbox.dialog({
+									 onEscape: true,
+									 message: data,
+									 size: 'extra-small',
+									 buttons: {
+										 ok: {
+											label: 'Update',
+											 className: 'btn-info',
+											 callback: function(){
+															var edit_items 	= $('#edit_items').val();
+														var drmd_id     = $('.drmd_details_edit_item').attr('data-id1');
+														var edit_uom    = $('#edit_uom').val();
+														var remarks     = $('#remarks').val();
+														if(edit_uom == null){
+															alert('Please enter UOM');
+														}else{
+															$.ajax({
+															url:'drmd_details_edit_item_r_r',
+															method:'POST',
+															cache: false,
+															data:{
+																drid  	   : drid,
+																drmd_id    : drmd_id,
+																edit_items : edit_items,
+																edit_uom   : edit_uom,
+																remarks    : remarks
+															},
+															success: function(data)
+															{
+															   bootbox.alert({
+																	message: 'Your entry was successfully updated!',
+																	callback: function(){
+																	   location.reload();
+																	}
+																});
+															},
+															});
+													}
+																						
+											 }
+										 }
+									 }
+								 });
+							 }
+						  });					  
+					});	
+				  </script>";
+
+				  
+   }
 
 	   public function drrs_update_quatity_mod($drrsid,$quantity){
 	   			$this->db->set('item_qty',$quantity);

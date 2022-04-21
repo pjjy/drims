@@ -49,7 +49,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'drimscontroller/login_ctrl';
+// $route['default_controller'] = 'drimscontroller/login_ctrl';
+$route['default_controller'] = 'drimscontroller/dashboard_ctrl';
+$route['login_r'] = 'drimscontroller/login_ctrl';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
@@ -74,9 +76,10 @@ $route['get_city_r'] = 'drimscontroller/get_city_ctrl';
 $route['save_drmd_r'] = 'drimscontroller/save_drmd_ctrl';
 $route['drmd_view_details_r'] = 'drimscontroller/drmd_view_details_ctrl';
 $route['drmd_add_date_r'] = 'drimscontroller/drmd_add_date_ctrl';
-$route['drmd_entries_r']	= 'drimscontroller/drmd_entries_ctrl';
+$route['drmd_entries_r'] = 'drimscontroller/drmd_entries_ctrl';
 $route['drmd_disapproved_r'] = 'drimscontroller/drmd_disapproved_ctrl';
 $route['drmd_details_r'] = 'drimscontroller/drmd_details_ctrl';
+$route['drmd_details_dash_r'] = 'drimscontroller/drmd_details_dash_ctrl';
 $route['btn_drmd_disapp_details_r']	= 'drimscontroller/btn_drmd_disapp_details_ctrl';
 $route['drmd_ris_repo_r'] = 'drimscontroller/drmd_ris_repo_ctrl';
 $route['drmd_details_edit_item_r'] = 'drimscontroller/drmd_details_edit_item_ctrl';

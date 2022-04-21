@@ -311,7 +311,7 @@
                              ?>
                         </div>
                        
-                        <div class="row flex-grow">
+                        <!-- <div class="row flex-grow">
                           <div class="col-md-6 col-lg-4 grid-margin stretch-card">
                             <div class="card card-rounded">
                               <div class="card-body card-rounded">
@@ -390,25 +390,81 @@
                               </div>
                             </div>
                           </div>
+                        </div> -->
+                              
+                        <div class="row flex-grow">
+                          <div class="col-12 grid-margin stretch-card">
+                            <div class="card card-rounded">
+                              <div class="card-body">
+                                <div class="d-sm-flex justify-content-between align-items-start">
+                                <div class="row" style="width:100%">
+                                    <table id="drrs_table">
+                                            <thead>
+                                                  <tr>
+                                                     <th>#</th>
+                                                     <th>Reference #</th>
+                                                     <th>Incident</th>
+                                                     <th>Province</th>
+                                                     <th>Municipality</th>
+                                                     <th>Requester</th>
+                                                     
+                                                     <th>More</th>
+                                                     
+                                                    
+                                                  </tr>
+                                               </thead>
+                                              <tbody>
+                                                 <?php
+                                                    foreach($get_drmd_request as $key =>  $value){ 
+                                                      $incident_name = $value['incidesc'];
+                                                      $requester_name = $value['reqsdesc'];
+                                                      if($value['inci_num'] == 13){
+                                                        $incident_name = 'u.s: '.$value['ot_inci'];
+                                                      }
+                                                      if($value['req_num'] == 11){
+                                                        $requester_name = 'u.s: '.$value['ot_req_desc'];
+                                                      }
+                                                       $key++;
+                                                        echo 
+                                                        '<tr>
+                                                          <td><p>'.$key.'</p></td>
+                                                          <td><p>'.$value['reference_no'].'</p></td>
+                                                          <td><p>'.$incident_name.'<p></td>
+                                                          <td><p>'.ucfirst(strtolower($value['provDesc'])).'</p></td>
+                                                          <td><p>'.ucfirst(strtolower($value['citymunDesc'])).'</p></td>
+                                                          <td><p>'.$requester_name.'</p></td>
+                                                          <td>
+                                                              <a href="javascript:void(0);" <button data-id="'.$value['drid'].'" class="btn_drmd_details_dash"><div class="badge badge-opacity-success">View Details</div></a>
+                                                          </td>
+                                                        </tr>';
+                                                    } 
+                                                  ?>
+                                                <!-- <td><a href=""><p>Expand</p></a></td> -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                             </div>
+                            </div>
+                          </div>
                         </div>
-
+                        
+                        <!-- 
                          <div class="row flex-grow">
                           <div class="col-12 grid-margin stretch-card">
                             <div class="card card-rounded">
                               <div class="card-body">
                                 <div class="d-sm-flex justify-content-between align-items-start">
-                                  <div>
+                                  <div> -->
                                     <!--  <p class="card-subtitle card-subtitle-dash">Lorem ipsum dolor sit amet consectetur adipisicing elit</p> -->
-                                  </div>
-                                </div>
+                                  <!-- </div> -->
+                                <!-- </div> -->
                                <!-- <iframe src="https://www.google.com/maps/d/embed?mid=13dimgFijGPW_NXJYxIhO3kqFU1RvZzmb&hl=en&ehbc=2E312F" width="1550" height="480"></iframe> -->
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
+                              <!-- </div> -->
+                            <!-- </div> -->
+                          <!-- </div> -->
+                        <!-- </div> -->
                       </div>
-
                       <!-- <div class="col-lg-4 d-flex flex-column">
                         <div class="row flex-grow">
                           <div class="col-12 grid-margin stretch-card">

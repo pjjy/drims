@@ -1149,7 +1149,42 @@
 	                });
 	            }
 	        }
+
+			$('.btn_drmd_details_dash').on('click',function(){
+				var drmd_id = $(this).attr('data-id');
+	 			//$('.status_details').fadeOut(300);
+				//$('.status_details').fadeIn(300);
+	 			
+	 		    $.ajax({
+					url: 'drmd_details_dash_r',
+					method: 'POST',
+					cache: false,
+					data:{
+						drmd_id:drmd_id
+					},
+					success:function(data)
+					{
+					  // $(".status_details").html(data);
+					  bootbox.dialog({
+							    // title: 'A custom dialog with buttons and callbacks',
+							    onEscape: true,
+							    message: data,
+							    size: 'extra-large',
+							    buttons: {
+							        ok: {
+							            label: "Close",
+							            className: 'btn-info',
+							            callback: function(){
+							                // console.log('Custom OK clicked');
+							            }
+							        }
+							    }
+							});
+					  }
+				});
+			});
 	        
+
 	        $('.btn_drmd_details').on('click',function(){
 	 			var drmd_id = $(this).attr('data-id');
 	 			//$('.status_details').fadeOut(300);

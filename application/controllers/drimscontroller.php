@@ -139,8 +139,13 @@ class drimscontroller extends CI_Controller {
 	    if(isset($_POST['drmd_id'])){
 	 		$this->drimsmodel->drmd_details_mod($this->input->post('drmd_id'));
 	    }
-    	    // $this->drimsmodel->drmd_details_mod('1');
     }
+
+	public function drmd_details_dash_ctrl(){
+		if(isset($_POST['drmd_id'])){
+			$this->drimsmodel->drmd_details_dash_mod($this->input->post('drmd_id'));
+		}
+	}
 
     public function btn_drmd_disapp_details_ctrl(){
     	if(isset($_POST['drmd_id'])){
@@ -161,11 +166,12 @@ class drimscontroller extends CI_Controller {
     }
 
 //DRMD VIEWS
-    
+
     public function dashboard_ctrl(){
     	$this->load->library('session');
+		$dashData['get_drmd_request'] = $this->drimsmodel->get_drmd_request_mod();
 
-    	$sideData['first_name']					= $this->session->userdata('user')['first_name'];
+		$sideData['first_name']					= $this->session->userdata('user')['first_name'];
     	$sideData['user_id']					= $this->session->userdata('user')['user_id'];
 		$sideData['last_name'] 					= $this->session->userdata('user')['last_name'];
 		$sideData['count_pending'] 				= $this->drimsmodel->count_pending_mod();
@@ -214,11 +220,19 @@ class drimscontroller extends CI_Controller {
 				$this->load->view('sidebar/drimssidebar', $sideData);
 				// $this->load->view('sidebar/rrossidebar', $sideData);
 			}
-
 			$this->load->view('dashboard/dashboard', $dashData);
 			$this->load->view('footer/footer');
 			$this->load->view('js/js');
+			
+			
     	}
+		else if(empty($this->session->userdata('user'))){
+			$this->load->view('header/header');
+			$this->load->view('sidebar/allsidebar');
+			$this->load->view('dashboard/dashboard', $dashData);
+			$this->load->view('footer/footer');
+			$this->load->view('js/js');
+		}
     	else if($this->session->userdata('user')['status'] == 0){
      		redirect('log_in_check_r');
      	}
@@ -620,7 +634,7 @@ class drimscontroller extends CI_Controller {
 		$data['get_rros_request'] = $this->drimsmodel->get_rros_request_mod();
 		$sideData['first_name'] = $this->session->userdata('user')['first_name'];
 		$sideData['last_name'] = $this->session->userdata('user')['last_name'];
-		$sideData['user_id']	= $this->session->userdata('user')['user_id'];
+		$sideData['user_id'] = $this->session->userdata('user')['user_id'];
 		$sideData['last_name'] = $this->session->userdata('user')['last_name'];
 		$sideData['count_pending'] = $this->drimsmodel->count_pending_mod();
 		$sideData['count_disapproved'] = $this->drimsmodel->count_disapproved();
