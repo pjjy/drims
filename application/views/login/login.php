@@ -26,6 +26,9 @@
                     if($this->session->flashdata('error')){
                       echo '<div class="alert alert-danger text-center" style="margin-top:20px;">'.$this->session->flashdata('error').'</div>';
                     }
+                    if($this->session->flashdata('success')){
+                      echo '<div class="alert alert-success text-center" style="margin-top:20px;">'.$this->session->flashdata('success').'</div>';
+                    }
                   ?>
                 <!-- <div class="mt-3"> -->
                   <button type="submit" class="btn btn-block  btn-sm font-weight-medium auth-form-btn" >SIGN IN</button>

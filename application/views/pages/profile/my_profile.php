@@ -15,29 +15,27 @@
                                     
                                       
                                     <div class="row">
-                                       
-                                      <div class="col-2">
-                                        <br><br>
+                                       <div class="col-2">
+                                        <br>
+                                         <br>
                                           <div class="form-group">
-                                              <label for="exampleInputPassword1">Old Password</label>
-                                              <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                              <label for="exampleInputPassword1">Current Password</label>
+                                              <input type="password" class="form-control current_password" placeholder="Old Password">
                                           </div>
 
-                                           <div class="form-group">
+                                          <div class="form-group">
                                               <label for="exampleInputPassword1">New Password</label>
-                                              <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
+                                              <input type="password" class="form-control new_password" i placeholder="New Password">
                                           </div>
-                                              <a href="javascript:void(0)" id="filter_bt" class="btn btn-otline-dark">Update password</a>
-                                      </div>
-                                    </div>
+                                              <a href="javascript:void(0)" class="btn btn-otline-dark update_pass_bt">Update password</a>
+                                       </div>
+                                     </div>
                                     <div class="status_details">
                                    </div>
-                                    <div class="rrosmore_details">
-                                    </div>
-                                 	
-                                  </div>
-
+                                  <div class="rrosmore_details">
+                                 </div>
                                 </div>
+                               </div>
                               </div>
                             </div>
                           </div>

@@ -26,7 +26,7 @@
                                                       <th>Province</th>
                                                       <th>Municipality</th>
                                                       <th>Requester</th>
-                                                      <th>RIS #</th>
+                                                     
                                                       <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -49,8 +49,11 @@
                                                            <td><p>'.ucfirst(strtolower($value['provDesc'])).'</p></td>
                                                            <td><p>'.ucfirst(strtolower($value['citymunDesc'])).'</p></td>
                                                            <td><p>'.$requester_name.'</p></td>
-                                                           <td><p>'.$value['field_office'].'-'.substr($value['reference_no'],0,3).'-'.$value['ris_no'].'</p></td>
-                                                           <td><a href="javascript:void(0);" data-id="'.$value['drid'].'" class="btn_rrsmoredet" ><i class="icon-info"></i> Details</a> <a data-id="'.$value['drid'].'" data-id1="'.$value['reference_no'].'" data-id2="'.$incident_name.'" data-id3="'.$value['provDesc'].'" data-id4="'.$value['citymunDesc'].'" data-id5="'.$requester_name.'" data-id6="'.$value['ris_no'].'" data-id7="'.$value['no_beneficiaries'].'" class="drrs_distri_process" href="javascript:void(0);"><i class="icon-play"></i> Liquadate</a> </td>
+                                                         
+                                                           <td>
+                                                             <a href="javascript:void(0);"  data-id="'.$value['drid'].'" class="btn_rrsmoredet" <button><div class="badge badge-opacity-success">View Details</div></a>
+                                                             <a href="javascript:void(0);"  data-id="'.$value['drid'].'" data-id1="'.$value['reference_no'].'" data-id2="'.$incident_name.'" data-id3="'.$value['provDesc'].'" data-id4="'.$value['citymunDesc'].'" data-id5="'.$requester_name.'" data-id6="'.$value['ris_no'].'" data-id7="'.$value['no_beneficiaries'].'" class="drrs_distri_process" <button><div class="badge badge-opacity-success">Liquidate</div></a>
+                                                           </td>
                                                         </tr>';
                                                     } 
                                                   ?>

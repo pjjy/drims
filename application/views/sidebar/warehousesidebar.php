@@ -59,8 +59,10 @@
             </a>
             <div class="collapse" id="ui-basic">
               <ul class="nav flex-column sub-menu">
-                 <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="rros_myentry_r"){echo "active";}?>" href="rros_myentry_r">Processed Data (<?php echo $count_processed; ?>)</a></li>
-                 <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="eterato_r"){echo "active";}?>" href="eterato_r">Reports</a></li>
+                <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="drmd_request_r"){echo "active";}?>" href="wr_toreleas_r">Releases</a></li>
+                <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="drmd_entries_r"){echo "active";}?>" href="wr_entries_r">MY releases ()</a></li>
+                <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="drrs_disapprove_r"){echo "active";}?>" href="wr_disapproved_r">Disapproved Entries ()</a></li>
+                <!-- <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="drmd_ris_repo_r"){echo "active";}?>" href="wr_ris_repo_r">RIS repo (<?php echo $count_ris_dr_mod; ?>)</a></li> -->
               </ul>
             </div>
           </li>

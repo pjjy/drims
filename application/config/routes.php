@@ -86,6 +86,9 @@ $route['drmd_details_edit_item_r'] = 'drimscontroller/drmd_details_edit_item_ctr
 $route['drmd_details_edit_item_r_r'] = 'drimscontroller/drmd_details_edit_item_r_r_ctrl';
 $route['drmd_details_edit_uom_r'] = 'drimscontroller/drmd_details_edit_uom_ctrl';
 $route['drmd_remove_r']	= 'drimscontroller/drmd_remove_ctrl';
+$route['drmd_add_response_letter_r'] = 'drimscontroller/drmd_response_letter_ctrl';
+$route['drmd_save_response_letter_r'] = 'drimscontroller/drmd_save_response_letter_ctrl';
+$route['drmd_view_response_letter_r'] = 'drimscontroller/drmd_view_response_letter_ctrl';
 //drmd
 
 //drrs
@@ -127,11 +130,21 @@ $route['view_distribution_r'] = 'drimscontroller/view_distribution_ctrl';
 $route['drims_request_r'] = 'drimscontroller/drims_request_ctrl';
 //drims
 
+
+//warehouse
+
+$route['wr_toreleas_r'] = 'drimscontroller/warehouse_ctrl';
+
+//end of warehouse
+
+
+
 //super admin
 $route['super_admin_r'] = 'drimscontroller/super_admin_ctrl';
 $route['su_saveuser_r'] = 'drimscontroller/su_saveuser_ctrl';
 $route['add_directory_r'] = 'drimscontroller/add_directory_ctrl';
 $route['su_reset_user_r'] = 'drimscontroller/su_reset_user_ctrl';
+$route['su_add_item_r'] = 'drimscontroller/su_add_item_ctrl';
 //end super admin
 
 //reports
@@ -139,8 +152,14 @@ $route['eterato_r'] = 'drimscontroller/eterato_ctrl';
 $route['fetch_report_r'] = 'drimscontroller/fetch_report_ctrl';
 $route['fetch_more_r'] = 'drimscontroller/fetch_more_ctrl';
 //end reports
-
+$route['update_pass_r'] = 'drimscontroller/update_pass_ctrl';
 //directories
 $route['directories_r'] = 'drimscontroller/directories_ctrl';
+$route['ris_edit_r'] = 'drimscontroller/ris_edit_ctrl';
+$route['ris_edit_final_r'] = 'drimscontroller/ris_edit_final_ctrl';
+$route['view_edit_history_r'] = 'drimscontroller/view_edit_history_ctrl';
+
+
+
 
 $route['test_r'] = 'drimscontroller/test_ctrl';

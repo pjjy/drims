@@ -79,7 +79,7 @@
             </a>
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href=''>Profile</a></li>
+                <li class="nav-item"> <a class="nav-link <?php if($this->uri->segment(1)=="my_profile_r"){echo "active";}?>" href='my_profile_r'>Profile</a></li>
                 <li class="nav-item"> <a class="nav-link" href=''>About</a></li>
                 <li class="nav-item"> <a class="nav-link" href='logout_r'>Log out</a></li>
               </ul>

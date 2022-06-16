@@ -18,8 +18,14 @@
 			// $('.others').hide();
 			// $('.otherrequester').hide();
 
+			
+			
 			$(document).ready(function() {
     			$('#drrs_table').DataTable();
+			});
+
+			$(document).ready(function() {
+    			$('#disapp_dash_table').DataTable();
 			});
 
 			$(document).ready(function() {
@@ -29,8 +35,6 @@
 			$(document).ready(function() {
     			$('#drrs_table2').DataTable();
 			});
-
-
 			
 			$('#incident').on('change',function(){
 				
@@ -137,14 +141,28 @@
 				var province 	    = $("#province").val();
 				var municipality    = $("#municipality").val();
 				var requester 	    = $("#requester").val();
-				var otherrequester  = $("#otherrequester").val();
+				var otherrequester  = $("#otherrequester").val();	
 				var remarks 	    = $("#remarks").val();
 				var datepicker 	    = $("#datepicker").val();
 				var datepicker1     = $("#datepicker1").val();
 
-				if(requester.length <= 0 || datepicker.length <= 0 || datepicker1.length <= 0){
-					bootbox.alert("Hello, please enter some valid values");
-				}else{
+				//if(requester.length <= 0 || datepicker.length <= 0 || datepicker1.length <= 0){
+				// bootbox.alert("Hello, please enter some valid values");
+				//}
+
+				if(datepicker.length <= 0){
+					bootbox.alert("Notice, please enter valid value in date letter request");
+				}
+				else if(datepicker1.length <= 0){
+					bootbox.alert("Notice, please enter valid values in date forwarded in drrs");
+				}
+				else if(remarks.trim().length <= 0){
+					bootbox.alert("Notice, Empty remarks!");
+				}
+				// else if(food_item == ""){
+				// 	alert();
+				// }
+				else{
 					bootbox.confirm({
 					    title: "Hello!",
 					    message: "Please review you entry before proceeding, thank you",
@@ -178,13 +196,12 @@
 												non_food_item		: non_food_item,		//array
 												non_food_qty		: non_food_qty,			//array
 												non_food_uom		: non_food_uom			//array
-
 								            },
 									});
 									bootbox.alert({
-									    message: "Nice, your entry was successfully saved!",
-									    callback: function(){
-									       	location.reload();
+										message: "Nice, your entry was successfully saved!",
+									   		 callback: function(){
+									       	 location.reload();
 									    }
 									});
 					         }
@@ -220,18 +237,21 @@
 				$('.requester').val(data5);
 				$('.congressional_disctrict').val(data6);
 
-				$.ajax({
-					url: 'drrs_get_item_r',
-					method: 'POST',
-					cache: false,
-					data:{
-						id:id
-					},
-					success:function(data)
-					{ 
-						$(".assist").html(data);
-					} 
-				})
+						
+					$.ajax({
+						url: 'drrs_get_item_r',
+						method: 'POST',
+						cache: false,
+						data:{
+							id:id
+						},
+						success:function(data)
+						{ 
+							$(".assist").html(data);
+						} 
+					})
+				
+			
 
 			});
 
@@ -408,7 +428,7 @@
 
 			$('.drrs_save_req').on('click',function(){
 			
-				alert(req_id);
+			
 			    var	item_id_arr			= [];			
 	    	    var	cqty_uom_arr		= [];
 	    	    var	cqty_requested_arr	= [];
@@ -449,8 +469,20 @@
 				var date_approval_drmd 			  	= $('.date_approval_drmd').val();
 				var date_incident 					= $('.date_incident').val();
 				var num_beneficiaries				= $('.num_beneficiaries').val();
-
-				bootbox.confirm({
+				if(date_letter_req_rec_from_drmd <= 0){
+					bootbox.alert("Hello, please enter valid values in date forwarded in drrs");
+				}
+				else if(date_approval_drmd <= 0){
+					bootbox.alert("Hello, please enter valid values in date forwarded in drrs");
+				}
+				else if(date_incident <= 0){
+					bootbox.alert("Hello, please enter valid values in date forwarded in drrs");
+				}
+				else if(num_beneficiaries <= 0){
+					bootbox.alert("Hello, please enter valid values in date forwarded in drrs");
+				}	
+				else{
+					bootbox.confirm({
 					    title: "Hello!",
 					    message: "Please review you entry before proceeding, thank you",
 					    buttons: {
@@ -461,7 +493,7 @@
 					            label: 'Confirm'
 					        }
 					    },
-					    callback: function (result){
+					    callback: function(result){
 					         if(result){
 								$.ajax({
 						            url:'save_drrs_r',
@@ -477,7 +509,6 @@
 										cqty_uom_arr					: cqty_uom_arr,
 										cqty_requested_arr				: cqty_requested_arr,
 										cqty_release_arr				: cqty_release_arr
-
 						            },
 						            success:function(data)
 						            { 
@@ -494,6 +525,8 @@
 					         }
 					    }
 					});
+				}
+				
 			});
 
 			$('.drrs_disapprove_req').on('click',function(){
@@ -675,13 +708,16 @@
 				var qty_left				= [];
 				var price 					= [];
 				var total 					= []; 	
+				// var province_origin			= [];
 				// var warehouse 				= [];
 				// var trucking 				= [];
 
 				var date_let_aprv_drmd		= $('.date_let_aprv_drmd').val();	
 				var date_crd_pull_fr_drmd   = $('.date_crd_pull_fr_drmd').val();
 				var date_ris_frw_drmd		= $('.date_ris_frw_drmd').val();
-				
+				var warehouse_origin 		= $('.province_sel').val();
+				var t;
+				var y;
 
 				$('.cqty_uom').each(function(){
 					 item_uom.push($(this).attr('data-id6'));
@@ -703,6 +739,12 @@
 
 				$('.cqty_release').each(function(){
 	    			qty_released.push($(this).val());
+
+					if(this.value == ""){
+						t = true;
+					}else{
+						t = false;
+					}
 				});
 
 				$('.cqty_left').each(function(){
@@ -711,11 +753,21 @@
 
 				$('.cprice').each(function(){
 	    			price.push($(this).val());
+
+					if(this.value == ""){
+						y = true;
+					}else{
+						y = false;
+					}
 				});
 
 				$('.ctotal').each(function(){
 	    			total.push($(this).val());
 				});
+
+				// $('.province_sel').each(function(){
+				// 	province_origin.push($(this).val());
+				// });
 
 				// $('.warehouse_sel').each(function(){
 	   			//	warehouse.push($(this).val());
@@ -726,8 +778,14 @@
 				// });
 				
 				// alert(req_id);
-
-				if(req_id!=null){
+				if(t == true || y == true){
+					bootbox.alert("Please enter price and quantity release");
+				}	
+				else if( $('.date_let_aprv_drmd').val() == "" || $('.date_crd_pull_fr_drmd').val() == "" || $('.date_ris_frw_drmd ').val() == ""){
+					bootbox.alert("Please enter date values");
+				}
+				//if(price == null)
+				else if(req_id!=null){
 					bootbox.confirm({
 					    title: "Hello!",
 					    message: "Please review you entry before proceeding, thank you",
@@ -741,25 +799,28 @@
 					    },
 					    callback: function (result){
 					         if(result){
-									$.ajax({
-							            url:'rros_save_req_r',
-							            method:'POST',
-							            cache: false,
-							            data:{
-								            	req_id				   : req_id,
-												date_let_aprv_drmd	   : date_let_aprv_drmd,
-												date_crd_pull_fr_drmd  : date_crd_pull_fr_drmd,
-												date_ris_frw_drmd	   : date_ris_frw_drmd,
-												item_uom			   : item_uom, 			  // array
-												items 				   : items,				  // array
-												qty_requested		   : qty_requested, 	  // array
-												qty_approved		   : qty_approved,		  // array
-												qty_released		   : qty_released, 		  // array
-												qty_left			   : qty_left,			  // array
-												price 				   : price, 			  // array
-												total 				   : total				  // array
-												// warehouse			   : warehouse,		  // array	
-												// trucking			   : trucking			  // array
+									$.ajax({														
+							            url:'rros_save_req_r',                                  
+							            method:'POST',                                          
+							            cache: false,                                           
+							            data:{												   	
+								            	req_id				   : req_id,                
+												date_let_aprv_drmd	   : date_let_aprv_drmd,    
+												date_crd_pull_fr_drmd  : date_crd_pull_fr_drmd, 
+												date_ris_frw_drmd	   : date_ris_frw_drmd,   
+												warehouse_origin	   : warehouse_origin,
+												
+												item_uom			   : item_uom, 			   // array
+												items 				   : items,				   // array
+												qty_requested		   : qty_requested, 	   // array
+												qty_approved		   : qty_approved,		   // array
+												qty_released		   : qty_released, 		   // array
+												qty_left			   : qty_left,			   // array
+												price 				   : price, 			   // array
+												total 				   : total,				   // array
+												// province_origin		   : province_origin 	   // array
+												// warehouse		   : warehouse,		       // array	
+												// trucking			   : trucking			   // array
 							            },
 							            success: function(data)
 							            {
@@ -909,6 +970,10 @@
 					});
 				}
 			});	
+
+			$('#cancel_bt').on('click', function(){
+				$('.report_tbl').hide();
+			});
 
 			$('#filter_bt').on('click',function(){
 				var	incident     = $('#incident').val();
@@ -1285,9 +1350,11 @@
 	 			if(first_name == "" ){
 	 				$('#first_name').css('border-color', 'red');
 	 			}
+				
 	 			if(last_name == ""){
 	 				$('#last_name').css('border-color', 'red');
 	 			}
+
 	 			if(user_name == ""){
 	 				$('#user_name').css('border-color', 'red');
 	 			}
@@ -1295,9 +1362,11 @@
 	 			if(first_name != ""){
 	 				$('#first_name').css('border-color', '');
 	 			}
+
 	 			if(last_name != ""){
 	 				$('#last_name').css('border-color', '');
 	 			}
+
 	 			if(user_name != ""){
 	 				$('#user_name').css('border-color', '');
 	 			}
@@ -1498,9 +1567,155 @@
 										  });
 										}
 									});		
-					       }
+					        }
 					    }
 					});
+			});
+
+
+			
+			$('.update_pass_bt').on('click',function(){
+				
+				var currentpassword	= $('.current_password').val();
+				var newpassword 	= $('.new_password').val();
+
+				if(currentpassword == "" ){
+	 				$('.current_password').css('border-color', 'red');
+	 			}
+				if(newpassword == "" ){
+	 				$('.new_password').css('border-color', 'red');
+	 			}
+
+				 
+				if(currentpassword != ""){
+					$('.current_password').css('border-color', '');
+				}
+				if(newpassword != ""){
+					$('.new_password').css('border-color', '');
+				}
+		
+				// alert();
+				if(currentpassword !="" && newpassword !=""){
+
+					$.ajax({
+							url: 'update_pass_r',
+							method: 'POST',
+							cache: false,
+							data:{
+								currentpassword:currentpassword,
+								newpassword:newpassword
+							
+							},
+							success:function(data)
+							{
+								// alert(data);
+								
+								if(data == 2){
+									bootbox.alert({
+									message: "Please enter your correct password",
+									
+									});
+								}
+								
+								
+								if(data == 1){
+									bootbox.alert({
+									message: "Password is successfully updated , You will be log out now",
+									callback: function(){
+										window.location = 'logout_r';
+									}
+									});
+								}
+							}
+						});	
+
+					}
+				
+			});
+			
+
+			$('.btn_add_response_letter').on('click',function(){
+				var id = $(this).attr('data-id');
+				$.ajax({
+					url: 'drmd_add_response_letter_r',
+					method: 'POST',
+					cache: false,
+					data:{
+						id:id
+					},
+					success:function(data)
+					{	
+					 bootbox.confirm({
+					    title: " ",
+					    message: data,
+					    buttons: {
+					        cancel: {
+					            label: 'Cancel'
+					        },
+					        confirm: {
+					            label: 'Confirm'
+					        }
+					    },
+					    callback: function (result){
+							if(result){
+								if($('.response_date').val() == ""){
+									bootbox.alert({
+										    message: "Please enter a valid date!",
+										    // callback: function(){
+										    //    location.reload();
+										    // }
+										  });
+								}else{
+									// alert($('.response_date').val());
+									var response_date = $('.response_date').val();
+								
+									$.ajax({
+										url: 'drmd_save_response_letter_r',
+										method: 'POST',
+										cache: false,
+										data:{
+											id:id,
+											response_date:response_date
+										},
+										success:function(data1)
+										{
+										  bootbox.alert({
+										    message: "Date response successfully added!",
+										    callback: function(){
+										       location.reload();
+										    }
+										  });
+										}
+									});		
+
+								}
+							}
+					    }
+					  });	
+					}
+				});	
+			});		
+
+
+			$('.btn_view_response_letter').on('click',function(){
+				var drmd_id = $(this).attr('data-id');
+				$.ajax({
+						url: 'drmd_view_response_letter_r',
+						method: 'POST',
+						cache: false,
+						data:{
+							drmd_id:drmd_id
+						},
+						success:function(data)
+						{
+							bootbox.alert({
+							message: data,
+							callback: function(){
+							
+							}
+							});
+						}
+					});	
 			});
 			
 	})

@@ -55,10 +55,9 @@
                                                          <td><p>'.ucfirst(strtolower($value['provDesc'])).'</p></td>
                                                          <td><p>'.ucfirst(strtolower($value['citymunDesc'])).'</p></td>
                                                          <td><p>'.$requester_name.'</p></td>
-                                                         <td><p>
-                                                            <a data-id="'.$value['drid'].'" class="btn_rrsmoredet"  href="javascript:void(0);">&nbsp;&nbsp;  RIS DETAILS</a>
-                                                            <a data-id="'.$value['drid'].'" class="btn_drmd_details"  href="javascript:void(0);">&nbsp;&nbsp;  PROCESSED BY</a>
-                                                          </p>
+                                                         <td>
+                                                              <a href="javascript:void(0);" data-id="'.$value['drid'].'" class="btn_rrsmoredet" <button><div class="badge badge-opacity-success">View RIS</div></a>
+                                                              <a href="javascript:void(0);" data-id="'.$value['drid'].'" class="btn_drmd_details" <button><div class="badge badge-opacity-success">Details</div></a>
                                                          </td>
                                                       </tr> ';
                                                   } 

@@ -10,6 +10,7 @@
   <script src="assets/js/jquery.dataTables.js"></script>
   <script src="assets/js/image-uploader.js"></script>
   <script src="assets/js/Chart.min.js"></script>
+  <script src="assets/js/xlsx.full.min.js"></script>
 </body>
 </html>
 <script type="text/javascript">

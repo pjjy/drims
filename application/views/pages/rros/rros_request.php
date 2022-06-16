@@ -55,9 +55,9 @@
                                                         <td><p>'.ucfirst(strtolower($value['citymunDesc'])).'</p></td>
                                                         <td><p>'.$requester_name.'</p></td>
                                                         <td>
-                                                          <a data-id="'.$value['drid'].'" class="btn_drmd_details"  href="javascript:void(0);"><i class="icon-info"></i> Details</a>&nbsp;&nbsp;
-                                                          <a data-id="'.$value['drid'].'" data-id1="'.$value['reference_no'].'" data-id2="'.$incident_name.'" data-id3="'.$value['provDesc'].'" data-id4="'.$value['citymunDesc'].'" data-id5="'.$requester_name.'" data-id6="'.$value['disctrictcode'].'" class="rros_process" href="javascript:void(0);"><i class="icon-play"></i> Process</a></td>
-                                                      </tr> ';
+                                                          <a data-id="'.$value['drid'].'" class="btn_drmd_details"  href="javascript:void(0);" <button><div class="badge badge-opacity-success"><i class="icon-info"></i> View Details</div></a>                                                       
+                                                          <a data-id="'.$value['drid'].'" data-id1="'.$value['reference_no'].'" data-id2="'.$incident_name.'" data-id3="'.$value['provDesc'].'" data-id4="'.$value['citymunDesc'].'" data-id5="'.$requester_name.'" data-id6="'.$value['disctrictcode'].'" class="rros_process" href="javascript:void(0);" <button><div class="badge badge-opacity-success"><i class="icon-play"></i> Process</div></a>
+                                                        </tr> ';
                                                     } 
                                                   ?>
                                                    <!-- <td><p>'.ucfirst(strtolower($value['df_name'])).' '.ucfirst(strtolower($value['dl_name'])).'</p></td> -->
@@ -108,18 +108,15 @@
                                         <label for="exampleFormControlSelect2">REQUESTER</label>
                                           <input type="text" class="form-control requester" readonly/>
                                         </div>
-                                     </div>
-                                
-
-
-                                 <div class="row">
+                                      </div>
+                                    <div class="row">
                                 <!--      <div class="col-md-4">
                                         <div class="form-group">
                                           <label for="exampleFormControlSelect2">RIS CONTROL NUMBER</label>
                                             <input type="text" min="0" class="form-control ris_num" id="requester"/>
                                          </div>
                                      </div> -->
-                                     <div class="col-md-4">
+                                     <div class="col-md-3">
                                        <div class="form-group">
                                         <label for="exampleFormControlSelect2">DATE NOTICE OF APPROVAL RECEIVED FROM DRMD </label>
                                           <div id="datepicker-popup" class="input-group date datepicker navbar-date-picker">
@@ -130,7 +127,7 @@
                                        </div>
                                         </div>
                                      </div>
-                                     <div class="col-md-4">
+                                     <div class="col-md-3">
                                        <div class="form-group">
                                           <label for="exampleFormControlSelect2">PULL-OUT LETTER FRWD TO DRMD</label>
                                             <div id="datepicker-popup" class="input-group date datepicker navbar-date-picker">
@@ -142,7 +139,7 @@
                                         </div>
                                      </div>
 
-                                     <div class="col-md-4">
+                                     <div class="col-md-3">
                                         <div class="form-group">
                                           <label for="exampleFormControlSelect2">DATE RIS FORWARDED TO DRMD</label>
                                             <div id="datepicker-popup" class="input-group date datepicker navbar-date-picker">
@@ -154,7 +151,22 @@
                                         </div>
                                       </div>
 
-                                 </div>
+                                      <div class="col-md-3">
+                                      <div class="form-group">
+                                        <label for="exampleFormControlSelect2">WAREHOUSE ORIGIN</label>
+                                          <select class="form-control province_sel">
+                                            <?php
+                                              foreach($get_province as $value){
+                                                echo '<option value ='.$value['provCode'].'>'.$value['provDesc'].'</option>';
+                                              }
+                                            ?>
+                                        </select>
+                                      </div>
+                                      </div>
+
+
+                                      
+                                    </div>
 
                                  
                                  <!-- <div class="row "> -->

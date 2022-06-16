@@ -39,12 +39,24 @@
                                                     foreach($get_drmd_request as $key =>  $value){ 
                                                       $incident_name = $value['incidesc'];
                                                       $requester_name = $value['reqsdesc'];
+
+                                                      $d = '<a href="javascript:void(0);" <button="" data-id="'.$value['drid'].'" class="btn_add_response_letter"><div class="badge badge-opacity-warning">Add date of response letter</div></a>';
+                                                    
+
+                                                      $e =  '';
+                                                     
                                                       if($value['inci_num'] == 13){
                                                         $incident_name = 'u.s: '.$value['ot_inci'];
                                                       }
                                                       if($value['req_num'] == 11){
                                                         $requester_name = 'u.s: '.$value['ot_req_desc'];
                                                       }
+                                                      if($value['response_id']){
+                                                        $d = '<a href="javascript:void(0);" <button="" data-id="'.$value['drid'].'" class="btn_view_response_letter"><div class="badge badge-opacity-success">View response letter date</div></a>';
+                                                        $e = '<a href="javascript:void(0);" <button="" data-id="'.$value['drid'].'" class="btn_add_response_letter"><div class="badge badge-opacity-success">Edit date</div></a>';
+                                                     
+                                                      }
+
                                                        $key++;
                                                         echo 
                                                         '<tr>
@@ -56,10 +68,10 @@
                                                           <td><p>'.$requester_name.'</p></td>
                                                           
                                                           <td>
-                                                            <p><a data-id="'.$value['drid'].'" class="btn_drmd_details"  href="javascript:void(0);">DETAILS</a></p>
-                                                            
+                                                            <a href="javascript:void(0);" <button="" data-id="'.$value['drid'].'" class="btn_drmd_details"><div class="badge badge-opacity-success">View Details</div></a>
+                                                            '.$d.'
+                                                            '.$e.'
                                                           </td>
-
                                                         </tr>';
                                                     } 
                                                   ?>

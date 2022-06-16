@@ -54,7 +54,10 @@
                                                         <td><p>'.ucfirst(strtolower($value['provDesc'])).'</p></td>
                                                         <td><p>'.ucfirst(strtolower($value['citymunDesc'])).'</p></td>
                                                         <td><p>'.$requester_name.'</p></td>
-                                                        <td><p><a data-id="'.$value['drid'].'" class="btn_drmd_disapp_details"  href="javascript:void(0);">DETAILS</a></p></td>
+                                                        <td>
+                                                         <a href="javascript:void(0);"  data-id="'.$value['drid'].'"  class="btn_drmd_disapp_details" <button><div class="badge badge-opacity-success">View Details</div></a>
+                                         
+                                                        </td>
                                                       </tr> ';
                                                     }   
                                                   ?>

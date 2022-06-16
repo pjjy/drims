@@ -63,7 +63,7 @@
                 <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="rros_myentry_r"){echo "active";}?>" href="rros_myentry_r">Processed Data (<?php echo $count_processed; ?>)</a></li>
                 <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="rros_disapp_r"){echo "active";}?>" href="rros_disapp_r">Disapproved Request (<?php echo $count_disapproved; ?>)</a></li>
                 <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="rros_delinquent_r"){echo "active";}?>" href="rros_delinquent_r">Delinquent request (<?php echo $count_delinquent; ?>)</a></li>
-                <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="eterato_r"){echo "active";}?>" href="eterato_r">Reports</a></li>
+                <!-- <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="eterato_r"){echo "active";}?>" href="eterato_r">Reports</a></li> -->
                 <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="standy_fund_r"){echo "active";}?>" href="standy_fund_r">Stand by funds</a></li>
               </ul>
             </div>
@@ -76,7 +76,7 @@
             </a>
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link <?php if($this->uri->segment(1)=="standy_fund_r"){echo "active";}?>" href='my_profile_r'>Profile</a></li>
+                <li class="nav-item"> <a class="nav-link <?php if($this->uri->segment(1)=="my_profile_r"){echo "active";}?>" href='my_profile_r'>Profile</a></li>
                 <li class="nav-item"> <a class="nav-link" href=''>About</a></li>
                 <li class="nav-item"> <a class="nav-link" href='logout_r'>Log out</a></li>
               </ul>

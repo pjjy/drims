@@ -1,4 +1,4 @@
- <div class="main-panel">
+<div class="main-panel">
     <div class="content-wrapper">
       <div class="row">
         <div class="col-sm-12">
@@ -23,42 +23,29 @@
                                                   <tr>
                                                     <th>#</th>
                                                     
-                                                    <th>Incident</th>
-                                                    <th>Remarks</th>
+                                                    <!-- <th>Incident</th> -->
+                                                    <!-- <th>Remarks</th> -->
                                                     <th>Province</th>
                                                     <th>Municipality</th>
-                                                    <th>Requester</th>
-                                                    <!-- <th>Drmd</th> -->
-                                                    <!-- <th>Drrs</th> -->
-                                                    <!-- <th>RROS</th> -->
-                                                    <!-- <th>RIS #</th> -->
-                                                    <!-- <th>Qty requested</th> -->
+                                                    <!-- <th>Requester</th> -->
                                                     <th>Action</th>
                                                   </tr>
                                               </thead>
                                               <tbody>
                                                 <?php
-                                                  foreach($get_rros_request as $key =>  $value){
-                                                    $incident_name = $value['incidesc'];
-                                                    $requester_name = $value['reqsdesc'];
-                                                    if($value['inci_num'] == 13){
-                                                      $incident_name = 'u.s: '.$value['ot_inci'];
-                                                    }
-                                                    if($value['req_num'] == 11){
-                                                      $requester_name = 'u.s: '.$value['ot_req_desc'];
-                                                    }
+                                                  foreach($get_wr_to_release as $key =>  $value){
+                                                   
                                                     $key++;
                                                     echo 
                                                     '<tr>
                                                         <td><p>'.$key.'</p></td>
-                                                        <td><p>'.$incident_name.'</p></td>
-                                                        <td><p>'.$value['remarks'].'</p></td>
+                                                      
                                                         <td><p>'.ucfirst(strtolower($value['provDesc'])).'</p></td>
                                                         <td><p>'.ucfirst(strtolower($value['citymunDesc'])).'</p></td>
-                                                        <td><p>'.$requester_name.'</p></td>
+                                                      
                                                         <td>
-                                                            <a  data-id="'.$value['drid'].'" class="btn_rrsmoredet"  href="javascript:void(0);" <button><div class="badge badge-opacity-success">View Details</div></a>
-                                                            <a  data-id="'.$value['drid'].'" class="btn_drmd_details"  href="javascript:void(0);" <button><div class="badge badge-opacity-success">View Persons</div></a>
+                                                            <a data-id="'.$value['drid'].'" class="btn_rrsmoredet"  href="javascript:void(0);" <button><div class="badge badge-opacity-success">View Details</div></a>
+                                                         
                                                         </td>
                                                     </tr> ';
                                                   } 

@@ -34,6 +34,7 @@
                                                     <th><small>Added by</small></th>
                                                     <th><small>Date Added</small></th>
                                                     <th><small>Action</small></th>
+                                                    <th><small></small></th>
                                                   </tr>
                                               </thead>
                                               <tbody>
@@ -46,7 +47,7 @@
                                                         <td><p>PHP '.number_format($value['fund'],2).'</p></td>
                                                         <td><p>'.ucfirst(strtolower($value['first_name'])).' '.ucfirst(strtolower($value['last_name'])).'</p></td>
                                                         <td><p>'.date('Y-m-d', strtotime($value['created'])).'</p></td>
-                                                        <td><p><a class="updateSt_fund_btn" data-id1='.$value['stfid'].' data-id='.$value['fund'].' href="javascript:void(0)">UPDATE</a></p></td>
+                                                        <td><a data-id1='.$value['stfid'].' data-id='.$value['fund'].' class="updateSt_fund_btn" href="javascript:void(0);" <button=""><div class="badge badge-opacity-success"><i class="icon-info"></i> Edit</div></a>
                                                       </tr> ';
                                                   } 
                                                 ?>

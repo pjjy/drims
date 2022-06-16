@@ -27,13 +27,12 @@ class drimscontroller extends CI_Controller {
 
     public function log_in_check_ctrl(){
     	$sideData['first_name'] = $this->session->userdata('user')['first_name'];
-    	if($this->session->userdata('user') && $this->session->userdata('user')['status'] == 0){
+    	if($this->session->userdata('user') && $this->session->userdata('user')['status'] == '0'){
     		$this->load->view('header/header');
 			$this->load->view('login/log_in_check', $sideData);
 		}else{
 			redirect('/');
-		}
-   	
+		}   	
 		// $this->load->view('footer/footer');
     }
 
@@ -58,7 +57,7 @@ class drimscontroller extends CI_Controller {
      	if($this->session->userdata('user')['role'] == '6' && $this->session->userdata('user')['status'] == '1'){
      		redirect('drims_request_r');
      	}
-      	if($this->session->userdata('user')['role'] == 1 || $this->session->userdata('user')['role'] == 2 || $this->session->userdata('user')['role'] == 3 || $this->session->userdata('user')['role'] == 4 || $this->session->userdata('user')['role'] == 5 || $this->session->userdata('user')['role'] == 6  && $this->session->userdata('user')['status'] == 0){
+      	if($this->session->userdata('user')['role'] == '1' || $this->session->userdata('user')['role'] == '2' || $this->session->userdata('user')['role'] == '3' || $this->session->userdata('user')['role'] == '4' || $this->session->userdata('user')['role'] == '5'  && $this->session->userdata('user')['status'] == '0'){
      		redirect('log_in_check_r');
      	}
      	else{
@@ -71,9 +70,11 @@ class drimscontroller extends CI_Controller {
 
     public function login_auth_ctrl(){
     	// $this->drimsmodel->login_auth_mod('12345','12345');
+		
   		$this->load->library('session');
 		$data =	$this->drimsmodel->login_auth_mod($this->input->post('username'),$this->input->post('password'));
-		// print_r($data);
+		print_r($data);
+	
 		if($data){
 			if($data['role'] == '1'){
 				if($data['status'] == 0){
@@ -92,7 +93,7 @@ class drimscontroller extends CI_Controller {
 					$this->session->set_userdata('user', $data);
 					redirect('drmd_request_r');
 				}
-			}//DRMD
+			}//DRMD 
 			if($data['role'] == '4'){
 				if($data['status'] == 0){
 					$this->session->set_userdata('user', $data);
@@ -111,28 +112,31 @@ class drimscontroller extends CI_Controller {
 					redirect('rros_request_r');
 				}	
 			}//RROS
-			if($data['role'] == '6'){
+			if($data['role'] == '7' || $data['role'] == '8' || $data['role'] == '9'){
 				if($data['status'] == 0){
 					$this->session->set_userdata('user', $data);
 					redirect('log_in_check_r');
 				}else{
 					$this->session->set_userdata('user', $data);
-					redirect('dashboard_r');
-				}	
-			}//drims
-			
-			//DIVISION CHIEF
-		}else{
-			header('location:'.base_url());
-			$this->session->set_flashdata('error','Invalid login. User not found');
-		}
+					// redirect();
+					redirect('wr_toreleas_r');
+				}
+			}//warehouselogin
+					
+			 //if wrong password
+			}else{			
+				$this->session->set_flashdata('error', 'Invalid login. User not found');
+				redirect('login_r');
+			}
     }
 
     public function login_auth_update_ctrl(){
 	    	$this->drimsmodel->login_auth_update_mod($this->session->userdata('user')['usr_id'],$this->session->userdata('user')['user_id'],$this->input->post('new_password'),$this->input->post('email'));
    			$this->load->library('session');
-			$this->session->unset_userdata('user');
-			header('location:'.base_url());
+			$this->session->unset_userdata('user');			
+			// header('location:'.base_url());
+			$this->session->set_flashdata('Success', 'Please log in with your new password');
+			redirect('login_r');
     }
 
     public function drmd_details_ctrl(){
@@ -169,8 +173,8 @@ class drimscontroller extends CI_Controller {
 
     public function dashboard_ctrl(){
     	$this->load->library('session');
-		$dashData['get_drmd_request'] = $this->drimsmodel->get_drmd_request_mod();
-
+		$dashData['get_drmd_request'] = $this->drimsmodel->get_drmd_request_dash_mod();
+		$dashData['get_drrs_disap_request'] = $this->drimsmodel->get_drrs_disap_request_mod();
 		$sideData['first_name']					= $this->session->userdata('user')['first_name'];
     	$sideData['user_id']					= $this->session->userdata('user')['user_id'];
 		$sideData['last_name'] 					= $this->session->userdata('user')['last_name'];
@@ -208,7 +212,7 @@ class drimscontroller extends CI_Controller {
 				$this->load->view('sidebar/susidebar', $sideData);
 			}
 			if($this->session->userdata('user')['role'] == '3'){
-					$this->load->view('sidebar/drmdsidebar', $sideData);
+				$this->load->view('sidebar/drmdsidebar', $sideData);
 			}
 			if($this->session->userdata('user')['role'] == '4'){
 				$this->load->view('sidebar/drrssidebar', $sideData);
@@ -218,13 +222,14 @@ class drimscontroller extends CI_Controller {
 			}
 			if($this->session->userdata('user')['role'] == '6'){
 				$this->load->view('sidebar/drimssidebar', $sideData);
-				// $this->load->view('sidebar/rrossidebar', $sideData);
 			}
+			if($this->session->userdata('user')['role'] == '7' || $this->session->userdata('user')['role'] == '8' || $this->session->userdata('user')['role']){
+				$this->load->view('sidebar/warehousesidebar', $sideData);
+			}
+
 			$this->load->view('dashboard/dashboard', $dashData);
 			$this->load->view('footer/footer');
-			$this->load->view('js/js');
-			
-			
+			$this->load->view('js/js');		
     	}
 		else if(empty($this->session->userdata('user'))){
 			$this->load->view('header/header');
@@ -243,21 +248,21 @@ class drimscontroller extends CI_Controller {
 
     public function drmd_request_ctrl(){
     	$this->load->library('session');
-    	$data['get_drmd_request']     = $this->drimsmodel->get_drmd_entries_mod();
-    	$data['get_requester']	      = $this->drimsmodel->get_requester();
-    	$data['get_incident'] 	      = $this->drimsmodel->get_incident_mod();
-    	$data['get_province'] 	      = $this->drimsmodel->get_province_mod();
-    	$data['get_default_city']     = $this->drimsmodel->get_default_city_mod('0712');
+    	$data['get_drmd_request']      = $this->drimsmodel->get_drmd_entries_mod();
+    	$data['get_requester']	       = $this->drimsmodel->get_requester();
+    	$data['get_incident'] 	       = $this->drimsmodel->get_incident_mod();
+    	$data['get_province'] 	       = $this->drimsmodel->get_province_mod();
+    	$data['get_default_city']      = $this->drimsmodel->get_default_city_mod('0712');
 
-    	$data['get_food_items'] = $this->drimsmodel->get_item_mod();
-		$data['get_non_food_items'] = $this->drimsmodel->get_non_food_item_mod();
-		$data['get_food_item_uom']  = $this->drimsmodel->get_item_uom_mod();
+    	$data['get_food_items'] 	   =	$this->drimsmodel->get_item_mod();
+		$data['get_non_food_items']    = $this->drimsmodel->get_non_food_item_mod();
+		$data['get_food_item_uom']     = $this->drimsmodel->get_item_uom_mod();
 
-		$sideData['first_name']       = $this->session->userdata('user')['first_name'];
-		$sideData['user_id']		  = $this->session->userdata('user')['user_id'];
-		$sideData['cound_drmd_entry'] = $this->drimsmodel->cound_drmd_entry_mod();
+		$sideData['first_name']        = $this->session->userdata('user')['first_name'];
+		$sideData['user_id']		   = $this->session->userdata('user')['user_id'];
+		$sideData['cound_drmd_entry']  = $this->drimsmodel->cound_drmd_entry_mod();
 		$sideData['count_disapproved'] = $this->drimsmodel->count_disapproved();
-		$sideData['count_ris_dr_mod'] = $this->drimsmodel->count_ris_dr_mod();
+		$sideData['count_ris_dr_mod']  = $this->drimsmodel->count_ris_dr_mod();
 
 		if($this->session->userdata('user')['role'] == 3 && $this->session->userdata('user')['status'] == 1){
     		$this->load->view('header/header');
@@ -367,7 +372,7 @@ class drimscontroller extends CI_Controller {
 
 	public function drmd_view_details_ctrl(){
 		if(isset($_POST['drid'])){
-			if($this->session->userdata('user')['role'] == 5 && $this->session->userdata('user')['status'] == 1){
+			if( $this->session->userdata('user')['role'] == 5 || $this->session->userdata('user')['role'] == 7 || $this->session->userdata('user')['role'] == 8 || $this->session->userdata('user')['role'] == 9  && $this->session->userdata('user')['status'] == 1){
 				$this->drimsmodel->drrs_dristibution_mod($this->input->post('drid'));
 			}else{
  				$this->drimsmodel->drmd_view_details_mod($this->input->post('drid'));
@@ -442,13 +447,6 @@ class drimscontroller extends CI_Controller {
 
 	public function drrs_disapproved_ctrl(){
 		$this->load->library('session');
-		// $data['get_rros_entries'] = $this->drimsmodel->get_rros_entries_mod();
-		// $data['get_drmd_request'] = $this->drimsmodel->get_drmd_request_mod();
-		// $data['get_cancelled_entry'] = $this->drimsmodel->drrs_cancelled_mod();
-		// $data['get_rros_request'] = $this->drimsmodel->get_drrs_done_request_mod();
-		// $data['get_food_items'] = $this->drimsmodel->get_item_mod();
-		// $data['get_non_food_items'] = $this->drimsmodel->get_non_food_item_mod();
-		// $data['get_food_item_uom']  = $this->drimsmodel->get_item_uom_mod();
 
 		$data['get_drrs_disap_request'] = $this->drimsmodel->get_drrs_disap_request_mod();
 		$sideData['first_name'] = $this->session->userdata('user')['first_name'];
@@ -632,6 +630,7 @@ class drimscontroller extends CI_Controller {
 	public function rros_request_ctrl(){
 		$this->load->library('session');
 		$data['get_rros_request'] = $this->drimsmodel->get_rros_request_mod();
+		$data['get_province'] 	    	= $this->drimsmodel->get_province_mod();
 		$sideData['first_name'] = $this->session->userdata('user')['first_name'];
 		$sideData['last_name'] = $this->session->userdata('user')['last_name'];
 		$sideData['user_id'] = $this->session->userdata('user')['user_id'];
@@ -674,6 +673,7 @@ class drimscontroller extends CI_Controller {
 				$this->input->post('date_crd_pull_fr_drmd'),
 				$this->input->post('date_ris_frw_drmd'),
 				$this->session->userdata('user')['user_id'],
+				$this->input->post('warehouse_origin'),
 				$this->input->post('item_uom'),
 				$this->input->post('items'),
 				$this->input->post('qty_requested'),
@@ -682,6 +682,7 @@ class drimscontroller extends CI_Controller {
 				$this->input->post('qty_left'),
 				$this->input->post('price'),
 				$this->input->post('total')
+				// $this->input->post('province_origin')
 				// $this->input->post('warehouse'),
 				// $this->input->post('trucking')
 			);
@@ -948,8 +949,15 @@ class drimscontroller extends CI_Controller {
 	}
 
 	public function my_profile_ctrl(){
-		$sideData['first_name'] = $this->session->userdata('user')['first_name'];
-		$sideData['user_id'] = $this->session->userdata('user')['user_id'];
+		$sideData['first_name'] 		= $this->session->userdata('user')['first_name'];
+		$sideData['user_id']			= $this->session->userdata('user')['user_id'];
+		$sideData['last_name'] 			= $this->session->userdata('user')['last_name'];
+		$sideData['count_pending']		= $this->drimsmodel->count_pending_mod();
+		$sideData['count_disapproved']  = $this->drimsmodel->count_disapproved();
+		$sideData['count_processed']    = $this->drimsmodel->count_processed();
+		$sideData['count_delinquent']	= $this->drimsmodel->count_delinquent();
+	    // $data['get_drrs_disap_request'] = $this->drimsmodel->rros_get_disapproved_mod();
+		$data['get_drrs_disap_request'] = $this->drimsmodel->get_drrs_disap_request_mod();
 		$data['profile_data'] = $this->drimsmodel->profile_data_mod();
 		if(isset($this->session->userdata('user')['user_id']) && $this->session->userdata('user')['status'] == 1){
 			$this->load->view('header/header');
@@ -964,7 +972,25 @@ class drimscontroller extends CI_Controller {
 
 	public function update_add_distribution_ctrl(){
 		if(isset($_POST['rosit'])){
-			$this->drimsmodel->update_add_distribution_mod($_POST['rosit'],$_POST['warehouse_id'],$_POST['trucking_id']);
+			$this->drimsmodel->update_add_distribution_mod($_POST['rosit'],$_POST['remarks'],$_POST['trucking_id'],$_POST['actualRelease']);
+		}
+	}
+
+	public function ris_edit_ctrl(){
+		if(isset($_POST['id'])){
+			$this->drimsmodel->ris_edit_mod($_POST['id'],$_POST['qty'],$_POST['price']);
+		}
+	}
+
+	public function ris_edit_final_ctrl(){
+		if(isset($_POST['id'])){
+			$this->drimsmodel->ris_edit_final_mod($_POST['id'],$_POST['qty_approved'],$_POST['edited_qty'],$_POST['edited_price'],$_POST['edited_total']);
+		}
+	}
+
+	public function view_edit_history_ctrl(){
+		if(isset($_POST['id'])){
+			$this->drimsmodel->view_edit_history_mod($_POST['id']);
 		}
 	}
 
@@ -977,6 +1003,41 @@ class drimscontroller extends CI_Controller {
 	public function su_reset_user_ctrl(){
 		if(isset($_POST['id'])){
 			$this->drimsmodel->su_reset_user_mod($_POST['id']);
+		}
+	}
+
+	public function update_pass_ctrl(){
+		$this->drimsmodel->update_pass_mod($this->input->post('currentpassword'), $this->input->post('newpassword'));					
+	}
+
+	public function drmd_response_letter_ctrl(){
+		$this->drimsmodel->drmd_response_letter_mod($this->input->post('id'));
+	}
+
+	public function drmd_save_response_letter_ctrl(){
+		$this->drimsmodel->drmd_save_response_letter_mod($this->input->post('response_date'),$this->input->post('id'));
+	}
+
+	public function drmd_view_response_letter_ctrl(){
+		$this->drimsmodel->drmd_view_response_letter_mod($this->input->post('drmd_id'));
+	}
+
+	public function su_add_item_ctrl(){
+		echo "will add items";
+	}
+
+	public function warehouse_ctrl(){
+		$sideData['first_name'] = $this->session->userdata('user')['first_name'];
+		$sideData['user_id']	= $this->session->userdata('user')['user_id'];
+		$data['get_wr_to_release'] = $this->drimsmodel->wr_toreleas_mod();
+		if(isset($this->session->userdata('user')['user_id']) && $this->session->userdata('user')['status'] == 1){
+			$this->load->view('header/header');
+			$this->load->view('sidebar/warehousesidebar', $sideData);
+			$this->load->view('pages/warehouse/warehouse', $data); 
+			$this->load->view('footer/footer');
+			$this->load->view('js/js');
+		}else{
+			redirect('/');
 		}
 	}
 

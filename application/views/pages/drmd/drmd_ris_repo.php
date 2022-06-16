@@ -57,7 +57,9 @@
                                                         <td><p>'.ucfirst(strtolower($value['citymunDesc'])).'</p></td>
                                                         <td><p>'.$requester_name.'</p></td>
                                                         
-                                                        <td><p><a data-id="'.$value['drid'].'" class="btn_rrsmoredet"  href="javascript:void(0);">DETAILS</a></p></td>
+                                                        <td>
+                                                          <a href="javascript:void(0);" <button="" data-id="'.$value['drid'].'" class="btn_rrsmoredet" ><div class="badge badge-opacity-success">View Details</div></a>
+                                                        </td>
                                                     </tr> ';
                                                   } 
                                                 ?>

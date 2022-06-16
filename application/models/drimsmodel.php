@@ -319,9 +319,10 @@
 
 	    public function drmd_details_dash_mod($drmd_id){
 	   
-	    	$this->db->select('drmd_req.remarks as drmdremarks,drmd_req.id as drmd_id, drusr.first_name as drf_name, drusr.last_name as drl_name, drmd_req.created as dr_created , usr.first_name as dr_fname,usr.last_name as dr_lname, drs_req.drmd_id as drs_req_id ,drs_req.added_by as drs_by, drs_req.created as drs_created, ros_req.added_by as rs_by,ros_req.created as rs_created,usrs.first_name as rs_fname,usrs.last_name as rs_lname, rros_it.drmd_id as rros_it_drmd_id');
+	    	$this->db->select('inci.description as inci_desc,drmd_req.incident as inci_num,drmd_req.remarks as drmdremarks,drmd_req.id as drmd_id, drusr.first_name as drf_name, drusr.last_name as drl_name, drmd_req.created as dr_created , usr.first_name as dr_fname,usr.last_name as dr_lname, drs_req.drmd_id as drs_req_id ,drs_req.added_by as drs_by, drs_req.created as drs_created, ros_req.added_by as rs_by,ros_req.created as rs_created,usrs.first_name as rs_fname,usrs.last_name as rs_lname, rros_it.drmd_id as rros_it_drmd_id');
 	    	$this->db->from('drmd_request as drmd_req');
 	    	$this->db->join('users as drusr','drusr.user_id = drmd_req.added_by', 'left');
+			$this->db->join('incident as inci','inci.id = drmd_req.incident','inner');
 	    	// $this->db->join('drrs_disapprove as drrs_disapp','drrs_disapp.drmd_id = drmd_req.id','left');
 	    	$this->db->join('drrs_request as drs_req','drs_req.drmd_id = drmd_req.id','left');
 	    	$this->db->join('users as usr','usr.user_id = drs_req.added_by','left');
@@ -347,9 +348,6 @@
 				$rs_lname = $data['rs_lname'];
 				$rs_created = date('m/d/Y h:i:s a', strtotime($data['rs_created']));
 				$ris_stat = $data['rros_it_drmd_id'];			
-
-				$ris_btn = '<a class="ris_btn" data-id='.$data['rros_it_drmd_id'].' href="">Click to view RIS</a>';
-
 
 				$years		  = "";
 				$months		  = "";
@@ -551,8 +549,8 @@
 		                    </div>
 		             <div>';		
 
-		            
-		            echo '<p>Remarks: '.$data['drmdremarks'].'</p>'; 
+		            echo '<p>Incident:'.$data['inci_desc'].'</p>';
+					echo '<p>Remarks:'.$data['drmdremarks'].'</p>'; 
 		            echo '<hr>';
 	            	$this->db->select('*,drmd_itms.id as drid, drmd_itms.drmd_id as drmdid ,itms.description as spec_items,drmd_itms.item as drsItm , drmd_itms.item_requested as drmd_item_req, uom_desc.description as uom_description');
 	            	$this->db->from('drmd_items as drmd_itms');
@@ -630,9 +628,7 @@
 						              </div>
 						                 <div class="col-md-3">
 						                 <small>'.$value1['item_qty'].'</small>
-						                 '.(($this->session->userdata('user')['role'] != '4')? '' : '
-					           	   	  	 <small>  <a class="drrs_edit_qty" data-id='.$value1['drrsid'].' data-id1='.$value1['item_qty'].' href="javascript:void(0);" style="color:BLUE">EDIT</a></small>').'
-					           	   	  	</div>	           	     
+						             </div>	           	     
 				           	      </div>';	
        				}
 
@@ -661,7 +657,7 @@
 										            },
 										            success: function(data)
 										            {
-								 					  bootbox.alert({
+								 					    bootbox.alert({
 														    message: 'Your entry was successfully removed!',
 														    callback: function(){
 														       location.reload();
@@ -756,9 +752,8 @@
 																	    }
 																	});
 													            },
-									   						 });
-														}
-				 	               									 	               
+									   					  });
+													}		 	               
 								 	            }
 								 	        }
 								 	    }
@@ -766,9 +761,7 @@
 								 }
 							  });					  
 						});	
-					  </script>";
-
-		          	
+					  </script>";          	
 	   }
 
 	   public function drmd_details_mod($drmd_id){
@@ -996,8 +989,8 @@
 							<small>'.$dr_fname.' '.$dr_lname.'</small><br>
 							<small>'.$drs_created.'</small><br>
 							<small>'.$years.' '.$months.' '.$days.' '.$hours.' '.$minuts.' '.$seconds.'</small><br>
-						
 						</div>
+						
 						<div class="col-md-4">
 							<small>'.$rs_fname.' '.$rs_lname.'</small><br>
 							<small>'.$rs_created.'</small><br>
@@ -1011,12 +1004,12 @@
 				$this->db->select('*,drmd_itms.id as drid, drmd_itms.drmd_id as drmdid ,itms.description as spec_items,drmd_itms.item as drsItm , drmd_itms.item_requested as drmd_item_req, uom_desc.description as uom_description');
 				$this->db->from('drmd_items as drmd_itms');
 				$this->db->join('drmd_request as drmd_req','drmd_req.id = drmd_itms.drmd_id','inner');
-				   $this->db->join('items as itms','itms.id = drmd_itms.item','inner');
-				   $this->db->join('uom as uom_desc','uom_desc.id = drmd_itms.item_uom','inner');
-				   $this->db->where('drmd_itms.drmd_id', $drmd_id);
-				   // $this->db->where('drmd_itms.isdeleted !=','yes');
-				   $this->db->order_by('itms.type', 'desc');
-					$query = $this->db->get();
+				$this->db->join('items as itms','itms.id = drmd_itms.item','inner');
+				$this->db->join('uom as uom_desc','uom_desc.id = drmd_itms.item_uom','inner');
+				$this->db->where('drmd_itms.drmd_id', $drmd_id);
+				// $this->db->where('drmd_itms.isdeleted !=','yes');
+				  $this->db->order_by('itms.type', 'desc');
+				$query = $this->db->get();
 				  $data = $query->result_array();
 				   echo '<div class="row">
 							<div class="col-md-3">
@@ -1059,14 +1052,14 @@
 
 
 				   echo '<hr>';
-				$this->db->select('*,drmd_itms.id as drrsid ,itms.description as spec_items,drmd_itms.item as drsItm , drmd_itms.item_requested as drmd_item_req, uom_desc.description as uom_description');
-				$this->db->from('drrs_items as drmd_itms');
+				   $this->db->select('*,drmd_itms.id as drrsid ,itms.description as spec_items,drmd_itms.item as drsItm , drmd_itms.item_requested as drmd_item_req, uom_desc.description as uom_description');
+				   $this->db->from('drrs_items as drmd_itms');
 				   $this->db->join('items as itms','itms.id = drmd_itms.drmd_id','inner');
 				   $this->db->join('uom as uom_desc','uom_desc.id = drmd_itms.item_uom','inner');
 				   $this->db->where('drmd_itms.drmd_id', $drmd_id);
 				   $this->db->order_by('itms.type', 'desc');
-					$query = $this->db->get();
-				  $data1 = $query->result_array();
+				   $query = $this->db->get();
+				   $data1 = $query->result_array();
 				   echo '<div class="row">
 						   <div class="col-md-9">
 							  <div class="form-group">
@@ -1147,9 +1140,9 @@
 								data:{
 									drrsid:drrsid,
 									quantity:quantity
-								},
+								},  
 								success:function(quantity)
-								{ 
+								{   
 									 bootbox.alert({
 										message: 'Quantity was successfully updated',
 										callback: function(){
@@ -1166,7 +1159,7 @@
 
 					$('.drmd_details_edit_item').on('click', function(){
 						var drid = $(this).attr('data-id');
-							
+							     
 						$.ajax({
 							  url: 'drmd_details_edit_item_r',
 							 method: 'POST',
@@ -1185,7 +1178,7 @@
 											label: 'Update',
 											 className: 'btn-info',
 											 callback: function(){
-															var edit_items 	= $('#edit_items').val();
+														var edit_items 	= $('#edit_items').val();
 														var drmd_id     = $('.drmd_details_edit_item').attr('data-id1');
 														var edit_uom    = $('#edit_uom').val();
 														var remarks     = $('#remarks').val();
@@ -1222,10 +1215,8 @@
 							 }
 						  });					  
 					});	
-				  </script>";
-
-				  
-   }
+				  </script>";			  
+       }
 
 	   public function drrs_update_quatity_mod($drrsid,$quantity){
 	   			$this->db->set('item_qty',$quantity);
@@ -1402,6 +1393,20 @@
 								$this->db->insert('drmd_items', $data); 		
 		    			}
 		    		}
+
+					for($w = 0; $w < count($non_food_item); $w++){ 
+		    			if($non_food_qty[$w] !=0 || $non_food_qty[$w] != null){
+		    					$data = array(
+										'drmd_id'			=> $last_id,
+										'item'				=> $non_food_item[$w],
+										'item_uom'			=> $non_food_uom[$w],
+										'item_requested'	=> $non_food_qty[$w],
+										'created'			=> date('Y-m-d H:i:s'),	 
+										'deleted'			=> date('Y-m-d H:i:s')	 
+								);	   
+								$this->db->insert('drmd_items', $data); 		
+		    			}
+		    		}
 	    }
 
 
@@ -1422,8 +1427,29 @@
     		return $query->result_array();
 	    }
 
+	     
+		public function get_drmd_request_dash_mod(){
+	    	$this->db->select('*,dr.id as drid,reqs.description as reqsdesc,inci.description as incidesc,ot_inci.incident as ot_inci,dr.incident as inci_num,dr.requester as req_num,other_req.requester as ot_req_desc');
+	    	$this->db->from('drmd_request as dr');
+	    	$this->db->join('incident as inci', 'inci.id = dr.incident','left');
+	    	$this->db->join('drmd_other_request_inci as ot_inci','ot_inci.drmd_id = dr.id','left');
+	    	$this->db->join('requester as reqs','reqs.id = dr.requester','left');
+	    	$this->db->join('drmd_other_requester as other_req','other_req.drmd_id = dr.id','left');
+	    	$this->db->join('refprovince as prov', 'prov.provCode = dr.province','inner');
+	    	$this->db->join('refcitymun as mun', 'mun.citymunCode = dr.mucipality','inner');
+	    	$this->db->join('users as usr_det','usr_det.user_id = dr.added_by','inner');
+	    	
+			$this->db->where('dr.id NOT IN (SELECT drmd_id FROM drrs_disapprove)' , NULL , FALSE);
+			
+			// $this->db->where('dr.drrs_status','0');
+	    	// $this->db->where('dr.id NOT IN (SELECT drmd_id FROM drrs_disapprove)', NULL, FALSE);
+	    	$this->db->order_by('dr.id', 'desc');
+	    	$query = $this->db->get();
+    		return $query->result_array();
+	    }
+
 	    public function get_drmd_entries_mod(){
-	    	$this->db->select('*, usr_det1.first_name as f_name, usr_det1.last_name as l_name , usr_det.first_name as df_name , usr_det.last_name as dl_name,drmd_req.id as drid,reqs.description as reqsdesc,inci.description as incidesc,ot_inci.incident as ot_inci,drmd_req.incident as inci_num,drmd_req.requester as req_num,other_req.requester as ot_req_desc');
+	    	$this->db->select('*,date_res.drmd_id as response_id, usr_det1.first_name as f_name, usr_det1.last_name as l_name , usr_det.first_name as df_name , usr_det.last_name as dl_name,drmd_req.id as drid,reqs.description as reqsdesc,inci.description as incidesc,ot_inci.incident as ot_inci,drmd_req.incident as inci_num,drmd_req.requester as req_num,other_req.requester as ot_req_desc');
     	   	$this->db->from('drmd_request as drmd_req');
 			$this->db->join('incident as inci', 'inci.id = drmd_req.incident','left');
 			$this->db->join('drmd_other_request_inci as ot_inci','ot_inci.drmd_id = drmd_req.id','left');
@@ -1434,8 +1460,10 @@
 	    	$this->db->join('users as usr_det', 'usr_det.user_id = drmd_req.added_by','left');
 	    	$this->db->join('drrs_request as drrs_req', 'drrs_req.drmd_id = drmd_req.id','left');
 	    	$this->db->join('users as usr_det1', 'usr_det1.user_id = drrs_req.added_by','left');
+			$this->db->join('drmd_date_response as date_res','date_res.drmd_id = drmd_req.id','left');
 	    	$this->db->where('drmd_req.id NOT IN (SELECT drmd_id FROM drrs_disapprove)', NULL, FALSE);
 	       	$this->db->order_by('drmd_req.id', 'desc');
+			$this->db->group_by('drmd_req.id');   
 	    	$query = $this->db->get();
     		return $query->result_array();
 	    }
@@ -1613,12 +1641,12 @@
             	
           <div>';
 				$grand_total = 0;
-				$request_left = 0;
+				
 				$button = '';
 	    	foreach($data as $key =>  $value){
 	    		$key++;
 	    		$grand_total += $value['price'] * $value['qty_released'];
-	    		$mother_amout = 0;
+	    		
 
 	    		if($value['rrosit_id']){
 	    			$button = '<button class="view_distribution button2" data-id="'.$value['rosit'].'">View Distributon</button>'; 
@@ -1735,25 +1763,22 @@
 							</style>'; 		
 	    }
 
-	    public function drrs_dristibution_mod($drid){
+	    public function drrs_dristibution_mod($drid){   	    	
 
-	    	// $this->db->select('');
-	    	// $this->db->select('*');
-
-	    	$this->db->select('*,um.description as uom_desc , rrosit.id as rosit ,rrosit.created as rosb_created , usr_det1.first_name as f_name, usr_det1.last_name as l_name');
+	    	$this->db->select('*, um.description as uom_desc , rrosit.id as rosit ,rrosit.created as rosb_created , usr_det1.first_name as f_name, usr_det1.last_name as l_name');
 	    	$this->db->from('rros_items as rrosit');
 	    	$this->db->join('uom as um','um.id = rrosit.item_uom','inner');
 	    	$this->db->join('items as itm','itm.id = rrosit.item','inner');
 	    	$this->db->join('delivery_and_trucking as del_trc','del_trc.rrosit_id = rrosit.id','left');
 	    	$this->db->join('users as usr_det1', 'usr_det1.user_id = rrosit.added_by','inner');
 	    	$this->db->join('drmd_request as drmd_req','drmd_req.id = rrosit.drmd_id','inner');
+			$this->db->join('refprovince as province','province.provCode = rrosit.province_origin','inner');
 	    	$this->db->order_by('rrosit.id', 'asc');
 	    	$this->db->where('rrosit.drmd_id', $drid);
 	    	$this->db->where('rrosit.qty_released !=', 0);
 	    	$query = $this->db->get();
 	    	$data = $query->result_array();
-	   			    
-	    	echo '
+	   		echo '
 				<div class="row">
 					<div class="col-md-2">
                  <div class="form-group">
@@ -1766,7 +1791,7 @@
                 </div>
                 </div>
 
-               <div class="col-md-1">
+                <div class="col-md-1">
                  <div class="form-group">
                    <b><label>QTY REQUESTED</label></b>
                  </div>
@@ -1807,72 +1832,72 @@
             	 </div>
                <div>';
 				$grand_total = 0;
-				$request_left = 0;
 				$button = '';
+				
 	    	foreach($data as $key =>  $value){
 	    		$key++;
 	    		$grand_total += $value['price'] * $value['qty_released'];
-	    		$mother_amout = 0;
-
-	    		
+				$print = '<button class="print_ris button2" data-id="'.$value['rosit'].'">Print</button>'; 
 	    		if($value['rrosit_id']){
 	    			$button = '<button class="view_distribution button2" data-id="'.$value['rosit'].'">V</button>'; 
 	    		}else{
 	    			$button = '<button class="add_distribution button3" data-id="'.$value['rosit'].'">+</button>';
 	    		}
+				$edit_btn = '<a href="javascript:void(0);" <button data-id="'.$value['rosit'].'" data-id1="'.$value['qty_released'].'" data-id2="'.$value['price'].'" data-id3="'.$value['qty_left'].'" data-id4="'.$value['qty_approved'].'" class="btn_ris_edit"><div class="badge badge-opacity-success">Edit</div></a>';
    				echo '
 	   				 <div class="row">
 				   		<div class="col-md-2">
 				   		  <div class="form-group">
-	                        <p>'.$value['description'].'</p>
+							 
+	                        <small>'.$edit_btn.'  '.ucwords(strtolower($value['description'])).'</small>
 	                      </div>
 	                    </div>
 
 	                    <div class="col-md-1">
 	                      <div class="form-group">
-	                        <p>'.$value['uom_desc'].'</p>
+	                        <small>'.$value['uom_desc'].'</small>
 	                      </div>
 	                    </div>
 	                    
 	                    <div class="col-md-1">
 	                      <div class="form-group">
-	                        <p>'.number_format($value['qty_requested']).'</p>
+	                        <small>'.number_format($value['qty_requested']).'</small>
 	                      </div>
 	                    </div>
 	                    
 	                    <div class="col-md-1">
 	                      <div class="form-group">
-	                        <p>'.number_format($value['qty_approved']).'</p>
+	                        <small>'.number_format($value['qty_approved']).'</small>
 	                      </div>
 	                    </div>
 	                   
 	                    <div class="col-md-1">
 	                      <div class="form-group">
-	                        <p>'.number_format($value['qty_released']).'</p>
+	                        <small>'.number_format($value['qty_released']).'</small>
 	                      </div>
 	                    </div>
 	                    
 	                    <div class="col-md-1">
 	                      <div class="form-group">
-	                        <p>₱'.number_format($value['price'],2).'</p>
+	                        <small>₱'.number_format($value['price'],2).'</small>
 	                      </div>
 	                    </div>
 
 	                    <div class="col-md-1">
 	                      <div class="form-group">
-	                        <p>₱'.number_format($value['price'] * $value['qty_released'],2).'</p>
+	                        <small>₱'.number_format($value['price'] * $value['qty_released'],2).'</small>
 	                      </div>
 	                    </div>
 
 	                    <div class="col-md-3">
 	                      <div class="form-group">
-	                    	<p>'.$button.' '.$value['field_office'].'-'.substr($value['reference_no'],0,3).'-'.$value['ris_no'].' By '.$value['f_name'].' '.$value['l_name'].'</p>
+						    <small>'.$button.' '.$value['field_office'].'-'.substr($value['provDesc'],0,3).'-'.$value['ris_no'].' By '.$value['f_name'].' '.$value['l_name'].' '.$print.'</small>
 	                      </div>
 	                    </div>
 
 	                    <div class="col-md-1">
 	                      <div class="form-group">
-	                    	<p>'.date('m/d/Y h:i:s a', strtotime($value['rosb_created'])).'</p>
+	                    	<small>'.date('m/d/Y h:i:s a', strtotime($value['rosb_created'])).'</small>
 	                      </div>
 	                    </div>
 	                 <div>';
@@ -1889,20 +1914,30 @@
 
 	                
    				echo  "<script>
-   						$('.add_distribution').on('click', function(){
-   							var rosit = $(this).attr('data-id');
-   							 $.ajax({
-								url: 'add_distribution_r',
+				   		
+				   		$('.btn_ris_edit').on('click',function(){
+							var id              = $(this).attr('data-id');
+							var qty             = $(this).attr('data-id1');
+							var price 		    = $(this).attr('data-id2');
+
+							
+							var qty_approved 	= $(this).attr('data-id4');
+							
+							
+
+							$.ajax({
+								url: 'ris_edit_r',
 								method: 'POST',
 								cache: false,
 								data:{
-									rosit:rosit
+									id:id,
+									qty:qty,
+									price:price
 								},
 								success:function(data)
-								{
-									
+								{								
 									bootbox.confirm({
-										title:'Please select warehouse and trucking',
+										title:'Update Quantity and Pricing',
 									    message: data,
 									    buttons: {
 									        cancel: {
@@ -1916,33 +1951,105 @@
 									    },
 									    callback: function (result) {
 									        if(result){
-									        	var warehouse_id = $('.warehouse_sel').val();
-									        	var trucking_id = $('.warehouse_sel').val();
-									        	
-
-									        	if (confirm('Are you sure you want to proceed?') == true) {
+												
+												var edited_qty = $('.edited_qty').val();
+												var edited_price = $('.edited_price').val();
+												var edited_total = $('.edited_total').val();			
+			
+												if (confirm('Are you sure you want to proceed?') == true) {
 													$.ajax({
-										        	 url: 'update_add_distribution_r',
-														method: 'POST',
-														cache: false,
-														data:{
-															rosit:rosit,
-															warehouse_id:warehouse_id,
-															trucking_id:trucking_id
-														},
-														success:function(data)
-														{
-															bootbox.hideAll();
-														  	alert('Trucking and warehouse successfuly added.');
-														}
-													});
-									        	} 
-							        	
+														url: 'ris_edit_final_r',
+														   method: 'POST',
+														   cache: false,
+														   data:{
+																id:id,                       
+																edited_qty:edited_qty,
+																edited_price:edited_price,
+																edited_total:edited_total,
+																
+																qty_approved:qty_approved
+														   },
+														   success:function(data)
+														   {
+															 bootbox.hideAll();
+														 	 bootbox.alert('Quantity and price successfuly updated.');
+														   }
+													   });
+												}   
 									        }
 									    }
 									}); 
-						  
-								}
+						     	}
+							});
+							
+							
+						});
+
+   						$('.add_distribution').on('click', function(){
+   							var rosit = $(this).attr('data-id');
+   							 $.ajax({
+								url: 'add_distribution_r',
+								method: 'POST',
+								cache: false,
+								data:{
+									rosit:rosit
+								},
+								success:function(data)
+								{
+									bootbox.confirm({
+										title:'Please enter trucking and actual release',
+									    message: data,
+									    buttons: {
+									        cancel: {
+									            label: 'No',
+									            className: 'btn-danger'
+									        },
+									         confirm: {
+									            label: 'Yes',
+									            className: 'btn-success'
+									        }
+									    },
+									    callback: function (result) {
+									        if(result){
+											
+												var remarks = $('.remarks').val();
+									           	var trucking_id  = $('.trucking_sel').val();								        		
+												var actualRelease = $('.actualrelease').val();
+												
+
+												if(remarks.length === 0 ){
+													alert('Please enter remarks');
+												}
+												if(actualRelease.length === 0){
+													alert('Please enter actual release');
+												}	
+												else{
+													if(confirm('Are you sure you want to proceed?') == true) {
+															alert(rosit);
+														    $.ajax({
+															 		url: 'update_add_distribution_r',
+															 		method: 'POST',
+															 		cache: false,
+															 		data:{
+															 			rosit:rosit,
+															 			remarks:remarks,
+																		trucking_id:trucking_id,
+																		actualRelease:actualRelease
+															 		},
+															 		success:function(data)
+															 		{
+															 			bootbox.hideAll();
+																 		bootbox.alert('Trucking and actual release was successfuly added to this RIS');
+															 		}
+															});
+
+														
+													} 
+												}							        	
+									        }
+									    }
+									}); 
+						     	}
 							});
 							  
 						});	
@@ -1970,7 +2077,7 @@
 									            label: 'Close',
 									            className: 'btn-info',
 									            callback: function(){
-									                console.log('Custom OK clicked');
+									               
 									            }
 									        }
 									    }
@@ -1991,7 +2098,187 @@
 
 			    }
 
-		public function add_distribution_mod($rosit){
+				
+				
+
+		public function ris_edit_mod($id, $qty, $price){
+
+				$total = $price * $qty;
+
+				echo '<div class="col-md-12">
+				<div class="form-group">
+						<small><a href="javascript:void(0);" data-id="'.$id.'" class="view_edit_history">View edit history</a></small>
+				 </div>
+	      		</div>';
+
+				echo '<div class="col-md-12">
+						  <div class="form-group">
+						 	<label>Qty Released</label>
+							<input type="number" min="0" value="'.$qty.'" class="form-control edited_qty">
+						  </div>
+						</div>';
+
+				echo '<div class="col-md-12">
+						<div class="form-group">
+						   <label>Price</label>
+						  <input type="number" min="0" value="'.$price.'" class="form-control edited_price">
+						</div>
+					  </div>';
+
+				echo '<div class="col-md-12">
+					  <div class="form-group">
+						 <label>Total</label>
+						<input type="number" min="0" value="'.$total.'" class="form-control edited_total" disabled>
+					  </div>
+					</div>'; 
+
+				echo  "<script>
+				$('.edited_qty, .edited_price').on('keyup', function(){
+					$('.edited_total').val($('.edited_qty').val() * $('.edited_price').val());				
+				});
+
+				
+				$('.view_edit_history').on('click',function(){
+					var id = $(this).attr('data-id');
+					$.ajax({
+						url: 'view_edit_history_r',
+						method: 'POST',
+						cache: false,
+						data:{
+							id:id
+						},
+						success:function(data)
+						{ 
+							bootbox.dialog({
+							    title: 'Edit history',
+							    onEscape: true,
+							    message: data,
+								
+							    size: 'extra-small',
+							    buttons: {
+							        ok: {
+							            label: 'Close',
+							            className: 'btn-info',
+							            callback: function(){
+							                console.log('Custom OK clicked');
+							            }
+							        }
+							    }
+							});
+						} 
+			    	});
+				});
+
+				</script>";	
+		}		
+
+		public  function view_edit_history_mod($id){
+				$this->db->select('*');
+				$this->db->from('rros_items_edit_history as edit_history');
+				$this->db->join('users as usr','usr.user_id = edit_history.added_by', 'inner');
+				$this->db->where('edit_history.rros_id', $id);
+				$query = $this->db->get();
+				$data = $query->result_array();
+			
+				echo '<div class="row">
+						<div class="col-md-1">
+							<div class="form-group">
+								<b><label>#</label></b>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<b><label>Released</label></b>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<b><label>Price</label></b>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<b><label>Total</label></b>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<b><label>Peson</label></b>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<b><label>Date</label></b>
+							</div>
+						</div>
+					</div>';
+
+				foreach($data as $key => $value){
+					$key++;
+					echo '<div class="row">
+							<div class="col-md-1">
+								<div class="col-md-2">
+									<p>'.$key.'.</p>
+								</div>
+							</div>
+
+							<div class="col-md-2">
+								<div class="col-md-2">
+									<p>'.$value['qty_realeased'].'.</p>
+								</div>
+							</div>
+
+							<div class="col-md-2">
+								<div class="col-md-2">
+									<p>'.$value['price'].'.</p>
+								</div>
+							</div>
+
+							<div class="col-md-2">
+								<div class="col-md-2">
+									<p>'.$value['total'].'.</p>
+								</div>
+							</div>
+                                							 						
+							<div class="col-md-2">
+								<div class="col-md-2">
+									<p>'.$value['first_name'].' '.$value['last_name'].'.</p>
+								</div>
+							</div>
+                                
+							<div class="col-md-2">
+								<div class="col-md-2">
+									<p>'.$value['created'].'.</p>
+								</div>
+							</div>					
+						</div>';
+				}	
+		}
+
+		public function ris_edit_final_mod($id,$qty_approved,$edited_qty,$edited_price,$edited_total){
+				//update	
+				$this->db->set('qty_released', $edited_qty);
+				$this->db->set('price', $edited_price);
+				$this->db->set('qty_left', $qty_approved - $edited_qty);
+				$this->db->set('total', $edited_total);
+				$this->db->where('id', $id);
+				$this->db->update('rros_items');
+
+				// insert edit_history
+				$data = array(
+					'rros_id'	    => $id,
+					'qty_realeased' => $edited_qty,
+					'price'         => $edited_price,
+					'total'         => $edited_total,
+					'added_by'		=>  $this->session->userdata('user')['user_id'],
+					'created'       => date('Y-m-d H:i:s'),	
+					'deleted'       => date('Y-m-d H:i:s')	
+				);
+				$this->db->insert('rros_items_edit_history', $data);
+
+		}
+
+		public function add_distribution_mod(){
 
 				$this->db->select('*');
 				$this->db->from('trucking');
@@ -2002,7 +2289,9 @@
 				$this->db->from('Warehouse');
 				$query = $this->db->get();
 				$data2 = $query->result_array();
-				echo    '<div class="col-md-12">
+				
+									     		
+						echo    '<div class="col-md-12">
                            <div class="form-group">
                            	<label>Select Warehouse</label>
                              <select class="form-control warehouse_sel">';
@@ -2015,14 +2304,29 @@
 
                         echo '<div class="col-md-12">
                            <div class="form-group">
-                           <label>Select Trucking</label>
+                           <label>Select Trucking*</label>
                               <select class="form-control trucking_sel">';
-                                	  foreach($data1 as $value1 ){
-                                 			echo '<option value ='.$value1['id'].'>'.$value1['description'].'</option>';
-                                	  }
-                        echo'</select>
+                                	 foreach($data1 as $value1){
+                                 		echo '<option value ='.$value1['id'].'>'.$value1['description'].'</option>';
+                                	 }
+                        echo '</select>
+                        	</div>
+                        </div>';
+						
+						echo '
+						<div class="col-md-12">
+						  <div class="form-group">
+						 	<label>Actual Release*</label>
+							<input type="number" min="0" class="form-control actualrelease">
+						  </div>
+						</div>';
+
+						echo '<div class="col-md-12">
+                           <div class="form-group">
+                           	<label>Remarks*</label>
+									<textarea class="form-control remarks"></textarea>
                            </div>
-                         </div>';
+                        </div> ';
 
 		}	    
 
@@ -2049,23 +2353,24 @@
 	    	$this->db->from('users as usr');
 	    	$this->db->where('usr.user_name',$username);
 	    	$this->db->where('usr.password',md5($password));
-			  $query = $this->db->get();
-			  return $query->row_array();
+			 $query = $this->db->get();
+			return $query->row_array();
 	    }
 
 	    public function login_auth_update_mod($id,$user_id,$new_password,$email){
 	    	
 		  	 $data = array(
-			 		'user_id'	 =>	$user_id,
-			 		'email'		 =>	$email,
-			 		'created'    => date('Y-m-d H:i:s'),	
-			 		'deleted'    =>	date('Y-m-d H:i:s')	
+			 		'user_id'  => $user_id,
+			 		'email'	   => $email,
+			 		'created'  => date('Y-m-d H:i:s'),	
+			 		'deleted'  => date('Y-m-d H:i:s')	
 			 );
 			 $this->db->insert('user_details', $data);
 			 $this->db->set('status','1');
 			 $this->db->set('password',md5($new_password));
 			 $this->db->where('id', $id);
 			 $this->db->update('users');
+
 	    }
 
 	    public function save_drrs_mod(
@@ -2095,8 +2400,7 @@
 				$this->db->insert('drrs_request', $data);
 
 	    		for($q = 0; $q < count($item_id_arr); $q++){
-	    			// if($food_qty[$q] !=0 || $food_qty[$q] != null){
-	    					$data1 = array(
+	    			     	$data1 = array(
 									 	'drmd_id'			=> $drmd_id,
 									 	'item'				=> $item_id_arr[$q],
 									 	'item_uom'			=> $cqty_uom_arr[$q],
@@ -2104,11 +2408,11 @@
 									 	'item_qty'  		=> $cqty_release_arr[$q],
 									 	'created'			=> date('Y-m-d H:i:s'),	 
 									 	'deleted'			=> date('Y-m-d H:i:s')	 
-							 );	   
+							);	   
 							$this->db->insert('drrs_items', $data1); 		
-	    			// }
-	    		}
+	    	 	}
 			
+
 
     			$this->db->set('drrs_status','1');
 				$this->db->where('id', $drmd_id);
@@ -2311,26 +2615,20 @@
 	       		$this->db->select('*');
 	       		$this->db->from('trucking');
 	       		$query = $this->db->get();
-			  		$data1 = $query->result_array();
+			  		// $data1 = $query->result_array();
 
-		  		$this->db->select('*');
-		  		$this->db->from('Warehouse');
-		  		$query = $this->db->get();
-		  		$data2 = $query->result_array();
-
-	       		$this->db->select('*,itms.description as spec_items,drs_item.item as drsItm');
+		  		$this->db->select('*,itms.description as spec_items,drs_item.item as drsItm');
 	       		$this->db->from('drrs_items as drs_item');
 	       		$this->db->join('items as itms','itms.id = drs_item.item','inner');
 	       		$this->db->join('uom as uom_desc','uom_desc.id = drs_item.item_uom','inner');
 	       		$this->db->where('drs_item.drmd_id', $drmd_id);
 	       		$this->db->where('drs_item.item_qty !=','0');
 	       		$this->db->order_by('itms.type', 'desc');
-			 			$query = $this->db->get();
-			  		$data = $query->result_array();
-			  		echo '<br><h5>ASSISTANCE</h5><br>';
-					  echo '
-							<div class="row">
-													
+			 	$query = $this->db->get();
+			  	$data = $query->result_array();
+			  	echo '<br><h5>ASSISTANCE</h5><br>';
+				    echo '    
+							<div class="row">				
 			                <div class="col-md-2">
 			                  <div class="form-group">
 			                    <b><label>ITEM</label></b>
@@ -2351,21 +2649,25 @@
 			                    <b><label>APPROVED</label></b>
 			                 </div>
 			               </div>
-		                 <div class="col-md-2">
-		                  <div class="form-group">
-		                    <b><label>QTY RELEASED</label></b>
-		                 </div>
+		                   <div class="col-md-2">
+		                     <div class="form-group">
+		                      <b><label>QTY RELEASED</label></b>
+		                     </div>
 			               </div>
+					
 			               <div class="col-md-2">
 			                  <div class="form-group">
 			                    <b><label>PRICE(₱)</label></b>
 			                 </div>
 			               </div>
-			               <div class="col-md-1">
+
+			               <div class="col-md-2">
 			                  <div class="form-group">
 			                    <b><label>TOTAL(₱)</label></b>
 			                 </div>
 			               </div>
+
+						  
 			            <div>';
 					  foreach($data as $key =>  $value){
 	    			  echo '
@@ -2412,8 +2714,7 @@
 	                      	  </div>
 	                    	</div>
 	             		  </div>';
-   					}	
-
+					}	
 
    					echo '<div class="row">
 	              				<div class="col-md-3">
@@ -2446,7 +2747,7 @@
 					  	</script>';
 	      	}
 
-	      	public function rros_save_req_mod($req_id,$date_let_aprv_drmd,$date_crd_pull_fr_drmd,$date_ris_frw_drmd,$user_id,$item_uom,$items,$qty_requested,$qty_approved,$qty_released,$qty_left,$price,$total){
+	      	public function rros_save_req_mod($req_id,$date_let_aprv_drmd,$date_crd_pull_fr_drmd,$date_ris_frw_drmd,$user_id,$warehouse_origin,$item_uom,$items,$qty_requested,$qty_approved,$qty_released,$qty_left,$price,$total){
 							$data = array(
 							 	'drmd_id'				 => $req_id,
 							 	'date_let_aprv_drmd'	 => date('Y-m-d', strtotime($date_let_aprv_drmd)),
@@ -2460,24 +2761,30 @@
 						  	$this->db->insert('rros_request', $data);
 						  	$ris_no = $this->rros_auto_ris_mod($req_id);
 						  	for($q = 0; $q < count($qty_requested); $q++){
+								//   if($qty_released[$q] != '0' || !empty($qty_released[$q]) || $qty_released[$q] != 0){
+
 									$data = array(
 										'drmd_id'			=> $req_id,
-										'item_uom'			=> $item_uom[$q],
-										'item'				=> $items[$q],
-										'qty_requested'     => $qty_requested[$q],
-										'qty_approved'	    => $qty_approved[$q],
-									  	'qty_released'      => $qty_released[$q],
-									  	'qty_left'			=> $qty_approved[$q] - $qty_released[$q],
-									  	'price'				=> $price[$q],
-									  	'total'				=> $total[$q],
+										'item_uom'			=> $item_uom[$q], 	//array
+										'item'				=> $items[$q], 			//array
+										'qty_requested'     => $qty_requested[$q],	//array
+										'qty_approved'	    => $qty_approved[$q],	//array
+									  	'qty_released'      => $qty_released[$q],	//array
+									  	'qty_left'			=> $qty_approved[$q] - $qty_released[$q], 	//array
+									  	'price'				=> $price[$q],	//array
+									  	'total'				=> $total[$q],	//array
+										'province_origin'   => $warehouse_origin,	//array
 									 	'added_by'			=> $this->session->userdata('user')['user_id'],
-									 	'ris_no'			=> date('ymd') . '-'. $ris_no,
+									 	'ris_no'			=> date('ymd').'-'.$ris_no,
 									  	'field_office'	    => 'FO7',
 										'created'			=> date('Y-m-d H:i:s'),	 
 										'deleted'			=> date('Y-m-d H:i:s')	 
 									);	   
 									$this->db->insert('rros_items', $data);
 
+								//   }
+									
+//
 									$data1 = array(
 										'item_uom'			=> $item_uom[$q],
 										'item'				=> $items[$q],
@@ -2493,7 +2800,7 @@
 									$this->db->insert('rros_items_running_balance', $data1);
 		    			 	}
 
-	      	}
+	      }
 
 	      public function rros_save_req_mod1($id,$req_id,$date_let_aprv_drmd,$date_crd_pull_fr_drmd,$date_ris_frw_drmd,$user_id,$item_uom,$items,$qty_requested,$qty_approved,$qty_released,$qty_left,$price,$total){
 				
@@ -2530,66 +2837,65 @@
 
 	      	public function fetch_report_mod($incident,$province,$municipality,$requester,$datepicker,$datepicker1){
 
-							$this->db->select('*, drmd_req.id as drid  , inci.description as incidesc , req.description as  reqdesc');
+							$this->db->select('*,drs_req.no_beneficiaries as drs_no_bene ,drmd_req.incident as inci_num ,ros_it.id as rosb_id , ros_it.created as rosb_created, drmd_req.id as drid  , inci.description as incidesc , req.description as  reqdesc');
 							$this->db->from('drmd_request as drmd_req');
-							$this->db->join('drrs_request as drs_req','drs_req.drmd_id = drmd_req.id', 'inner');
-							$this->db->join('incident as inci','inci.id = drmd_req.incident', 'inner');
-							$this->db->join('requester as req','req.id = drmd_req.requester', 'inner');
+							$this->db->join('drrs_request as drs_req','drs_req.drmd_id = drmd_req.id', 'left');
+							$this->db->join('incident as inci','inci.id = drmd_req.incident', 'left');
+							$this->db->join('requester as req','req.id = drmd_req.requester', 'left');
+							$this->db->join('drrs_items as drrs_it','drrs_it.drmd_id = drmd_req.id','left');
+							$this->db->join('rros_items as ros_it','ros_it.drmd_id = drmd_req.id','left');
+							
 							// $this->db->join('drrs_request_distri as drs_liq','drs_liq.drmd_id = drmd_req.id','left');						
-							$this->db->join('refprovince as prov', 'prov.provCode = drmd_req.province', 'inner');
-							$this->db->join('refcitymun as muni', 'muni.citymunCode = drmd_req.mucipality', 'inner');
-
+							$this->db->join('refprovince as prov', 'prov.provCode = drmd_req.province', 'left');
+							$this->db->join('refcitymun as muni', 'muni.citymunCode = drmd_req.mucipality', 'left');
+							
 							if($incident != ""){
 								$this->db->where('drmd_req.incident', $incident);
 							}
-							if($province != ""){
+							else if($province != ""){
 								$this->db->where('drmd_req.province', $province);
 							}
-							if($municipality != ""){
+							else if($municipality != ""){
 								$this->db->where('drmd_req.mucipality', $municipality);
 							}
-							if($requester != ""){								
+							else if($requester != ""){		
 								$this->db->where('drmd_req.requester', $requester);
 							}
-							if($datepicker != "" && $datepicker1 != ""){
-								$this->db->or_where('drmd_req.created BETWEEN "'.date('Y-m-d', strtotime($datepicker)). '" and "'.date('Y-m-d', strtotime($datepicker1)).'"');
+							else if($datepicker != "" && $datepicker1 != ""){
+								$this->db->where('drmd_req.created BETWEEN "'.date('Y-m-d', strtotime($datepicker)). '" and "'.date('Y-m-d', strtotime($datepicker1)).'"');
 							}
-							// $this->db->or_where('drmd_req.drrs_status','1');
-							// $this->db->or_where('drmd_req.id IN (SELECT drmd_id FROM drrs_request_distri)', NULL, FALSE);
+							$this->db->group_by('drmd_req.reference_no');
 							$query = $this->db->get();
-							$data  = $query->result_array();
-
+							$data = $query->result_array();
+														
 							foreach($data as $key => $value){
     		  				$key++;
-       		        		// echo '<tr>
-							// 		<td><p>'.$key.'.</p></td>
-							// 		<td><p>'.$value['reference_no'].'</p></td>
-							// 		<td><p>'.$value['incidesc'].'</p></td>
-							// 		<td><p>'.$value['reqdesc'].'</p></td>
-							// 		<td><p>'.$value['provDesc'].'</p></td>
-							// 		<td><p>'.$value['citymunDesc'].'</p></td>
-							// 		<td><p><a class="'.$value['drid'].'" target="_blank" href="fetch_more_r">More Details>></a></p></td>
-		               		// 	  </tr>';
+							$remarks = "";	
+       		        								    
+							if($value['inci_num'] == 1){
+								$remarks = '-'.$value['remarks'];
+							}  
 
 							echo '<tr>
-									<td><p>'.$key.'.</p></td>
-									<td><p>'.$value['provDesc'].'</p></td>
-									<td><p>'.$value['citymunDesc'].'</p></td>
-									<td><p>'.$value['incidesc'].'</p></td>
-									<td><p>1200</p></td>
-									<td><p>'.$value['date_letter_request'].'</p></td>
-									<td><p>Date Letter Request was Received</p></td> 
-									<td><p>Date Response Letter was sent to LGUs</p></td>
-									<td><p>Quantity of FFPs Requested</p></td>
-									<td><p>Quantity of FFPs Released</p></td>
-									<td><p>Released Completed</p></td>
-									<td><p>Food Cost</p></td>
-									<td><p>Cost of Non-Food Items</p></td>
-									<td><p>Cost of Non-Food Items</p></td>
-									<td><p>RDS</p></td>
-								  </tr>';		 
-	    	 		}
+								  	<td><p>'.$key.'.</p></td>
+								 	<td><p>'.$value['provDesc'].'</p></td>
+								 	<td><p>'.$value['citymunDesc'].'</p></td>
+								 	<td><p>'.$value['incidesc'].' '.$remarks.'</p></td>
+									<td><p>'.$value['drs_no_bene'].'</p></th>
+								 	<td><p>'.date_format(new DateTime($value['date_letter_request']), 'd-m-Y').'</p></td>
+							  	 	<td><p>'.number_format($value['item_requested'],2).'</p></td>
+								 	<td><p>'.number_format($value['item_qty'],2).'</p></td>
+								 	<td><p>'.date_format(new DateTime($value['date_approval']), 'd-m-Y').'</p></td>
+									<td><p>'.date_format(new DateTime($value['rosb_created']), 'd-m-Y').'</p></td>
+								 	
+								 </tr>';		 
+	    	 		        }   
 	      	}
+			  						// <td><p>'.number_format($value['total'], 0).'</p></td>
+			  						// <td><p>Cost of Non-Food Items</p></td>
+									// <td><p>Cost of Non-Food Items</p></td>
+									// <td><p>'.number_format($value['total'],2).'</p></td>
+									// <td><p>RDS</p></td>
 
 	      	public function fetch_more_mod($drid){
 	      		  $this->db->select('*, itms.description as itms_description');
@@ -2608,7 +2914,7 @@
                           </tr>
                       </thead>
                       <tbody>';
-                    $prod = 0 ;  
+                   
                    	foreach($data as $key =>  $value){
                    		$key++;
 	                   		echo '<tr>
@@ -2637,23 +2943,23 @@
 							$this->db->update('drmd_request');
 	      	}
 
-	     //  	public function drrs_cancelled_mod(){
-		    //    	$this->db->select('*,drs.created as drscreated,drs.drmd_id as drid, usr_det.first_name as df_name , usr_det.last_name as dl_name, usr_det1.first_name as disFname,usr_det1.last_name as disLname,drmd_req.id as drid,reqs.description as reqsdesc,inci.description as incidesc,ot_inci.incident as ot_inci,drmd_req.incident as inci_num,drmd_req.requester as req_num,other_req.requester as ot_req_desc');
-			   //  	$this->db->from('drrs_disapprove as drs');
-						// $this->db->join('drmd_request as drmd_req','drmd_req.id = drs.drmd_id','inner');
-						// $this->db->join('incident as inci', 'inci.id = drmd_req.incident','left');
-						// $this->db->join('drmd_other_request_inci as ot_inci','ot_inci.drmd_id = drmd_req.id','left');
-						// $this->db->join('requester as reqs','reqs.id = drmd_req.requester','left');
-						// $this->db->join('drmd_other_requester as other_req','other_req.drmd_id = drmd_req.id','left');
-			   //  	$this->db->join('refprovince as prov', 'prov.provCode = drmd_req.province','inner');
-			   //  	$this->db->join('refcitymun as mun', 'mun.citymunCode = drmd_req.mucipality','inner');
-			   //  	$this->db->join('users as usr_det', 'usr_det.user_id = drmd_req.added_by','inner');
-			   //  	$this->db->join('users as usr_det1', 'usr_det1.user_id = drs.added_by','inner');
-			   //  	$this->db->join('drrs_request as drrs_req', 'drrs_req.drmd_id = drmd_req.id','inner');
-			   //  	$this->db->join('users as usr_det1', 'usr_det1.user_id = drrs_req.added_by','inner');
-			   //  	$query = $this->db->get();
-		    // 		return $query->result_array();
-	     //  	}
+			//  	public function drrs_cancelled_mod(){
+			//    	$this->db->select('*,drs.created as drscreated,drs.drmd_id as drid, usr_det.first_name as df_name , usr_det.last_name as dl_name, usr_det1.first_name as disFname,usr_det1.last_name as disLname,drmd_req.id as drid,reqs.description as reqsdesc,inci.description as incidesc,ot_inci.incident as ot_inci,drmd_req.incident as inci_num,drmd_req.requester as req_num,other_req.requester as ot_req_desc');
+			//  	$this->db->from('drrs_disapprove as drs');
+			// 		$this->db->join('drmd_request as drmd_req','drmd_req.id = drs.drmd_id','inner');
+			// 		$this->db->join('incident as inci', 'inci.id = drmd_req.incident','left');
+			// 		$this->db->join('drmd_other_request_inci as ot_inci','ot_inci.drmd_id = drmd_req.id','left');
+			// 		$this->db->join('requester as reqs','reqs.id = drmd_req.requester','left');
+			// 		$this->db->join('drmd_other_requester as other_req','other_req.drmd_id = drmd_req.id','left');
+			//  	$this->db->join('refprovince as prov', 'prov.provCode = drmd_req.province','inner');
+			//  	$this->db->join('refcitymun as mun', 'mun.citymunCode = drmd_req.mucipality','inner');
+			//  	$this->db->join('users as usr_det', 'usr_det.user_id = drmd_req.added_by','inner');
+			//  	$this->db->join('users as usr_det1', 'usr_det1.user_id = drs.added_by','inner');
+			//  	$this->db->join('drrs_request as drrs_req', 'drrs_req.drmd_id = drmd_req.id','inner');
+			//  	$this->db->join('users as usr_det1', 'usr_det1.user_id = drrs_req.added_by','inner');
+			//  	$query = $this->db->get();
+			// 		return $query->result_array();
+			//  	}
 
 	      	public function drrs_undo_ctrl($drid){
 							$this->db->where('drmd_id', $drid);
@@ -2665,7 +2971,7 @@
 
 	      	public function rros_auto_ris_mod($req_id){
 
-	      			$count = 1;
+	      		  $count = 1;
 	      		  $this->db->select('*');
 							$this->db->from('ris as rst');
 						  $this->db->where('SUBSTR(rst.ris_no,1,7)', date('ymd') . '-');
@@ -2677,11 +2983,11 @@
 							}
 							
 							$data = array(
-								'drmd_id' => $req_id,	
-								'ris_no'	=> date('ymd') . '-' . $count,
-								'field_office' => 'FO7',
-								'created' => date('Y-m-d H:i:s'),
-								'deleted' => date('Y-m-d H:i:s'),
+								'drmd_id' 		=> $req_id,	
+								'ris_no'		=> date('ymd') . '-' . $count,
+								'field_office' 	=> 'FO7',
+								'created' 		=> date('Y-m-d H:i:s'),
+								'deleted' 		=> date('Y-m-d H:i:s'),
 							);
 							$this->db->insert('ris', $data);
 							return $count;
@@ -2695,10 +3001,10 @@
 							$this->db->join('refcitymun as city','city.provCode = prov.provCode','inner');
 							$this->db->where('reg.regCode','07');
 							$query = $this->db->get();
-	      		  	return $query->result_array();
+	      		  			return $query->result_array();
 						}
 			
-						public function rros_delinquent_mod(){
+					public function rros_delinquent_mod(){
 							$this->db->select('*, usr_det1.first_name as f_name, usr_det1.last_name as l_name , usr_det.first_name as df_name , usr_det.last_name as dl_name,drmd_req.id as drid,reqs.description as reqsdesc,inci.description as incidesc,ot_inci.incident as ot_inci,drmd_req.incident as inci_num,drmd_req.requester as req_num,other_req.requester as ot_req_desc');
 					  		$this->db->from('rros_items_running_balance as ros_bal');
 					  		$this->db->join('drmd_request as drmd_req','drmd_req.id = ros_bal.drmd_id','inner');
@@ -2723,21 +3029,21 @@
 			       		$this->db->select('*');
 			       		$this->db->from('trucking');
 			       		$query = $this->db->get();
-					  		$data1 = $query->result_array();
+					  	$data1 = $query->result_array();
 					  		
-					  		$this->db->select('*');
-					  		$this->db->from('Warehouse');
-					  		$query = $this->db->get();
-					  		$data2 = $query->result_array();
+					  	$this->db->select('*');
+					  	$this->db->from('Warehouse');
+					  	$query = $this->db->get();
+					  	$data2 = $query->result_array();
 
 			       		$this->db->select('*,uom_desc.description as uom_desc, rros_it.id as rros_it_id');
 			       		$this->db->from('rros_items_running_balance as rros_it');
 			       		$this->db->join('uom as uom_desc', 'uom_desc.id = rros_it.item_uom','inner');
-			    			$this->db->join('items as itms', 'itms.id = rros_it.item','inner');
-			    			$this->db->order_by('rros_it.id','desc');
+			    		$this->db->join('items as itms', 'itms.id = rros_it.item','inner');
+			    		$this->db->order_by('rros_it.id','desc');
 			       		$this->db->where('rros_it.drmd_id', $drmd_id);
-					 			$query = $this->db->get();
-					  		$data = $query->result_array();
+					 	$query = $this->db->get();
+					  	$data = $query->result_array();
 					  		echo '<br><h5>ASSISTANCE</h5><br>';
 							  echo '
 									<div class="row">
@@ -2942,7 +3248,7 @@
 						$this->db->join('users as usr','usr.user_id = stf.added_by','inner');
 						$this->db->order_by('stf.id','desc');
 						$query = $this->db->get();
-	      		return $query->result_array();
+	      				return $query->result_array();
     			}
 
 			 	public function	get_latest_fund_mod(){
@@ -2951,13 +3257,14 @@
 						$this->db->order_by('stf.id','desc');
 						$this->db->limit(1);
 						$query = $this->db->get();
-	      				 return $query->row();
+	      				return $query->row();
 			 	}
 
 			 	public function get_running_data_mod(){
 			 			$this->db->select('*,sum(rosb.qty_left) as total_per_lgu, sum(rosb.qty_approved) as total_app_perlgu ,rqstr.description as reqsdesc, drmd_req.reference_no, municipality.citymunDesc as muniDesc, rosb.qty_approved , rosb.qty_released, revprov.provCode as provinceCode, rosb.drmd_id as rosb_id , inci.description as incidesc, drmd_req.incident as inci_num, drmd_req.requester as req_num,
 			 				ot_inci.incident as ot_inci , other_req.requester as ot_req_desc');
 						$this->db->from('rros_items_running_balance as rosb');
+				
 						$this->db->join('drmd_request as drmd_req','drmd_req.id = rosb.drmd_id', 'inner');
 						$this->db->join('refcitymun as municipality','municipality.citymunCode = drmd_req.mucipality','inner');
 						$this->db->join('refprovince as revprov','revprov.provCode = municipality.provCode','inner');
@@ -2968,6 +3275,7 @@
 						// $this->db->join('delivery_and_trucking as del_trc','del_trc.id = rosb.id','inner');
 					    // $this->db->where('rosb.id IN (SELECT rrosit_id FROM delivery_and_trucking)', NULL, FALSE);
 						$this->db->group_by('rosb.drmd_id');
+						
 						// $this->db->order_by('municipality.citymunCode','asc');
 						
 						$query = $this->db->get();
@@ -3154,16 +3462,16 @@
 			 		}
 
 			 		// <div class="col-md-2">
-				  //                   		<div class="form-group">
-				  //                     	  <p>'.$value['wrhs_description'].'</p>
-				  //                     	 </div>
-				  //                   	</div>
+					//                   		<div class="form-group">
+					//                     	  <p>'.$value['wrhs_description'].'</p>
+					//                     	 </div>
+					//                   	</div>
 
-				  //                   	<div class="col-md-1">
-				  //                   		<div class="form-group">
-				  //                     	  <p>'.$value['trck_description'].'</p>
-				  //                     	 </div>
-				  //                   	</div>
+					//                   	<div class="col-md-1">
+					//                   		<div class="form-group">
+					//                     	  <p>'.$value['trck_description'].'</p>
+					//                     	 </div>
+					//                   	</div>
 
 			 		public function profile_data_mod(){
 			 				$this->db->select('*');
@@ -3245,10 +3553,10 @@
 						$this->db->select('*, usr_det1.first_name as f_name, usr_det1.last_name as l_name , usr_det.first_name as df_name , usr_det.last_name as dl_name,drmd_req.id as drid,reqs.description as reqsdesc,inci.description as incidesc,ot_inci.incident as ot_inci,drmd_req.incident as inci_num,drmd_req.requester as req_num,other_req.requester as ot_req_desc');
 				  		$this->db->from('rros_items_running_balance as ros_bal');
 				  		$this->db->join('drmd_request as drmd_req','drmd_req.id = ros_bal.drmd_id','inner');
-							$this->db->join('incident as inci', 'inci.id = drmd_req.incident','left');
-							$this->db->join('drmd_other_request_inci as ot_inci','ot_inci.drmd_id = drmd_req.id','left');
-							$this->db->join('requester as reqs','reqs.id = drmd_req.requester','left');
-							$this->db->join('drmd_other_requester as other_req','other_req.drmd_id = drmd_req.id','left');
+						$this->db->join('incident as inci', 'inci.id = drmd_req.incident','left');
+						$this->db->join('drmd_other_request_inci as ot_inci','ot_inci.drmd_id = drmd_req.id','left');
+						$this->db->join('requester as reqs','reqs.id = drmd_req.requester','left');
+						$this->db->join('drmd_other_requester as other_req','other_req.drmd_id = drmd_req.id','left');
 				    	$this->db->join('refprovince as prov', 'prov.provCode = drmd_req.province','inner');
 				    	$this->db->join('refcitymun as mun', 'mun.citymunCode = drmd_req.mucipality','inner');
 				    	$this->db->join('users as usr_det', 'usr_det.user_id = drmd_req.added_by','inner');
@@ -3374,7 +3682,7 @@
 			    		return $query->num_rows();
     				}
 
-    				public function update_add_distribution_mod($rosit, $warehouse_id, $trucking_id){
+    				public function update_add_distribution_mod($rosit,$remarks,$trucking_id,$actualRelease){
 			       	 	$data = array(
 								 'rrosit_id'	=> $rosit,
 								 'warehouse' 	=> $warehouse_id,
@@ -3438,8 +3746,8 @@
 						                  </div>
 						                </div>
 						             <div>';
-						foreach($data as $key => $value){
 
+						foreach($data as $value){
 							echo '  <div class="row">
 				                    	<div class="col-md-4">
 				                    		  <div class="form-group">
@@ -3467,16 +3775,147 @@
 
 
     				public function su_reset_user_mod($id){
-    					$this->db->set('status','0');
-    					$this->db->set('password',md5(12345));
+    					$this->db->set('status', '0');
+    					$this->db->set('password', md5(12345));
 						$this->db->where('id', $id);
 						$this->db->update('users');
-
-
 					}
 
-    }
+					public function update_pass_mod($currentpassword,$newpassword){
+						
+						$this->db->select('*');
+						$this->db->from('users as usr');
+						$this->db->where('usr.user_id',  $this->session->userdata('user')['user_id']);
+						$this->db->where('usr.password', md5($currentpassword));
+						$query = $this->db->get();
+						$data = $query->row_array();
+						if($data){
+    						$this->db->set('password', md5($newpassword));
+							$this->db->where('user_id',  $this->session->userdata('user')['user_id']);
+							$this->db->update('users');							
+							echo 1;
+						}
+						else{
+						    echo 2;
+						}
+    				}
 
+					public function drmd_response_letter_mod($id){
+						
+						$this->db->select('*');
+						$this->db->from('drmd_date_response as drmd_d_r');
+						$this->db->where('drmd_d_r.drmd_id', $id);
+						$this->db->order_by('drmd_d_r.id','desc');
+						$this->db->limit(1);
+						
+						$query = $this->db->get();
+						$data = $query->row_array();
+			
+    					echo '<div class="row">
+								<div class="col-md-12">
+							     	<label for="exampleFormControlSelect2">Date response letter sent</label>
+										<input type="text" value="'.$data['response_date'].'" class="form-control response_date" id="datepicker1" readonly="true">
+							  	</div>
+							  </div>';
+					
+						echo '<script type="text/javascript">
+									$(function() {
+										$("#datepicker1").datepicker();
+									});
+							  </script>';
+					}
+
+					public function drmd_save_response_letter_mod($response_date,$id){
+						$data = array(
+							'drmd_id'		 => $id,
+							'response_date'  => date('Y-m-d H:i', strtotime($response_date.date('H:i'))),
+							'added_by'	     => $this->session->userdata('user')['user_id'],
+							'created'		 => date('Y-m-d H:i:s'),	 
+							'deleted'		 => date('Y-m-d H:i:s')	
+				   		);
+				   		$this->db->insert('drmd_date_response', $data);
+					}
+
+					public function drmd_view_response_letter_mod($drmd_id){
+						
+						$this->db->select('*,date_res.drmd_id as date_res_id,date_res.created as date_res_created');
+						$this->db->from('drmd_date_response as date_res');
+						$this->db->join('users as usr','usr.user_id = date_res.added_by','inner');
+						$this->db->where('date_res.drmd_id',  $drmd_id);
+						$this->db->order_by('date_res.id','desc');
+
+						$query = $this->db->get();
+						$data = $query->result_array();
+						
+							echo '<div class="row">
+						                <div class="col-md-4">
+						                  <div class="form-group">
+						                    <b><label>Date of response</label></b>
+						                  </div>
+						                </div> 
+
+						                <div class="col-md-4">
+						                  <div class="form-group">
+						                    <b><label>Edited by</label></b>
+						                  </div>
+						                </div> 
+
+						                 <div class="col-md-4">
+						                  <div class="form-group">
+						                    <b><label>Date proccessed</label></b>
+						                  </div>
+						                </div>
+						            <div>';
+
+						foreach($data as $value){
+								echo '<div class="row">
+				                    	<div class="col-md-4">
+				                    		  <div class="form-group">
+				                      		  <p>'.$value['response_date'].'</p>
+				                      	  </div>
+				                    	</div>   
+
+				                    	<div class="col-md-4">
+				                    		  <div class="form-group">
+				                      		  <p>'.$value['first_name'].' '.$value['last_name'].'</p>
+				                      	  </div>
+				                    	</div>
+									
+				                    	<div class="col-md-4">
+				                    		  <div class="form-group">
+				                      		  <p>'.date('y-m-d', strtotime($value['date_res_created'])).'</p>
+				                      	  </div>
+				                    	</div>			            
+						 		    </div>';
+						}			
+					}
+
+					public function wr_toreleas_mod(){
+						$province = "";
+						if($this->session->userdata('user')['role'] == '7'){
+							$province = '0712';
+						}
+						if($this->session->userdata('user')['role'] == '8'){
+							$province = '0722';
+						}
+						if($this->session->userdata('user')['role'] == '9'){
+							$province = '0746';
+						}
+
+						$this->db->select('*,drreq.id as drid');
+			    		$this->db->from('rros_items as rosit');
+						$this->db->join('drmd_request as drreq', 'drreq.id  = rosit.drmd_id', 'left');
+						$this->db->join('refcitymun as citymun', 'citymun.citymunCode = drreq.mucipality', 'left');
+						$this->db->join('refprovince as refprov','refprov.provCode = citymun.provCode','left');
+				    	$this->db->group_by('rosit.drmd_id');
+				    	$this->db->order_by('rosit.id', 'desc');
+						$this->db->where('rosit.province_origin', $province);
+				    	$query = $this->db->get();
+			    		return $query->result_array();
+						
+					}	
+					
+    }
 ?>
 
 

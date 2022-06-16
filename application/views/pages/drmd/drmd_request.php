@@ -22,7 +22,7 @@
                                 <div class="row">
                                 <div class="col-md-3">
                                    <div class="form-group">
-                                    <label for="">TYPE OF INCIDENT</label>
+                                    <label for="">TYPE OF INCIDENT*</label>
                                     <select class="form-control" id="incident">
                                          <?php
                                               foreach($get_incident as $value){ 
@@ -41,7 +41,7 @@
 
                                    <div class="col-md-3">
                                      <div class="form-group">
-                                      <label for="">PROVINCE</label>
+                                      <label for="">PROVINCE*</label>
                                         <select class="form-control" id="province">
                                              <?php
                                                   foreach($get_province as $value){ 
@@ -54,7 +54,7 @@
 
                                   <div class="col-md-3">
                                    <div class="form-group">
-                                    <label for="">MUNICIPALITY</label>
+                                    <label for="">MUNICIPALITY*</label>
                                          <select class="form-control" id="municipality">
                                              <?php
                                                   foreach($get_default_city as $value){ 
@@ -69,7 +69,7 @@
                                  
                                  <div class="col-md-3">
                                     <div class="form-group">
-                                    <label for="">REQUESTER</label>
+                                    <label for="">REQUESTER*</label>
                                          <select class="form-control" id="requester">
                                              <?php
                                                   foreach($get_requester as $value){ 
@@ -88,7 +88,7 @@
 
                                    <div class="col-md-4 otherrequester">
                                       <div class="form-group">
-                                        <label for="exampleFormControlSelect2">REMARKS</label>
+                                        <label for="exampleFormControlSelect2">REMARKS*</label>
                                           <textarea type="text" placeholder="Enter remarks if available" class="form-control" id="remarks" ></textarea>    
                                       </div>
                                   </div>
@@ -101,7 +101,7 @@
                                  <div class="row">
                                    <div class="col-md-6">
                                     <div class="form-group">
-                                      <label for="exampleFormControlSelect2">DATE LETTER REQUEST(with complete attachments) RECEIVED</label>
+                                      <label for="exampleFormControlSelect2">DATE LETTER REQUEST(with complete attachments) RECEIVED*</label>
                                        <div id="datepicker-popup" class="input-group date datepicker navbar-date-picker">
                                         <span class="input-group-addon input-group-prepend border-right">
                                           <span class="icon-calendar input-group-text calendar-icon"></span>
@@ -112,7 +112,7 @@
                                     </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
-                                        <label for="exampleFormControlSelect2">DATE FORWARDED TO DRRS</label>
+                                        <label for="exampleFormControlSelect2">DATE FORWARDED TO DRRS*</label>
                                            <div id="datepicker-popup" class="input-group date datepicker navbar-date-picker">
                                              <span class="input-group-addon input-group-prepend border-right">
                                                <span class="icon-calendar input-group-text calendar-icon"></span>

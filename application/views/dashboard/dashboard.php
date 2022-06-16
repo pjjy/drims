@@ -10,7 +10,6 @@
                       <div class="col-sm-9">
                        <p style="color:gray; font-size: 9;"><a style="text-decoration:none;" href="#" class="minimize_btn"><b>HIDE/SHOW WEATHER FORECAST</b></a></p>  
                       </div>
-
                       <!-- <div class="col-sm-2">
                         <input type="text" placeholder="Search" class="form-control search_txt">
                       </div> -->
@@ -18,12 +17,9 @@
                      <!-- <div class="col-sm-1">
                        <a href="javascript:void(0)"  class="btn btn-otline-dark search"> <i class="icon-magnifying-glass"></i> Search</a>
                      </div> -->
-
-                     
                       <div class="row windy">
-                       
                           <div class="card-body">
-                            <iframe width="1600" height="500" src="https://embed.windy.com/embed2.html?lat=10.310&lon=123.893&detailLat=10.310&detailLon=123.893&width=400&height=500&zoom=5&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=&calendar=now&pressure=true&type=map&location=coordinates&detail=&metricWind=default&metricTemp=default&radarRange=-1" frameborder="0"></iframe>
+                            <!-- <iframe width="1600" height="500" src="https://embed.windy.com/embed2.html?lat=10.310&lon=123.893&detailLat=10.310&detailLon=123.893&width=400&height=500&zoom=5&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=&calendar=now&pressure=true&type=map&location=coordinates&detail=&metricWind=default&metricTemp=default&radarRange=-1" frameborder="0"></iframe> -->
                               <br>
                               <br>
                               <br>
@@ -33,14 +29,11 @@
                       <br>
                       <br>
                       <!-- <hr> -->
-                      <div class="row">
-                                            
+                      <div class="row">            
                                 <div class="d-sm-flex justify-content-between align-items-start">
                                     <h4>FILTER HERE</h4>
                                 </div>
-                                
                                 <hr>
-
                                 <div class="row">
                                     
 																	<div class="col-md-2">
@@ -145,15 +138,23 @@
                                 <br><br>
                                 <div class="row">
                   								<div class="col-12 report_tbl">
-                                        <table id="" class="" style="width:100%">
+                                        <table id="tbl_exporttable_to_xls" class="display nowrap" style="width:100%">
                                               <thead>
                                                   <tr>
 	                                                    <th><p>#</p></th>
-	                                                    <th><p>Reference No.</p></th>
-	                                                    <th><p>Incident</p></th>
-	                                                    <th><p>Requester</p></th>
 	                                                    <th><p>Province</p></th>
 	                                                    <th><p>Municipality</p></th>
+	                                                    <th><p>Incident</p></th>
+                                                      <th><p>Affected families</p></th>
+	                                                    <!-- <th><p>Quantity requested</p></th> -->
+	                                                    <th><p>Date letter request</p></th>
+                                                      <!-- <th><p>Date letter request</p></th> -->
+                                                    
+                                                      <!-- <th><p>S</p></th> -->
+                                                      <th><p>Quantity requested</p></th>
+                                                      <th><p>Quantity approved</p></th>
+                                                      <th><p>Date approved</p></th>
+                                                      <th><p>Date first release</p></th>
 	                                                    <!-- <th><p>Distribution area</p></th> -->
 	                                                  	<!--   <th><p>Total</p></th> -->
                                                   </tr>
@@ -161,9 +162,14 @@
                                               <tbody class="rep_result">
 
                                               </tbody>
-                                        </table>
+                                              <br>
+                                                 <a href="javascript:void(0);" onclick="ExportToExcel('xlsx')" class="btn_dl_excel"><small>Download as excel</small> <img src="assets/images/xls.png" width="30" height="30" alt="logo"></a>
+                                              <br><br>
+                                            </table>
                                  	 </div>    
                                	</div>  
+                                        
+
                                <hr>                            
                               </div>
                            <br>   
@@ -173,17 +179,17 @@
                         <div class="statistics-details d-flex align-items-center justify-content-between">
                           
                            <div>
-                            <p class="statistics-title">OVERALL ASSISTANCE</p>
+                            <p class="statistics-title">TOTAL COST OF ASSISTANCE</p>
                             <h3 class="rate-percentage">&#8369; <?php echo number_format($total_assistance->total,2); ?></h3>
                            </div>
                           
                            <div>
-                            <p class="statistics-title">OVERALL FOOD COST </p>
+                            <p class="statistics-title">FOOD COST </p>
                             <h3 class="rate-percentage">&#8369; <?php echo number_format($get_cost_food->total_food_item,2); ?></h3>
                            </div>
 
                            <div>
-                            <p class="statistics-title">OVERALL NON-FOOD COST </p>
+                            <p class="statistics-title">NON-FOOD COST </p>
                             <h3 class="rate-percentage">&#8369; <?php echo number_format($get_cost_non_food->total_food_item,2); ?></h3>
                            </div>
 
@@ -225,7 +231,7 @@
                                
                                 echo '<div class="col-6 grid-margin stretch-card">
                                   <div class="card card-rounded">
-                                   <div style="overflow-y: auto; overflow-x: hidden; height:500px;"> 
+                                   <div style="overflow-y: auto; overflow-x: hidden; height:580px;"> 
                                     <div class="card-body">
 
                                      <h4 class="align-baseline"><b>'.$value1['provDesc'].'</b></h4> 
@@ -262,7 +268,7 @@
                                                           if($percent == 100){
                                                              $statusBar = "bg-success";
                                                              $status    = "badge-opacity-success";
-                                                             $text      = "Completed";
+                                                             $text      = "View details";
                                                           }
                                                           if($value1['provCode'] == $value['provinceCode']){
                                                               $incident_name = $value['incidesc'];
@@ -281,13 +287,12 @@
                                                                  <h6>'.$value['muniDesc'].'</h6>
                                                                  <p>'.$incident_name.'</p>
                                                                  <p>'.$requester_name.'</p>
-                                                               
-                                                               </td>
+                                                                </td>
                                                                <td>
                                                                  <div>
                                                                    <div class="d-flex justify-content-between align-items-center mb-1 max-width-progress-wrap">
                                                                      <p class="text-success">'. $percent.'%</p>
-                                                                     <p>'.$total_relase_per_lgu.'/'.$value['total_app_perlgu'].'</p>
+                                                                     <p>'.number_format($total_relase_per_lgu).'/'.number_format($value['total_app_perlgu']).'</p>
                                                                    </div>
                                                                    <div class="progress progress-md">
                                                                      <div class="progress-bar '.$statusBar.'" role="progressbar" style="width: '.$percent.'%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
@@ -297,7 +302,6 @@
                                                               <td><a href="javascript:void(0);" class="dash_view_det" id-id="'.$value['rosb_id'].'"><div class="badge '.$status.'">'.$text.'</div></a></td>
                                                          </tr> ';
                                                       }
-
                                                     }
                                         echo  '</tbody>
                                        </table> 
@@ -403,14 +407,11 @@
                                                   <tr>
                                                      <th>#</th>
                                                      <th>Reference #</th>
-                                                     <th>Incident</th>
-                                                     <th>Province</th>
-                                                     <th>Municipality</th>
-                                                     <th>Requester</th>
-                                                     
-                                                     <th>More</th>
-                                                     
-                                                    
+                                                     <th><p>Incident</p></th>
+                                                     <th><p>Province</p></th>
+                                                     <th><p>Municipality</p></th>
+                                                     <th><p>Requester</p></th>
+                                                     <th><p>More</p></th>                                           
                                                   </tr>
                                                </thead>
                                               <tbody>
@@ -418,18 +419,26 @@
                                                     foreach($get_drmd_request as $key =>  $value){ 
                                                       $incident_name = $value['incidesc'];
                                                       $requester_name = $value['reqsdesc'];
+                                                      $remarks = "";
                                                       if($value['inci_num'] == 13){
-                                                        $incident_name = 'u.s: '.$value['ot_inci'];
+                                                        $incident_name = $value['ot_inci'];                                                  
                                                       }
+
+                                                      
+                                                      if($value['inci_num'] == 1){
+                                                        $remarks = '-'.$value['remarks'];
+                                                      }
+
                                                       if($value['req_num'] == 11){
-                                                        $requester_name = 'u.s: '.$value['ot_req_desc'];
+                                                        $requester_name = $value['ot_req_desc'];
                                                       }
+
                                                        $key++;
                                                         echo 
                                                         '<tr>
                                                           <td><p>'.$key.'</p></td>
                                                           <td><p>'.$value['reference_no'].'</p></td>
-                                                          <td><p>'.$incident_name.'<p></td>
+                                                          <td><p>'.$incident_name.' '.$remarks.'<p></td>
                                                           <td><p>'.ucfirst(strtolower($value['provDesc'])).'</p></td>
                                                           <td><p>'.ucfirst(strtolower($value['citymunDesc'])).'</p></td>
                                                           <td><p>'.$requester_name.'</p></td>
@@ -444,7 +453,66 @@
                                         </table>
                                     </div>
                                 </div>
-                             </div>
+
+                                <br>
+
+                                <div class="d-sm-flex justify-content-between align-items-start">
+                                  
+                                <div class="row" style="width:100%">
+                                    <table id="disapp_dash_table">
+                                            <thead>
+                                                  <tr>
+                                                     <th>#</th>
+                                                     <th>Reference #</th>
+                                                     <th><p>Incident</p></th>
+                                                     <th><p>Province</p></th>
+                                                     <th><p>Municipality</p></th>
+                                                     <th><p>Requester</p></th>
+                                                     <th><p>More</p></th>                                           
+                                                  </tr>
+                                               </thead>
+                                              <tbody>
+                                                 <?php
+                                                    foreach($get_drrs_disap_request as $key =>  $value){ 
+                                                      $incident_name = $value['incident_desc'];
+                                                      $requester_name = $value['requester_desc'];
+                                                      $remarks = "";
+                                                      if($value['inci_num'] == 13){
+                                                        $incident_name = $value['ot_inci'];                                                  
+                                                      }
+
+                                                      
+                                                      if($value['inci_num'] == 1){
+                                                        $remarks = '-'.$value['remarks'];
+                                                      }
+
+                                                      if($value['req_num'] == 11){
+                                                        $requester_name = $value['ot_req_desc'];
+                                                      }
+
+                                                       $key++;
+                                                        echo 
+                                                        '<tr>
+                                                          <td><p>'.$key.'</p></td>
+                                                          <td><p>'.$value['reference_no'].'</p></td>
+                                                          <td><p>'.$incident_name.' '.$remarks.'<p></td>
+                                                          <td><p>'.ucfirst(strtolower($value['provDesc'])).'</p></td>
+                                                          <td><p>'.ucfirst(strtolower($value['citymunDesc'])).'</p></td>
+                                                          <td><p>'.$requester_name.'</p></td>
+                                                          <td>
+                                                              <a href="javascript:void(0);" <button data-id="'.$value['drid'].'" class="btn_drmd_disapp_details"><div class="badge badge-opacity-warning">View Details</div></a>
+                                                          </td>
+                                                        </tr>';
+                                                    } 
+                                                  ?>
+                                                <!-- <td><a href=""><p>Expand</p></a></td> -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -565,4 +633,40 @@
     </div>
     <!-- page-body-wrapper ends -->
   </div>
-  <!-- container-scroller -->
+
+   <!-- container-scroller -->
+   <style>
+    /* width */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 5px grey; 
+      border-radius: 10px;
+    }
+    
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: grey; 
+      border-radius: 10px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #b5aba9; 
+    }
+  </style>
+
+<script>
+
+function ExportToExcel(type, fn, dl) {
+    var elt = document.getElementById('tbl_exporttable_to_xls');
+    var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+    return dl ?
+        XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+        XLSX.writeFile(wb, fn || (Date.now() + '.' + (type || 'xlsx')));
+}
+
+</script>

@@ -54,8 +54,8 @@
                                                           <td><p>'.$requester_name.'</p></td>
                                                           <td><p>'.ucfirst(strtolower($value['first_name'])).' '.ucfirst(strtolower($value['last_name'])).'</p></td>
                                                           <td>
-                                                              <p><a class="drrs_process" data-id="'.$value['drid'].'" data-id1="'.$value['reference_no'].'" data-id2="'.$incident_name.'" data-id3="'.$value['provDesc'].'" data-id4="'.$value['citymunDesc'].'" data-id5="'.$requester_name.'" data-id6="'.$value['disctrictcode'].'" href="javascript:void(0);">Approve</a> &nbsp;&nbsp;&nbsp;
-                                                              <a class="drrs_process_disapprove" data-id="'.$value['drid'].'" data-id1="'.$value['reference_no'].'" data-id2="'.$incident_name.'" data-id3="'.$value['provDesc'].'" data-id4="'.$value['citymunDesc'].'" data-id5="'.$requester_name.'"  data-id6="'.$value['disctrictcode'].'" href="javascript:void(0);">Disapprove</a></p>
+                                                            <a href="javascript:void(0);" data-id="'.$value['drid'].'" data-id1="'.$value['reference_no'].'" data-id2="'.$incident_name.'" data-id3="'.$value['provDesc'].'" data-id4="'.$value['citymunDesc'].'" data-id5="'.$requester_name.'" data-id6="'.$value['disctrictcode'].'"  class="drrs_process"  <button=""><div class="badge badge-opacity-success">Approved</div></a>
+                                                            <a href="javascript:void(0);" data-id="'.$value['drid'].'" data-id1="'.$value['reference_no'].'" data-id2="'.$incident_name.'" data-id3="'.$value['provDesc'].'" data-id4="'.$value['citymunDesc'].'" data-id5="'.$requester_name.'"  data-id6="'.$value['disctrictcode'].'" class="drrs_process_disapprove"  <button=""><div class="badge badge-opacity-warning">Disapproved</div></a>
                                                           </td>
                                                         </tr> ';
                                                     } 
