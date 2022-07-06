@@ -236,8 +236,7 @@
 				$('.municipality').val(data4);
 				$('.requester').val(data5);
 				$('.congressional_disctrict').val(data6);
-
-						
+					
 					$.ajax({
 						url: 'drrs_get_item_r',
 						method: 'POST',
@@ -250,9 +249,10 @@
 							$(".assist").html(data);
 						} 
 					})
-				
-			
+			});
 
+			$('.drrs_canel_req').on('click',function(){
+				$('.autofilled').hide();
 			});
 
 			$('.drrs_process_disapprove').on('click',function(){
@@ -843,6 +843,11 @@
 					});
 				}
 			});	
+
+
+			$('.rros_cancel_req').on('click',function(){
+				$('.autofilled').hide();
+			});
 
 
 			$('.rros_save_req1').on('click',function(){

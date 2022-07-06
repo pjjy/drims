@@ -223,7 +223,7 @@ class drimscontroller extends CI_Controller {
 			if($this->session->userdata('user')['role'] == '6'){
 				$this->load->view('sidebar/drimssidebar', $sideData);
 			}
-			if($this->session->userdata('user')['role'] == '7' || $this->session->userdata('user')['role'] == '8' || $this->session->userdata('user')['role']){
+			if($this->session->userdata('user')['role'] == '7' || $this->session->userdata('user')['role'] == '8' || $this->session->userdata('user')['role'] == '9'){
 				$this->load->view('sidebar/warehousesidebar', $sideData);
 			}
 
@@ -404,7 +404,7 @@ class drimscontroller extends CI_Controller {
 
 		if($this->session->userdata('user')['role'] == 4 && $this->session->userdata('user')['status'] == 1){
 			$this->load->view('header/header');
-			$this->load->view('sidebar/drrssidebar',$sideData);
+			$this->load->view('sidebar/drrssidebar', $sideData);
 			$this->load->view('pages/drrs/drrs_request', $data);
 			$this->load->view('footer/footer');
 			$this->load->view('js/js');
@@ -972,7 +972,8 @@ class drimscontroller extends CI_Controller {
 
 	public function update_add_distribution_ctrl(){
 		if(isset($_POST['rosit'])){
-			$this->drimsmodel->update_add_distribution_mod($_POST['rosit'],$_POST['remarks'],$_POST['trucking_id'],$_POST['actualRelease']);
+			// $this->drimsmodel->update_add_distribution_mod($_POST['rosit'],$_POST['remarks'],$_POST['trucking_id'],$_POST['actualRelease']);
+			$this->drimsmodel->update_add_distribution_mod($_POST['rosit'], $_POST['warehouse_id'], $_POST['trucking_id'], $_POST['plannedRelease'], $_POST['actualRelease'], $_POST['remarks']);
 		}
 	}
 
@@ -1028,12 +1029,24 @@ class drimscontroller extends CI_Controller {
 
 	public function warehouse_ctrl(){
 		$sideData['first_name'] = $this->session->userdata('user')['first_name'];
-		$sideData['user_id']	= $this->session->userdata('user')['user_id'];
+		$sideData['user_id'] = $this->session->userdata('user')['user_id'];
 		$data['get_wr_to_release'] = $this->drimsmodel->wr_toreleas_mod();
 		if(isset($this->session->userdata('user')['user_id']) && $this->session->userdata('user')['status'] == 1){
 			$this->load->view('header/header');
 			$this->load->view('sidebar/warehousesidebar', $sideData);
 			$this->load->view('pages/warehouse/warehouse', $data); 
+			$this->load->view('footer/footer');
+			$this->load->view('js/js');
+		}else{
+			redirect('/');
+		}
+	}
+
+	public function wr_stockpile_r(){
+		if(isset($this->session->userdata('user')['user_id']) && $this->session->userdata('user')['status'] == 1){
+			$this->load->view('header/header');
+			$this->load->view('sidebar/warehousesidebar');
+			$this->load->view('pages/warehouse/warehouse');
 			$this->load->view('footer/footer');
 			$this->load->view('js/js');
 		}else{

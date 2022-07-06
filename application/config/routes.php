@@ -134,7 +134,7 @@ $route['drims_request_r'] = 'drimscontroller/drims_request_ctrl';
 //warehouse
 
 $route['wr_toreleas_r'] = 'drimscontroller/warehouse_ctrl';
-
+$route['wr_stockpile_r'] = 'drimscontroller/wr_stockpile_r';
 //end of warehouse
 
 

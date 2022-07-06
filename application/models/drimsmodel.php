@@ -1481,20 +1481,26 @@
 	    	return $query->result_array();
 	    }
 
-	    public function drrs_get_item_mod($drmd_id){
-	    	$this->db->select('*,itms.description as spec_items,drd_itms.item as drsItm');
+	    public function drrs_get_item_mod($drmd_id){    		
+				$this->db->select('*,itms.description as spec_items,drd_itms.item as drsItm , drmd_req.created as drmdcreated');
 	       		$this->db->from('drmd_items as drd_itms');
+				$this->db->join('drmd_request as drmd_req','drmd_req.id = drd_itms.drmd_id','inner');
 	       		$this->db->join('items as itms','itms.id = drd_itms.item','inner');
 	       		$this->db->join('uom as uom_desc','uom_desc.id = drd_itms.item_uom','inner');
+				$this->db->join('users as usr','usr.user_id = drmd_req.added_by','inner');
 	       		$this->db->where('drd_itms.drmd_id', $drmd_id);
-	       	
 	       		$this->db->order_by('itms.type', 'desc');
-			 			$query = $this->db->get();
-			  		$data = $query->result_array();
+			 	$query = $this->db->get();
+			  	$data = $query->result_array();
+
+				echo '<br><h5>Time Encoded: '.date('M/d/Y @ h:i:s a', strtotime($data[0]['drmdcreated'])).'</h5>';
+				echo '<h5>Date forwarded to DRRS: '.date('M/d/Y @ h:i:s a', strtotime($data[0]['date_forwarded_drrs'])).'</h5>';
+				echo '<h5>Encoded By: '.$data[0]['first_name'].' '.$data[0]['last_name'].'</h5>';
+				echo '<br>';
+				echo '<hr>';
 			  		echo '<br><h5>ASSISTANCE</h5><br>';
 					  echo '
-							<div class="row">
-													
+						<div class="row">									
 			                <div class="col-md-2">
 			                  <div class="form-group">
 			                    <b><label>ITEM</label></b>
@@ -1735,9 +1741,10 @@
 								success:function(data)
 								{
 									bootbox.dialog({
+										title: 'hello',
 									    onEscape: true,
 									    message: data,
-									    size: 'extra-small',
+									    size: 'extra-large',
 									    buttons: {
 									        ok: {
 									            label: 'Close',
@@ -1769,7 +1776,7 @@
 	    	$this->db->from('rros_items as rrosit');
 	    	$this->db->join('uom as um','um.id = rrosit.item_uom','inner');
 	    	$this->db->join('items as itm','itm.id = rrosit.item','inner');
-	    	$this->db->join('delivery_and_trucking as del_trc','del_trc.rrosit_id = rrosit.id','left');
+	    	// $this->db->join('delivery_and_trucking as del_trc','del_trc.rrosit_id = rrosit.id','inner');
 	    	$this->db->join('users as usr_det1', 'usr_det1.user_id = rrosit.added_by','inner');
 	    	$this->db->join('drmd_request as drmd_req','drmd_req.id = rrosit.drmd_id','inner');
 			$this->db->join('refprovince as province','province.provCode = rrosit.province_origin','inner');
@@ -1833,16 +1840,28 @@
                <div>';
 				$grand_total = 0;
 				$button = '';
+				$buttonView = '';
 				
 	    	foreach($data as $key =>  $value){
-	    		$key++;
+	    		$key ++;
 	    		$grand_total += $value['price'] * $value['qty_released'];
 				$print = '<button class="print_ris button2" data-id="'.$value['rosit'].'">Print</button>'; 
-	    		if($value['rrosit_id']){
-	    			$button = '<button class="view_distribution button2" data-id="'.$value['rosit'].'">V</button>'; 
-	    		}else{
-	    			$button = '<button class="add_distribution button3" data-id="'.$value['rosit'].'">+</button>';
-	    		}
+	    		// if($value['rrosit_id']){
+	    		// 	$button = '<button class="view_distribution button2" data-id="'.$value['rosit'].'">V</button>'; 
+	    		// }else{
+	    		// 	$button = '<button class="add_distribution button3" data-id="'.$value['rosit'].'">+</button>';
+	    		// }
+
+				// if($value['actual_release'] >= $value['qty_released']){
+					// $button = '<button class="view_distribution button2" data-id="'.$value['rosit'].'">V</button>'; 
+				// }else{
+
+					$button = '<button class="add_distribution button3" data-id="'.$value['rosit'].'">+</button>';
+
+					$buttonView = '<button class="view_distribution button3" data-id="'.$value['rosit'].'">Y</button>';
+
+				// }
+
 				$edit_btn = '<a href="javascript:void(0);" <button data-id="'.$value['rosit'].'" data-id1="'.$value['qty_released'].'" data-id2="'.$value['price'].'" data-id3="'.$value['qty_left'].'" data-id4="'.$value['qty_approved'].'" class="btn_ris_edit"><div class="badge badge-opacity-success">Edit</div></a>';
    				echo '
 	   				 <div class="row">
@@ -1891,7 +1910,7 @@
 
 	                    <div class="col-md-3">
 	                      <div class="form-group">
-						    <small>'.$button.' '.$value['field_office'].'-'.substr($value['provDesc'],0,3).'-'.$value['ris_no'].' By '.$value['f_name'].' '.$value['l_name'].' '.$print.'</small>
+						    <small>'.$button.' | '.$buttonView.' | '.$value['field_office'].'-'.substr($value['provDesc'],0,3).'-'.$value['ris_no'].' By '.$value['f_name'].' '.$value['l_name'].' '.$print.'</small>
 	                      </div>
 	                    </div>
 
@@ -1922,9 +1941,7 @@
 
 							
 							var qty_approved 	= $(this).attr('data-id4');
-							
-							
-
+						
 							$.ajax({
 								url: 'ris_edit_r',
 								method: 'POST',
@@ -2012,10 +2029,11 @@
 									    callback: function (result) {
 									        if(result){
 											
-												var remarks = $('.remarks').val();
-									           	var trucking_id  = $('.trucking_sel').val();								        		
+												var warehouse_id = $('.warehouse_sel').val();
+												var trucking_id  = $('.trucking_sel').val();
+												var plannedRelease = $('.plannedrelease').val();	
 												var actualRelease = $('.actualrelease').val();
-												
+												var remarks = $('.remarks').val();																		
 
 												if(remarks.length === 0 ){
 													alert('Please enter remarks');
@@ -2023,18 +2041,19 @@
 												if(actualRelease.length === 0){
 													alert('Please enter actual release');
 												}	
-												else{
+											    else{
 													if(confirm('Are you sure you want to proceed?') == true) {
-															alert(rosit);
-														    $.ajax({
+														   $.ajax({
 															 		url: 'update_add_distribution_r',
 															 		method: 'POST',
 															 		cache: false,
 															 		data:{
 															 			rosit:rosit,
-															 			remarks:remarks,
+																		warehouse_id:warehouse_id,
 																		trucking_id:trucking_id,
-																		actualRelease:actualRelease
+																		plannedRelease:plannedRelease,
+																		actualRelease:actualRelease,
+																		remarks:remarks
 															 		},
 															 		success:function(data)
 															 		{
@@ -2042,8 +2061,6 @@
 																 		bootbox.alert('Trucking and actual release was successfuly added to this RIS');
 															 		}
 															});
-
-														
 													} 
 												}							        	
 									        }
@@ -2054,7 +2071,7 @@
 							  
 						});	
 
-						
+					
 
 						$('.view_distribution').on('click', function(){
 							var rosit = $(this).attr('data-id');
@@ -2069,9 +2086,10 @@
 								success:function(data)
 								{
 									bootbox.dialog({
+										title: 'Distribution',
 									    onEscape: true,
 									    message: data,
-									    size: 'extra-small',
+									    size: 'extra-large',
 									    buttons: {
 									        ok: {
 									            label: 'Close',
@@ -2278,8 +2296,15 @@
 
 		}
 
-		public function add_distribution_mod(){
+		public function add_distribution_mod($rosit){
 
+				$this->db->select('*');
+				$this->db->from('rros_items as rositem');
+				$this->db->where('rositem.id', $rosit);
+				$query = $this->db->get();
+				$data0 = $query->result_array();
+				
+				
 				$this->db->select('*');
 				$this->db->from('trucking');
 				$query = $this->db->get();
@@ -2289,44 +2314,76 @@
 				$this->db->from('Warehouse');
 				$query = $this->db->get();
 				$data2 = $query->result_array();
+
+				$this->db->select('*');
+				$this->db->from('delivery_and_trucking as d_n_t');
+				$this->db->where('d_n_t.rrosit_id', $rosit);
+				$this->db->order_by('d_n_t.id', 'desc');
+				$query = $this->db->get();
+				$data3 = $query->row_array();
 				
-									     		
-						echo    '<div class="col-md-12">
-                           <div class="form-group">
-                           	<label>Select Warehouse</label>
-                             <select class="form-control warehouse_sel">';
- 										foreach($data2 as $value2){
-                                 			echo '<option value ='.$value2['id'].'>'.$value2['description'].'</option>';
-                                 		}
-                             echo '</select>
-                           </div>
-                        </div> ';
+				// $data0[0][''] - $data0[0]['qty_released'];
+				
+				// $q = $data0[0]['qty_released'] - $data3['actual_release'];
+				$b = 0;
+				if(isset($data3)){
+					$b = $data3['actual_left'];
+				}else{   
+					$b =  $data0[0]['qty_released'];
+				}
+				
+				echo '<div class="col-md-12">
+					<div class="form-group">
+					<label>Select Warehouse*</label>
+						<select class="form-control warehouse_sel">';
+							foreach($data2 as $value2){
+								echo '<option value ='.$value2['id'].'>'.$value2['description'].'</option>';
+							}
+						echo '</select>
+					</div>
+				</div>';
 
-                        echo '<div class="col-md-12">
-                           <div class="form-group">
-                           <label>Select Trucking*</label>
-                              <select class="form-control trucking_sel">';
-                                	 foreach($data1 as $value1){
-                                 		echo '<option value ='.$value1['id'].'>'.$value1['description'].'</option>';
-                                	 }
-                        echo '</select>
-                        	</div>
-                        </div>';
-						
-						echo '
-						<div class="col-md-12">
-						  <div class="form-group">
-						 	<label>Actual Release*</label>
+				echo '<div class="col-md-12">
+					<div class="form-group">
+					<label>Select Trucking*</label>
+						<select class="form-control trucking_sel">';
+							foreach($data1 as $value1){
+								echo '<option value ='.$value1['id'].'>'.$value1['description'].'</option>';
+							}
+					  echo '</select>
+					</div>
+				</div>';
+				
+				echo '
+				<div class="col-md-12">
+					<div class="form-group">
+							<label>Planned release</label>
+							<input type="number" value="'.$data0[0]['qty_released'].'" min="0" class="form-control plannedrelease" disabled="true">
+					</div>
+				</div>';			
+
+				echo '
+				<div class="col-md-12">
+					<div class="form-group">
+							<label>Qty left</label>
+							<input type="number" value="'.$b.'" min="0" class="form-control plannedrelease" disabled="true">
+					</div>
+				</div>';
+
+				echo '
+				<div class="col-md-12">
+					<div class="form-group">
+							<label>Actual Release*</label>
 							<input type="number" min="0" class="form-control actualrelease">
-						  </div>
-						</div>';
+					</div>
+				</div>';
 
-						echo '<div class="col-md-12">
-                           <div class="form-group">
-                           	<label>Remarks*</label>
-									<textarea class="form-control remarks"></textarea>
-                           </div>
-                        </div> ';
+				echo '<div class="col-md-12">
+					<div class="form-group">
+					<label>Remarks*</label>
+							<textarea class="form-control remarks"></textarea>
+					</div>
+				</div>';
 
 		}	    
 
@@ -2511,7 +2568,6 @@
 				       	$this->db->select('*,drs.created as drscreated ,drs.drmd_id as drid, usr_det1.first_name as f_name, usr_det1.last_name as l_name , usr_det.first_name as df_name , usr_det.last_name as dl_name,drmd_req.id as drid,reqs.description as reqsdesc,inci.description as incidesc,ot_inci.incident as ot_inci,drmd_req.incident as inci_num,drmd_req.requester as req_num,other_req.requester as ot_req_desc');
 					    	$this->db->from('drrs_request as drs');
 			    		// $this->db->join('drmd_request as drmd_req','dr.id = drs.drmd_id','inner');
-
 						$this->db->join('drmd_request as drmd_req','drmd_req.id = drs.drmd_id','inner');
 						$this->db->join('incident as inci', 'inci.id = drmd_req.incident','left');
 						$this->db->join('drmd_other_request_inci as ot_inci','ot_inci.drmd_id = drmd_req.id','left');
@@ -2971,38 +3027,38 @@
 
 	      	public function rros_auto_ris_mod($req_id){
 
-	      		  $count = 1;
-	      		  $this->db->select('*');
-							$this->db->from('ris as rst');
-						  $this->db->where('SUBSTR(rst.ris_no,1,7)', date('ymd') . '-');
-							
-							$tody_order = $this->db->count_all_results();
+						$count = 1;
+						$this->db->select('*');
+						$this->db->from('ris as rst');
+						$this->db->where('SUBSTR(rst.ris_no,1,7)', date('ymd') . '-');
+						
+						$tody_order = $this->db->count_all_results();
 
-							if (!empty($tody_order)) {
-								 $count = $tody_order + 1;
-							}
-							
-							$data = array(
-								'drmd_id' 		=> $req_id,	
-								'ris_no'		=> date('ymd') . '-' . $count,
-								'field_office' 	=> 'FO7',
-								'created' 		=> date('Y-m-d H:i:s'),
-								'deleted' 		=> date('Y-m-d H:i:s'),
-							);
-							$this->db->insert('ris', $data);
-							return $count;
+						if (!empty($tody_order)) {
+								$count = $tody_order + 1;
 						}
+						
+						$data = array(
+							'drmd_id' 		=> $req_id,	
+							'ris_no'		=> date('ymd') . '-' . $count,
+							'field_office' 	=> 'FO7',
+							'created' 		=> date('Y-m-d H:i:s'),
+							'deleted' 		=> date('Y-m-d H:i:s'),
+						);
+						$this->db->insert('ris', $data);
+						return $count;
+				}
 
 
-						public function hudleboard_mod(){
-							$this->db->select('*');
-							$this->db->from('refregion as reg');
-							$this->db->join('refprovince as prov','prov.regCode = reg.regCode','inner');
-							$this->db->join('refcitymun as city','city.provCode = prov.provCode','inner');
-							$this->db->where('reg.regCode','07');
-							$query = $this->db->get();
-	      		  			return $query->result_array();
-						}
+				public function hudleboard_mod(){
+						$this->db->select('*');
+						$this->db->from('refregion as reg');
+						$this->db->join('refprovince as prov','prov.regCode = reg.regCode','inner');
+						$this->db->join('refcitymun as city','city.provCode = prov.provCode','inner');
+						$this->db->where('reg.regCode','07');
+						$query = $this->db->get();
+						return $query->result_array();
+				}
 			
 					public function rros_delinquent_mod(){
 							$this->db->select('*, usr_det1.first_name as f_name, usr_det1.last_name as l_name , usr_det.first_name as df_name , usr_det.last_name as dl_name,drmd_req.id as drid,reqs.description as reqsdesc,inci.description as incidesc,ot_inci.incident as ot_inci,drmd_req.incident as inci_num,drmd_req.requester as req_num,other_req.requester as ot_req_desc');
@@ -3682,34 +3738,283 @@
 			    		return $query->num_rows();
     				}
 
-    				public function update_add_distribution_mod($rosit,$remarks,$trucking_id,$actualRelease){
-			       	 	$data = array(
-								 'rrosit_id'	=> $rosit,
-								 'warehouse' 	=> $warehouse_id,
-								 'trucking'	 	=> $trucking_id,
-								 'added_by'	 	=> $this->session->userdata('user')['user_id'],
-								 'created'		=> date('Y-m-d H:i:s'),	 
-								 'deleted'	 	=> date('Y-m-d H:i:s')	
+    				public function update_add_distribution_mod($rosit, $warehouse_id, $trucking_id, $plannedRelease, $actualRelease, $remarks){
+
+						$this->db->select('*');
+						$this->db->from('delivery_and_trucking as del_trc');
+						$this->db->where('del_trc.rrosit_id', $rosit);
+						$this->db->order_by('del_trc.id','desc');
+
+						$query = $this->db->get();
+						$data = $query->row_array();
+						$b = 0;
+						if(isset($data)){
+							$b = $data['actual_left'];
+						}else{
+							$b = $plannedRelease;
+						}
+						$ris_no = $this->rros_auto_ris_mod($rosit);
+
+						
+			       	 	$data1 = array(
+								 'rrosit_id' => $rosit,
+								 'warehouse' => $warehouse_id,
+								 'trucking' => $trucking_id,
+								 'planned_release' => $b,
+								 'actual_release' => $actualRelease,
+								 'actual_left' => $b - $actualRelease,
+								 'ris_no' => date('ymd').'-'.$ris_no,
+								 'remarks' => $remarks,
+								 'added_by' => $this->session->userdata('user')['user_id'],
+								 'created' => date('Y-m-d H:i:s'),	 
+								 'deleted' => date('Y-m-d H:i:s')
 						);
-						$this->db->insert('delivery_and_trucking', $data);
+						$this->db->insert('delivery_and_trucking', $data1);
     				}
 
     				public function view_distribution_mod($rosit){
-						$this->db->select('*,wrhs.description as wrhs_description , trck.description as trck_description');
+						$this->db->select('*,del_trc.ris_no as del_ris_no,province.provDesc as provName,del_trc.remarks as del_trc_remarks,wrhs.description as wrhs_description , trck.description as trck_description');
 						$this->db->from('delivery_and_trucking as del_trc');
 						$this->db->join('warehouse as wrhs','wrhs.id = del_trc.warehouse', 'inner');
 						$this->db->join('trucking as trck','trck.id = del_trc.trucking','inner');
+						$this->db->join('rros_items as rrosit','rrosit.id = del_trc.rrosit_id','left');
+						$this->db->join('drmd_request as drmd_req','drmd_req.id = rrosit.drmd_id','left');
+						$this->db->join('refprovince as province','province.provCode = drmd_req.province','left');
 						$this->db->join('users as usr','usr.user_id = del_trc.added_by','inner');
 						$this->db->where('del_trc.rrosit_id', $rosit);
-						
-						$query = $this->db->get();
-						$data = $query->row_array();
-			
-    					echo 'Warehouse Origin:'.'  '.$data['wrhs_description'].'<br>';
-    					echo 'Logistics:'.' '. $data['trck_description'].'<br>';
-    					echo 'Added by:'.'  '.$data['first_name'].' '.$data['last_name'];
-    				}
+						$this->db->order_by('del_trc.id','desc');
 
+						$query = $this->db->get();
+						$data = $query->result_array();			
+
+						if(isset($data)){
+							echo 'No data yet for this now.';
+						}else{
+							echo '<div class="col-md-12">
+									<div class="form-group">
+										<a href="javascript:void(0)" data-id="'.$rosit.'" class="edit_release">Edit this</a>
+										<br>
+									</div>
+								 </div>';
+						}
+
+						echo '
+						<div class="row">
+							<div class="col-md-2">
+								<div class="form-group">
+								<b><label>Warehouse</label></b>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+								<b><label>Logistics</label></b>
+								</div>
+							</div>
+							<div class="col-md-2">
+								<div class="form-group">
+									<b><label>Processed By</label></b>
+								</div>
+							</div>
+								<div class="col-md-2">
+								<div class="form-group">
+									<b><label>QTY Released</label></b>
+								</div>
+							</div>
+								<div class="col-md-2">
+								<div class="form-group">
+									<b><label>Remarks</label></b>
+								</div>
+							</div>
+							<div class="col-md-2">
+							<div class="form-group">
+								<b><label>RIS #</label></b>
+							</div>
+							</div>
+
+					 	<div>';
+
+						
+																		
+						foreach($data as $key => $value){
+							$key++;
+							echo '<div class="row">
+
+									<div class="col-md-2">
+										<div class="form-group">
+											<small>'.$key.'.  '.ucwords(strtolower($value['wrhs_description'])).'</small>
+										</div>
+									</div>
+
+									<div class="col-md-2">
+										<div class="form-group">
+											<small>'.ucwords(strtolower($value['trck_description'])).'</small>
+										</div>
+									</div>
+
+
+									<div class="col-md-2">
+										<div class="form-group">
+											<small>'.ucwords(strtolower($value['first_name'].' '.$value['last_name'])).'</small>
+										</div>
+									</div>
+
+									<div class="col-md-2">
+										<div class="form-group">
+											<small>'.$value['actual_release'].'</small>
+										</div>
+									</div>
+
+									<div class="col-md-2">
+										<div class="form-group">
+											<small>'.$value['del_trc_remarks'].'</small>
+										</div>
+									</div>
+
+									<div class="col-md-2">
+										<div class="form-group">
+											<small>FO7-'.substr($value['provName'],0,3).'-'.$value['del_ris_no'].'</small>
+										</div>
+									</div>
+
+								 </div>';	
+							// $key++;
+							// echo '<tr>
+							// 		<td><p>'.ucwords(strtolower($value['wrhs_description'])).'</p></td>
+							// 		<td><p>'.ucwords(strtolower($value['trck_description'])).'</p></td>
+							// 		<td><p>'.ucwords(strtolower($value['first_name'].' '.$value['last_name'])).'</p></td>
+							// 	 	<td><p>'.$value['actual_release'].'</p></td>
+							// 		<td><p>'.$value['remarks'].'</p></td>
+							// 	 </tr>';
+								
+						}
+
+					
+						// echo 'Warehouse Origin:'.'  '.ucwords(strtolower($data['wrhs_description'])).'<br>';
+    					// echo 'Logistics:'.' '.ucwords(strtolower($data['trck_description'])).'<br>';
+    					// echo 'Added by:'.'  '.ucwords(strtolower($data['first_name'].' '.$data['last_name'])).'<br>';
+						// echo 'Actual Release:'.'  '.$data['actual_release'].'<br>';
+						// echo 'Remarks:'.' '.$data['remarks'].'<br>';	
+												
+						// echo '<div class="col-md-12">
+						// 	<div class="form-group">
+						// 		<label>Processed by</label>
+						// 			<input type="" value="'.$data['first_name'].' '.$data['last_name'].'" min="0" class="form-control"  disabled="true">
+						// 	</div>
+						// </div>';         
+                        
+						// echo '<div class="col-md-12">
+						// 	<div class="form-group">
+						// 		<label>Warehouse*</label>
+						// 			<input type="" value="'.$data['wrhs_description'].'" min="0" class="form-control"  disabled="true">
+						// 	</div>
+						// </div>';
+
+						// echo '<div class="col-md-12">
+						// 	<div class="form-group">
+						// 	<label>Trucking*</label>
+						// 			<input type="" value="'.$data['trck_description'].'" min="0" class="form-control"  disabled="true">
+						// 	</div>
+						// </div>';
+						
+						// echo '
+						// <div class="col-md-12">
+						// 	<div class="form-group">
+						// 		<label>Planned release</label>
+						// 			<input type="number" value="'.$data['actual_release'].'" min="0" class="form-control plannedrelease" disabled="true">
+						// 	</div>
+						// </div>';			
+
+						// echo '
+						// <div class="col-md-12">
+						// 	<div class="form-group">
+						// 		<label>Actual Release*</label>
+						// 			<input type="number" value="'.$data['actual_release'].'" min="0" class="form-control actualrelease"  disabled="true">
+						// 	</div>
+						// </div>';
+
+						// echo '<div class="col-md-12">
+						// 	<div class="form-group">
+						// 		<label>Remarks*</label>
+						// 			<textarea class="form-control remarks"  disabled="true">'.$data['remarks'].'</textarea>
+						// 	</div>
+						// </div>';
+
+						echo   
+							'<script>
+									$(".edit_release").on("click",function(){
+										var rosit = $(this).attr("data-id");
+										
+										$.ajax({
+											url:"add_distribution_r",
+											method:"POST",
+											cache: false,
+											data:{
+												rosit:rosit
+											},
+											success:function(data){
+												bootbox.confirm({
+													title:"Edit trucking and actual release",
+													message: data,
+													buttons: {
+														cancel: {
+															label: "No",
+															className: "btn-danger"
+														},
+														 confirm: {
+															label: "Yes",
+															className: "btn-success"
+														}
+													},
+													callback: function (result) {
+														if(result){
+														
+															var warehouse_id = $(".warehouse_sel").val();
+															var trucking_id  = $(".trucking_sel").val();
+															var plannedRelease = $(".plannedrelease").val();	
+															var actualRelease = $(".actualrelease").val();
+															var remarks = $(".remarks").val();																		
+					
+															if(remarks.length === 0 ){
+																alert("Please enter remarks");
+															}
+															if(actualRelease.length === 0){
+																alert("Please enter actual release");
+															}	
+															else{
+																if(confirm("Are you sure you want to proceed?") == true) {
+																	   $.ajax({
+																				 url: "update_add_distribution_r",
+																				 method: "POST",
+																				 cache: false,
+																				 data:{
+																					 rosit:rosit,
+																					 warehouse_id:warehouse_id,
+																					 trucking_id:trucking_id,
+																					 plannedRelease:plannedRelease,
+																					 actualRelease:actualRelease,
+																					 remarks:remarks
+																				 },
+																				 success:function(data)
+																				 {
+																					 bootbox.hideAll();
+																					 bootbox.alert("Trucking and actual release was successfuly added to this RIS");
+																				 }
+																		});
+																} 
+															}							        	
+														}
+													}
+
+
+												})
+											}
+										});		
+								
+									
+									});
+						</script>';
+    				}
+					
     				//tiwason
     				public function drmd_remove_mod($drid){
     					$this->db->set('isdeleted','yes');
@@ -3914,6 +4219,13 @@
 			    		return $query->result_array();
 						
 					}	
+
+					// public function wr_stockpile_mod(){
+					// 	$this->db->select('*');
+					// 	$this->db->from('');
+					// 	$this->db->join('');
+					// 	$this->db->join('');
+					// }
 					
     }
 ?>

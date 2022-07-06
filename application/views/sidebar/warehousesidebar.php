@@ -21,11 +21,11 @@
         <ul class="navbar-nav">
          <?php
           $greetings = "";
-          if(date('H') >= 1 && date('H') <=12){
+          if(date('H') >= 1 && date('H') <= 12){
            $greetings = "Good morning";
-          }if(date('H') >= 13 && date('H') <=17){
+          }if(date('H') >= 13 && date('H') <= 17){
            $greetings = "Good Afternoon";
-          }if(date('H') >= 18 && date('H') <=23){
+          }if(date('H') >= 18 && date('H') <= 23){
            $greetings = "Good Evening";
           }
           echo '<li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
@@ -60,7 +60,7 @@
             <div class="collapse" id="ui-basic">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="drmd_request_r"){echo "active";}?>" href="wr_toreleas_r">Releases</a></li>
-                <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="drmd_entries_r"){echo "active";}?>" href="wr_entries_r">MY releases ()</a></li>
+                <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="drmd_entries_r"){echo "active";}?>" href="wr_stockpile_r">Stock Pile Update</a></li>
                 <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="drrs_disapprove_r"){echo "active";}?>" href="wr_disapproved_r">Disapproved Entries ()</a></li>
                 <!-- <li class="nav-item"><a class="nav-link <?php if($this->uri->segment(1)=="drmd_ris_repo_r"){echo "active";}?>" href="wr_ris_repo_r">RIS repo (<?php echo $count_ris_dr_mod; ?>)</a></li> -->
               </ul>

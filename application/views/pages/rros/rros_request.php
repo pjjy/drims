@@ -214,7 +214,7 @@
                                    <br><hr> <br>
                                    <div class="row">
                                     <div class="col-md-2">
-                                       <a href="." class="btn btn-otline-dark"><i class="icon-trash"></i> Cancel</a>
+                                       <a href="javascript:void(0)" class="btn btn-otline-dark rros_cancel_req"><i class="icon-trash"></i> Cancel</a>
                                        <a href="javascript:void(0)" class="btn btn-otline-dark rros_save_req"><i class="icon-briefcase"></i> Save</a> 
                                     </div>
                                   </div>

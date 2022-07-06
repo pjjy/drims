@@ -27,7 +27,7 @@
                                                     <!-- <th>Remarks</th> -->
                                                     <th>Province</th>
                                                     <th>Municipality</th>
-                                                    <!-- <th>Requester</th> -->
+                                              
                                                     <th>Action</th>
                                                   </tr>
                                               </thead>
@@ -39,32 +39,26 @@
                                                     echo 
                                                     '<tr>
                                                         <td><p>'.$key.'</p></td>
-                                                      
                                                         <td><p>'.ucfirst(strtolower($value['provDesc'])).'</p></td>
                                                         <td><p>'.ucfirst(strtolower($value['citymunDesc'])).'</p></td>
-                                                      
                                                         <td>
-                                                            <a data-id="'.$value['drid'].'" class="btn_rrsmoredet"  href="javascript:void(0);" <button><div class="badge badge-opacity-success">View Details</div></a>
-                                                         
+                                                            <a data-id="'.$value['drid'].'" class="btn_rrsmoredet"  href="javascript:void(0);" <button><div class="badge badge-opacity-success">Process now</div></a>                   
+                                                            <a  data-id="'.$value['drid'].'" class="btn_drmd_details"  href="javascript:void(0);" <button><div class="badge badge-opacity-success">View Persons</div></a>
                                                         </td>
                                                     </tr> ';
                                                   } 
                                                 ?>
                                                     <!-- <a data-id="'.$value['ris_no'].'" class="btn_rros_edit"  href="javascript:void(0);">&nbsp;&nbsp;  EDIT</a> -->
-                                                        
-                                                 <!-- <a data-id="'.$value['ris_no'].'" data-id1="'.$value['reference_no'].'" data-id2="'.$incident_name.'" data-id3="'.$value['provDesc'].'" data-id4="'.$value['citymunDesc'].'" data-id5="'.$requester_name.'" class="btn_print"  href="javascript:void(0);"> PRINT RIS</a> -->
-                                                  <!--  <td><p>'.ucfirst(strtolower($value['df_name'])).' '.ucfirst(strtolower($value['dl_name'])).'</p></td>
-                                                     <td><p>'.ucfirst(strtolower($value['f_name'])).' '.ucfirst(strtolower($value['l_name'])).'</p></td>
-                                                     <td><p>'.ucfirst(strtolower($value['rs_fname'])).' '.ucfirst(strtolower($value['rs_lname'])).'</p></td> -->
-                                                     <!-- <td><p>'.$value['field_office'].'-'.substr($value['reference_no'],0,3).'-'.$value['ris_no'].'</p></td> -->
+                                                    <!-- <a data-id="'.$value['ris_no'].'" data-id1="'.$value['reference_no'].'" data-id2="'.$incident_name.'" data-id3="'.$value['provDesc'].'" data-id4="'.$value['citymunDesc'].'" data-id5="'.$requester_name.'" class="btn_print"  href="javascript:void(0);"> PRINT RIS</a> -->
+                                                    <!--  <td><p>'.ucfirst(strtolower($value['df_name'])).' '.ucfirst(strtolower($value['dl_name'])).'</p></td>
+                                                    <td><p>'.ucfirst(strtolower($value['f_name'])).' '.ucfirst(strtolower($value['l_name'])).'</p></td>
+                                                    <td><p>'.ucfirst(strtolower($value['rs_fname'])).' '.ucfirst(strtolower($value['rs_lname'])).'</p></td> -->
+                                                    <!-- <td><p>'.$value['field_office'].'-'.substr($value['reference_no'],0,3).'-'.$value['ris_no'].'</p></td> -->
                                               </tbody>
                                           </table>
                                      </div>
-                                    </div>  
-                                  
-                                    
-
-                                  
+                                    </div>           
+                                                       
                                	 </div>
                               </div>
                             </div>
