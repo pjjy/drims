@@ -132,11 +132,11 @@ $route['drims_request_r'] = 'drimscontroller/drims_request_ctrl';
 
 
 //warehouse
-
 $route['wr_toreleas_r'] = 'drimscontroller/warehouse_ctrl';
-$route['wr_stockpile_r'] = 'drimscontroller/wr_stockpile_r';
+$route['wr_stockpile_r'] = 'drimscontroller/wr_stockpile_ctrl';
+$route['distri_id_r'] = 'drimscontroller/distri_id_ctrl';
+$route['edit_distribution_r'] = 'drimscontroller/edit_distribution_ctrl';
 //end of warehouse
-
 
 
 //super admin

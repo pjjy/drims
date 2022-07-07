@@ -1042,7 +1042,7 @@ class drimscontroller extends CI_Controller {
 		}
 	}
 
-	public function wr_stockpile_r(){
+	public function wr_stockpile_ctrl(){
 		if(isset($this->session->userdata('user')['user_id']) && $this->session->userdata('user')['status'] == 1){
 			$this->load->view('header/header');
 			$this->load->view('sidebar/warehousesidebar');
@@ -1051,6 +1051,18 @@ class drimscontroller extends CI_Controller {
 			$this->load->view('js/js');
 		}else{
 			redirect('/');
+		}
+	}
+
+	public function distri_id_ctrl(){
+		if(isset($_POST['distri_id'])){
+			$this->drimsmodel->distri_id_mod($this->input->post('distri_id'));
+		}
+	}
+
+	public function edit_distribution_ctrl(){
+		if(isset($_POST['rosit'])){
+			$this->drimsmodel->edit_distribution_mod($this->input->post('rosit'));
 		}
 	}
 
