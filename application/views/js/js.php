@@ -1722,6 +1722,214 @@
 						}
 					});	
 			});
+
+			$('.wr_add_stockpile').on('click',function(){
+										$.ajax({
+											url:"add_stockpile_form_r",
+											method:"POST",
+											cache: false,
+											data:{
+												title:'Add stockpile'
+											},
+											success:function(data){
+												bootbox.confirm({
+													title:"Add stockpile",
+													message: data,
+													buttons: {
+														cancel: {
+															label: "No",
+															className: "btn-danger"
+														},
+														 confirm: {
+															label: "Yes",
+															className: "btn-success"
+														}
+													},  
+													callback: function (result) {
+														if(result){
+															var stockpile_count = $(".stockpile_count").val();
+															if(stockpile_count.length === 0){
+																alert("Please enter some value!");
+															}
+															else{
+																if(confirm("Are you sure you want to proceed?") == true) {
+																	$.ajax({
+																		url: 'add_stockpile_r',
+																		method: 'POST',
+																		cache: false,
+																		data:{
+																			stockpile_count:stockpile_count
+																		},
+																		success:function(data)
+																		{
+																			bootbox.alert({
+																			message: "Stockpile is Successfully added!",
+																			callback: function(){
+																				location.reload();
+																			}
+																		});
+																	   }
+																	});	
+																 } 
+															   }						        	
+															}
+														}
+													})
+												}
+											});
+											
+			});
+
+
 			
+			$('.wr_edit_stock').on('click',function(){
+				var stockpile_id = $(this).attr('data-id');
+				
+				$.ajax({
+						url:"add_stockpile_form_r",
+						method:"POST",
+						cache: false,
+						data:{
+							title:'Edit stockpile'
+						},
+						success:function(data){
+							bootbox.confirm({
+								title:"edit stockpile",
+								message: data,
+								buttons: {
+									cancel: {
+										label: "No",
+										className: "btn-danger"
+									},
+										confirm: {
+										label: "Yes",
+										className: "btn-success"
+									}
+								},  
+								callback: function (result) {
+									if(result){
+										var stockpile_count = $(".stockpile_count").val();
+										if(stockpile_count.length === 0){
+											alert("Please enter some value!");
+										}
+										else{
+											if(confirm("Are you sure you want to proceed?") == true) {
+												
+												$.ajax({
+													url: 'edit_stockpile_r',
+													method: 'POST',
+													cache: false,
+													data:{
+														stockpile_count:stockpile_count,
+														stockpile_id:stockpile_id
+													},
+													success:function(data)
+													{
+														bootbox.alert({
+														message: "Stockpile is Successfully updated!",
+														callback: function(){
+															location.reload();
+														}
+													});
+													}
+												});	
+											  } 
+											}						        	
+										}
+									}
+								})
+							}
+						});
+
+			});
+
+
+			$('.show_all_labangon').on('click',function(){
+				$.ajax({
+						url: 'show_all_bohol_r',
+						method: 'POST',
+						cache: false,
+						data:{
+						   province: '0722'
+						},
+						success:function(data)
+						{ 
+							bootbox.dialog({
+							    title: 'Labangon Stock pile',
+							    onEscape: true,
+							    message: data,
+							    size: 'extra-small',
+							    buttons: {
+							        ok: {
+							            label: "Close",
+							            className: 'btn-info',
+							            callback: function(){
+							                console.log('Custom OK clicked');
+							            }
+							        }
+							    }
+							});
+						} 
+			    });
+			});
+
+			$('.show_all_bohol').on('click',function(){
+				$.ajax({
+						url: 'show_all_bohol_r',
+						method: 'POST',
+						cache: false,
+						data:{
+						   province: '0712'
+						},
+						success:function(data)
+						{ 
+							bootbox.dialog({
+							    title: 'Bohol Stock pile',
+							    onEscape: true,
+							    message: data,
+							    size: 'extra-small',
+							    buttons: {
+							        ok: {
+							            label: "Close",
+							            className: 'btn-info',
+							            callback: function(){
+							                console.log('Custom OK clicked');
+							            }
+							        }
+							    }
+							});
+						} 
+			    });
+			});
+
+			$('.show_all_negros').on('click',function(){
+				$.ajax({
+						url: 'show_all_bohol_r',
+						method: 'POST',
+						cache: false,
+						data:{
+						   province: '0746'
+						},
+						success:function(data)
+						{ 
+							bootbox.dialog({
+							    title: 'Negros Stock pile',
+							    onEscape: true,
+							    message: data,
+							    size: 'extra-small',
+							    buttons: {
+							        ok: {
+							            label: "Close",
+							            className: 'btn-info',
+							            callback: function(){
+							                console.log('Custom OK clicked');
+							            }
+							        }
+							    }
+							});
+						} 
+			    });
+			});
+
 	})
 </script>

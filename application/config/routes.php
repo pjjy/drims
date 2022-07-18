@@ -136,6 +136,11 @@ $route['wr_toreleas_r'] = 'drimscontroller/warehouse_ctrl';
 $route['wr_stockpile_r'] = 'drimscontroller/wr_stockpile_ctrl';
 $route['distri_id_r'] = 'drimscontroller/distri_id_ctrl';
 $route['edit_distribution_r'] = 'drimscontroller/edit_distribution_ctrl';
+$route['update_distribution_r'] = 'drimscontroller/update_distribution_ctrl';
+$route['add_stockpile_form_r'] = 'drimscontroller/add_stockpile_form_ctrl';
+$route['add_stockpile_r'] = 'drimscontroller/add_stockpile_ctrl';
+$route['edit_stockpile_r'] = 'drimscontroller/edit_stockpile_ctrl';
+$route['show_all_bohol_r'] = 'drimscontroller/show_all_bohol_ctrl';
 //end of warehouse
 
 
@@ -163,3 +168,5 @@ $route['view_edit_history_r'] = 'drimscontroller/view_edit_history_ctrl';
 
 
 $route['test_r'] = 'drimscontroller/test_ctrl';
+
+$route['testpdf_r'] = 'drimscontroller/testpdf_ctrl';

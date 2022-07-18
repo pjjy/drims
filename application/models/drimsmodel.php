@@ -41,7 +41,7 @@
 		
 		
 	    public function dash_get_city_mod($post_province_id){
-			echo $post_province_id;
+			// echo $post_province_id;
 	    	$this->db->select('*');
 	    	$this->db->from('refcitymun as city');
 	    	$this->db->where('city.provCode', $post_province_id);
@@ -3855,19 +3855,19 @@
 
 									<div class="col-md-2">
 										<div class="form-group">
-											<small><a href="javascript:void(0);" <button="" data-id="'.$value['del_trc_id'].'" class="distri_view_details"><div class="badge badge-opacity-danger">View</div></a></small>
-											<small><a href="javascript:void(0);" <button="" data-id="'.$value['del_trc_id'].'" class="edit_release"><div class="badge badge-opacity-danger">Edit</div></a></small>
-											
+											<small>FO7-'.substr($value['provName'],0,3).'-'.$value['del_ris_no'].'</small>
 										</div>
 									</div>
 
 									<div class="col-md-2">
 										<div class="form-group">
-											<small>FO7-'.substr($value['provName'],0,3).'-'.$value['del_ris_no'].'</small>
+											<small><a href="javascript:void(0);" <button="" data-id="'.$value['del_trc_id'].'" class="distri_view_details"><div class="badge badge-opacity-danger">View</div></a></small>|
+											<small><a href="javascript:void(0);" <button="" data-id="'.$value['del_trc_id'].'" class="edit_release"><div class="badge badge-opacity-danger">Edit</div></a></small>|
+											<small><a href="javascript:void(0);" <button="" data-id="'.$value['del_trc_id'].'" class="edit_release"><div class="badge badge-opacity-danger">Print</div></a></small>
+
 										</div>
 									</div>
-
-								 </div>';				
+							</div>';				
 						}
 					
 
@@ -3927,57 +3927,77 @@
 															label: "Yes",
 															className: "btn-success"
 														}
-													},
+													},  
 													callback: function (result) {
 														if(result){
 														
-															var warehouse_id = $(".warehouse_sel").val();
-															var trucking_id  = $(".trucking_sel").val();
-															var plannedRelease = $(".plannedrelease").val();	
-															var actualRelease = $(".actualrelease").val();
-															var remarks = $(".remarks").val();																		
+															var warehouse_sel   = $(".warehouse_sel").val();
+															var trucking_sel	= $(".trucking_sel").val();
+															var actualrelease   = $(".actualrelease").val();
+															var remarks		    = $(".remarks").val();		
+
 					
 															if(remarks.length === 0 ){
 																alert("Please enter remarks");
 															}
-															if(actualRelease.length === 0){
+															if(actualrelease.length === 0){
 																alert("Please enter actual release");
 															}	
 															else{
 																if(confirm("Are you sure you want to proceed?") == true) {
-																	   $.ajax({
-																				 url: "update_add_distribution_r",
-																				 method: "POST",
-																				 cache: false,
-																				 data:{
-																					 rosit:rosit,
-																					 warehouse_id:warehouse_id,
-																					 trucking_id:trucking_id,
-																					 plannedRelease:plannedRelease,
-																					 actualRelease:actualRelease,
-																					 remarks:remarks
-																				 },
-																				 success:function(data)
-																				 {
-																					 bootbox.hideAll();
-																					 bootbox.alert("Trucking and actual release was successfuly added to this RIS");
-																				 }
-																		});
+																	  	
+																	  
+																	   		$.ajax({
+																	 			url: "update_distribution_r",
+																		 			method: "POST",
+																		 			cache: false,
+																		 			data:{
+																		 				rosit:rosit,
+
+																		 				warehouse_sel:warehouse_sel,
+																		 				trucking_sel:trucking_sel,
+																		 				actualrelease:actualrelease,
+																		 				remarks:remarks
+																		 			},
+																		 			success:function(data)
+																		 			{
+																		 				bootbox.hideAll();
+																		 				bootbox.alert("Trucking and actual release was successfuly updated!");
+																		 			}
+																		    });
 																} 
 															}							        	
 														}
 													}
 
-
 												})
 											}
-										});		
-								
+										});								
 									
 									});
 						</script>';
     				}
 					
+			// 		$.ajax({
+			// 			url: "update_add_distribution_r",
+			// 			method: "POST",
+			// 			cache: false,
+			// 			data:{
+			// 				rosit:rosit,
+			// 				warehouse_id:warehouse_id,
+			// 				trucking_id:trucking_id,
+			// 				plannedRelease:plannedRelease,
+			// 				actualRelease:actualRelease,
+			// 				remarks:remarks
+			// 			},
+			// 			success:function(data)
+			// 			{
+			// 				bootbox.hideAll();
+			// 				bootbox.alert("Trucking and actual release was successfuly added to this RIS");
+			// 			}
+			//    });
+			
+
     				//tiwason
     				public function drmd_remove_mod($drid){
     					$this->db->set('isdeleted','yes');
@@ -4170,9 +4190,7 @@
 						if($this->session->userdata('user')['role'] == '9'){
 							$province = '0746';
 						}
-						echo '<br>';
-						echo $province;
-						echo '<br>';
+						
 
 
 						$this->db->select('*,drreq.id as drid');
@@ -4246,7 +4264,7 @@
 						echo '
 						<div class="col-md-12">
 							<div class="form-group">
-									<label>Actual Release*</label>
+								    <label>Actual Release*</label>
 									<input type="number" value="'.$data['actual_release'].'" min="0" class="form-control actualrelease">
 							</div>
 						</div>';
@@ -4257,6 +4275,160 @@
 									<textarea class="form-control remarks">'.$data['remarks'].'</textarea>
 							</div>
 						</div>';
+					}
+					//tiwason
+					public function update_distribution_mod($id,$warehouse_sel,$trucking_sel,$actualrelease,$remarks){
+						
+						// $this->db->select('*');
+						// $this->db->from('delivery_and_trucking as del_trc');
+						// $this->db->where('del_trc.id', $id);
+						// $query = $this->db->get();
+						// $data = $query->row_array();
+						 
+						// echo $data['actual_left'];
+						$this->db->set('warehouse', $warehouse_sel);
+						$this->db->set('trucking', $trucking_sel);
+						$this->db->set('actual_release', $actualrelease);
+						// $this->db->set('actual_left',$actualrelease + $data['actual_left']);
+						$this->db->set('remarks', $remarks);
+						$this->db->where('id', $id);
+						$this->db->update('delivery_and_trucking');
+					}
+
+					public function add_stockpile_form_mod($title){
+								
+								
+						echo '
+						<div class="col-md-12">
+							<div class="form-group">
+								    <label>'.$title.'</label>
+									<input type="number" value="" min="0" class="form-control stockpile_count">
+							</div>
+						</div>';
+					}
+
+					public function add_stockpile_mod($stockpile_count){
+
+						$province = "";
+						if($this->session->userdata('user')['role'] == '7'){
+							$province = '0712';
+						}
+						if($this->session->userdata('user')['role'] == '8'){
+							$province = '0722';
+						}
+						if($this->session->userdata('user')['role'] == '9'){
+							$province = '0746';
+						}
+
+						$data = array(
+							'count'	         => $stockpile_count,
+						    'added_by'	     => $this->session->userdata('user')['user_id'],
+							'role'			 => $this->session->userdata('user')['role'],
+							'province'		 => $province,
+							'created'		 => date('Y-m-d H:i:s'),	 
+							'deleted'		 => date('Y-m-d H:i:s')	
+				   		);
+				   		$this->db->insert('stockpile', $data);
+						// echo json_encode($this->session->userdata('user'));
+					}
+
+					public function wr_stockpile_mod(){
+						$province = "";
+						if($this->session->userdata('user')['role'] == '7'){
+							$province = '0712'; //bohol
+						}
+						if($this->session->userdata('user')['role'] == '8'){
+							$province = '0722'; //cebu
+						}
+						if($this->session->userdata('user')['role'] == '9'){
+							$province = '0746'; //neg-or
+						}
+						
+						$this->db->select('*, stc.id as stc_id, stc.created as stockcreated');
+			    		$this->db->from('stockpile as stc');
+						$this->db->join('users as usr','usr.user_id = stc.added_by','inner');
+					  	$this->db->order_by('stc.id', 'desc');
+						$this->db->where('stc.province', $province);
+				    	$query = $this->db->get();
+			    		return $query->result_array();
+					}
+
+					public function edit_stockpile_mod($stockpile_count,$stockpile_id){
+						$this->db->set('count', $stockpile_count);
+						$this->db->where('id', $stockpile_id);
+						$this->db->update('stockpile');
+					}
+
+					public function get_labangon_wr_mod(){						
+						$this->db->select('*');
+						$this->db->from('stockpile as stc');
+						$this->db->where('stc.province', '0722');
+						$this->db->limit(1);
+						$query = $this->db->get();
+						return $query->result_array();
+					}
+
+					public function get_bohol_wr_mod(){
+						$this->db->select('*');
+						$this->db->from('stockpile as stc');
+						$this->db->where('stc.province', '0712');
+						$this->db->limit(1);
+						$query = $this->db->get();
+						return $query->result_array();
+					}
+
+					public function get_negros_wr_mod(){
+						$this->db->select('*');
+						$this->db->from('stockpile as stc');
+						$this->db->where('stc.province', '0746');
+						$this->db->limit(1);
+						$query = $this->db->get();
+						return $query->result_array();
+					}
+
+
+					public function show_all_mod($province){
+						$this->db->select('*');
+						$this->db->from('stockpile as stc');
+						$this->db->where('stc.province',$province);
+						$query = $this->db->get();
+						$data = $query->result_array();
+
+						
+
+						echo '<div class="row">
+						                <div class="col-md-4">
+						                  <div class="form-group">
+						                    <b><label>Date </label></b>
+						                  	
+											</div>
+						                </div> 
+
+						                <div class="col-md-4">
+						                  <div class="form-group">
+						                    <b><label>Stockpile</label></b>
+						                  </div>
+						                </div> 
+						            <div>';
+						if(empty($data)){
+							echo 'No data yet for this now.';
+						}
+						foreach($data as $value){
+								echo '<div class="row">
+				                    	<div class="col-md-4">
+				                    		  <div class="form-group">
+				                      		  <p>'.date("M-d-Y", strtotime($value['created'])).'</p>
+				                      	  </div>
+				                    	</div>   
+
+				                    	<div class="col-md-4">
+				                    		  <div class="form-group">
+				                      		  <p>'.number_format($value['count'],2).' - FFPs</p>
+				                      	  </div>
+				                    	</div>		            
+						 		    </div>';
+						}		
+
 					}
     }
 ?>

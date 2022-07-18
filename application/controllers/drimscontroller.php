@@ -57,9 +57,13 @@ class drimscontroller extends CI_Controller {
      	if($this->session->userdata('user')['role'] == '6' && $this->session->userdata('user')['status'] == '1'){
      		redirect('drims_request_r');
      	}
-      	if($this->session->userdata('user')['role'] == '1' || $this->session->userdata('user')['role'] == '2' || $this->session->userdata('user')['role'] == '3' || $this->session->userdata('user')['role'] == '4' || $this->session->userdata('user')['role'] == '5'  && $this->session->userdata('user')['status'] == '0'){
+		if($this->session->userdata('user')['role'] == '7' && $this->session->userdata('user')['status'] == '1'){
+			redirect('wr_toreleas_r');
+		}
+		if($this->session->userdata('user')['role'] == '1' || $this->session->userdata('user')['role'] == '2' || $this->session->userdata('user')['role'] == '3' || $this->session->userdata('user')['role'] == '4' || $this->session->userdata('user')['role'] == '5'  && $this->session->userdata('user')['status'] == '0'){
      		redirect('log_in_check_r');
      	}
+		
      	else{
      		$this->load->library('session');
 	    	$this->load->view('header/header');
@@ -204,7 +208,11 @@ class drimscontroller extends CI_Controller {
 		$dashData['get_province'] 	    		= $this->drimsmodel->get_province_mod();
 		// $dashData['get_default_city']   		= $this->drimsmodel->get_default_city_mod('0712');
 		$dashData['get_requester']	    		= $this->drimsmodel->get_requester();
-		
+		$dashData['get_labangon_wr']			= $this->drimsmodel->get_labangon_wr_mod();
+		$dashData['get_bohol_wr']				= $this->drimsmodel->get_bohol_wr_mod();
+		$dashData['get_negros_wr']				= $this->drimsmodel->get_negros_wr_mod();
+
+
     	if($this->session->userdata('user')['status'] == 1){
 			$this->load->view('header/header');
 
@@ -855,14 +863,14 @@ class drimscontroller extends CI_Controller {
 		if($this->session->userdata('user')['role'] == 5 && $this->session->userdata('user')['status'] == 1){
 			$this->load->view('header/header');
 			$this->load->view('sidebar/rrossidebar', $sideData);
-			$this->load->view('pages/report/eterato',$data);
+			$this->load->view('pages/report/eterato', $data);
 			$this->load->view('footer/footer');
 			$this->load->view('js/js');
 		}
 		else if($this->session->userdata('user')['role'] == 6 && $this->session->userdata('user')['status'] == 1){
 			$this->load->view('header/header');
 			$this->load->view('sidebar/drimssidebar', $sideData);
-			$this->load->view('pages/report/eterato',$data);
+			$this->load->view('pages/report/eterato', $data);
 			$this->load->view('footer/footer');
 			$this->load->view('js/js');
 		}
@@ -1043,10 +1051,13 @@ class drimscontroller extends CI_Controller {
 	}
 
 	public function wr_stockpile_ctrl(){
+		$sideData['first_name'] = $this->session->userdata('user')['first_name'];
+		$sideData['user_id'] = $this->session->userdata('user')['user_id'];
+		$data['stockpile_count'] = $this->drimsmodel->wr_stockpile_mod();
 		if(isset($this->session->userdata('user')['user_id']) && $this->session->userdata('user')['status'] == 1){
 			$this->load->view('header/header');
-			$this->load->view('sidebar/warehousesidebar');
-			$this->load->view('pages/warehouse/warehouse');
+			$this->load->view('sidebar/warehousesidebar' , $sideData);
+			$this->load->view('pages/warehouse/stockpile', $data);
 			$this->load->view('footer/footer');
 			$this->load->view('js/js');
 		}else{
@@ -1066,4 +1077,35 @@ class drimscontroller extends CI_Controller {
 		}
 	}
 
+	public function update_distribution_ctrl(){
+		if(isset($_POST['rosit'])){														 			
+			$this->drimsmodel->update_distribution_mod($this->input->post('rosit'),$this->input->post('warehouse_sel'),$this->input->post('trucking_sel'),$this->input->post('actualrelease'),$this->input->post('remarks'));
+		}
+	}
+
+	public function add_stockpile_form_ctrl(){
+			$this->drimsmodel->add_stockpile_form_mod($this->input->post('title'));	
+	}
+
+	public function add_stockpile_ctrl(){
+		$this->drimsmodel->add_stockpile_mod($this->input->post('stockpile_count'));
+	}
+	
+	public function edit_stockpile_ctrl(){
+		$this->drimsmodel->edit_stockpile_mod($this->input->post('stockpile_count'),$this->input->post('stockpile_id'));
+	}
+
+	public function show_all_bohol_ctrl(){
+		$this->drimsmodel->show_all_mod($this->input->post('province'));
+	}
+
+	public function testpdf_ctrl(){
+		$this->load->view('report/tcpdf/examples/tcpdf_include');
+		$this->load->view('report/ris_report');
+	}
+
 }
+
+
+
+

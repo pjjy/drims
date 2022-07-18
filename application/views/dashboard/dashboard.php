@@ -250,8 +250,7 @@
                                            <tbody>';
                                                  
                                                   foreach($get_running_data as $key =>  $value){
-                                                        // echo $value['total_approv_per_lgu'].  '<br>';
-                                                       
+                                                        // echo $value['total_approv_per_lgu']. '<br>';
                                                         $statusBar = "";
                                                         $status    = "";
                                                         $text      = "";     
@@ -275,31 +274,31 @@
                                                               $requester_name = $value['reqsdesc'];
 
                                                               if($value['inci_num'] == 13){
-                                                                $incident_name = 'u.s: '.$value['ot_inci'];
+                                                                 $incident_name = 'u.s: '.$value['ot_inci'];
                                                               }
                                                              
                                                               if($value['req_num'] == 11){
-                                                                $requester_name = $value['ot_req_desc'];
+                                                                 $requester_name = $value['ot_req_desc'];
                                                               }
 
                                                              echo '<tr>
-                                                                <td> 
-                                                                 <h6>'.$value['muniDesc'].'</h6>
-                                                                 <p>'.$incident_name.'</p>
-                                                                 <p>'.$requester_name.'</p>
-                                                                </td>
-                                                               <td>
-                                                                 <div>
-                                                                   <div class="d-flex justify-content-between align-items-center mb-1 max-width-progress-wrap">
-                                                                     <p class="text-success">'. $percent.'%</p>
-                                                                     <p>'.number_format($total_relase_per_lgu).'/'.number_format($value['total_app_perlgu']).'</p>
-                                                                   </div>
-                                                                   <div class="progress progress-md">
-                                                                     <div class="progress-bar '.$statusBar.'" role="progressbar" style="width: '.$percent.'%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                                                                   </div>
-                                                                 </div>
-                                                                </td>
-                                                              <td><a href="javascript:void(0);" class="dash_view_det" id-id="'.$value['rosb_id'].'"><div class="badge '.$status.'">'.$text.'</div></a></td>
+                                                                    <td> 
+                                                                    <h6>'.$value['muniDesc'].'</h6>
+                                                                    <p>'.$incident_name.'</p>
+                                                                    <p>'.$requester_name.'</p>
+                                                                    </td>
+                                                                  <td>
+                                                                  <div>
+                                                                    <div class="d-flex justify-content-between align-items-center mb-1 max-width-progress-wrap">
+                                                                      <p class="text-success">'. $percent.'%</p>
+                                                                      <p>'.number_format($total_relase_per_lgu).'/'.number_format($value['total_app_perlgu']).'</p>
+                                                                    </div>
+                                                                    <div class="progress progress-md">
+                                                                      <div class="progress-bar '.$statusBar.'" role="progressbar" style="width: '.$percent.'%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                    </div>
+                                                                  </div>
+                                                                  </td>
+                                                                <td><a href="javascript:void(0);" class="dash_view_det" id-id="'.$value['rosb_id'].'"><div class="badge '.$status.'">'.$text.'</div></a></td>
                                                          </tr> ';
                                                       }
                                                     }
@@ -315,7 +314,7 @@
                              ?>
                         </div>
                        
-                        <!-- <div class="row flex-grow">
+                        <div class="row flex-grow">
                           <div class="col-md-6 col-lg-4 grid-margin stretch-card">
                             <div class="card card-rounded">
                               <div class="card-body card-rounded">
@@ -324,10 +323,13 @@
                                  <div class="wrapper w-100"> 
                                    <div class="d-flex justify-content-between align-items-center">
                                       <div class="d-flex align-items-center">
-                                        <p>Mar 14, 2019</p>
-                                        &nbsp;&nbsp;&nbsp;<p>500 FFPs</p>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span><b>-0.5%</b></span></p>
+                                        <?php 
+                                            foreach($get_labangon_wr as  $value){
+                                             echo '<p>Mar 14, 2019</p> 
+                                                    &nbsp;&nbsp;&nbsp;
+                                                    <p>500 FFPs</p>';
+                                            }
+                                        ?>
                                       </div>
                                     </div>
                                   </div>
@@ -335,7 +337,7 @@
                                 <div class="list align-items-center pt-3">
                                   <div class="wrapper w-100">
                                     <p class="mb-0">
-                                      <a href="#" class="fw-bold text-primary">Show all <i class="mdi mdi-arrow-right ms-2"></i></a>
+                                      <a href="javascript:void(0);" class="fw-bold text-primary show_all_labangon">Show all <i class="mdi mdi-arrow-right ms-2"></i></a>
                                     </p>
                                   </div>
                                 </div>
@@ -350,10 +352,13 @@
                                   <div class="wrapper w-100"> 
                                    <div class="d-flex justify-content-between align-items-center">
                                       <div class="d-flex align-items-center">
-                                        <p>Mar 14, 2019</p>
-                                        &nbsp;&nbsp;&nbsp;<p>500 FFPs</p>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span><b>-0.5%</b></span></p>
+                                        <?php
+                                          foreach($get_bohol_wr as $value){
+                                          echo'<p>'.date("M-d-Y", strtotime($value['created'])).'</p>
+                                                &nbsp;&nbsp;&nbsp;
+                                                <p>'.$value['count'].' FFPs</p>';
+                                          }
+                                        ?>
                                       </div>
                                     </div>
                                   </div>
@@ -361,7 +366,7 @@
                                 <div class="list align-items-center pt-3">
                                   <div class="wrapper w-100">
                                     <p class="mb-0">
-                                      <a href="#" class="fw-bold text-primary">Show all <i class="mdi mdi-arrow-right ms-2"></i></a>
+                                      <a href="javascript:void(0);" class="fw-bold text-primary show_all_bohol">Show all <i class="mdi mdi-arrow-right ms-2"></i></a>
                                     </p>
                                   </div>
                                 </div>
@@ -376,10 +381,16 @@
                                   <div class="wrapper w-100"> 
                                    <div class="d-flex justify-content-between align-items-center">
                                       <div class="d-flex align-items-center">
-                                        <p>Mar 14, 2019</p>
-                                        &nbsp;&nbsp;&nbsp;<p>500 FFPs</p>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span><b>-0.5%</b></span></p>
+                                      <?php
+                                        foreach($get_negros_wr as $value){
+                                          echo'<p>'.date("M-d-Y", strtotime($value['created'])).'</p>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <p>'.$value['count'].' FFPs</p>';
+                                        }
+                                      ?> 
+                                      
+                                       
+                                      
                                       </div>
                                     </div>
                                   </div>
@@ -387,14 +398,14 @@
                                 <div class="list align-items-center pt-3">
                                   <div class="wrapper w-100">
                                     <p class="mb-0">
-                                      <a href="#" class="fw-bold text-primary">Show all <i class="mdi mdi-arrow-right ms-2"></i></a>
+                                      <a href="javascript:void(0);" class="fw-bold text-primary show_all_negros">Show all <i class="mdi mdi-arrow-right ms-2"></i></a>
                                     </p>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div> -->
+                        </div>
                               
                         <div class="row flex-grow">
                           <div class="col-12 grid-margin stretch-card">
