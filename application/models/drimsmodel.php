@@ -1010,7 +1010,7 @@
 				// $this->db->where('drmd_itms.isdeleted !=','yes');
 				  $this->db->order_by('itms.type', 'desc');
 				$query = $this->db->get();
-				  $data = $query->result_array();
+				$data = $query->result_array();
 				   echo '<div class="row">
 							<div class="col-md-3">
 							  <div class="form-group">
@@ -1772,7 +1772,7 @@
 
 	    public function drrs_dristibution_mod($drid){   	    	
 
-	    	$this->db->select('*, um.description as uom_desc , rrosit.id as rosit ,rrosit.created as rosb_created , usr_det1.first_name as f_name, usr_det1.last_name as l_name');
+	    	$this->db->select('*, um.description as uom_desc , rrosit.drmd_id as rros_drmd_id , rrosit.id as rosit ,rrosit.created as rosb_created , usr_det1.first_name as f_name, usr_det1.last_name as l_name');
 	    	$this->db->from('rros_items as rrosit');
 	    	$this->db->join('uom as um','um.id = rrosit.item_uom','inner');
 	    	$this->db->join('items as itm','itm.id = rrosit.item','inner');
@@ -1785,6 +1785,7 @@
 	    	$this->db->where('rrosit.qty_released !=', 0);
 	    	$query = $this->db->get();
 	    	$data = $query->result_array();
+			
 	   		echo '
 				<div class="row">
 					<div class="col-md-2">
@@ -1845,7 +1846,7 @@
 	    	foreach($data as $key =>  $value){
 	    		$key ++;
 	    		$grand_total += $value['price'] * $value['qty_released'];
-				$print = '<button class="print_ris button2" data-id="'.$value['rosit'].'">Print</button>'; 
+				$print = '<button class="print_ris button2" data-id="'.$value['rosit'].'"  data-id1="'.$value['rros_drmd_id'].'">Print</button>'; 
 	    		// if($value['rrosit_id']){
 	    		// 	$button = '<button class="view_distribution button2" data-id="'.$value['rosit'].'">V</button>'; 
 	    		// }else{
@@ -1932,192 +1933,14 @@
 	              		</div>';	    
 
 	                
-   				echo  "<script>
-				   		
-				   		$('.btn_ris_edit').on('click',function(){
-							var id              = $(this).attr('data-id');
-							var qty             = $(this).attr('data-id1');
-							var price 		    = $(this).attr('data-id2');
-
-							
-							var qty_approved 	= $(this).attr('data-id4');
+   				
 						
-							$.ajax({
-								url: 'ris_edit_r',
-								method: 'POST',
-								cache: false,
-								data:{
-									id:id,
-									qty:qty,
-									price:price
-								},
-								success:function(data)
-								{								
-									bootbox.confirm({
-										title:'Update Quantity and Pricing',
-									    message: data,
-									    buttons: {
-									        cancel: {
-									            label: 'No',
-									            className: 'btn-danger'
-									        },
-									         confirm: {
-									            label: 'Yes',
-									            className: 'btn-success'
-									        }
-									    },
-									    callback: function (result) {
-									        if(result){
-												
-												var edited_qty = $('.edited_qty').val();
-												var edited_price = $('.edited_price').val();
-												var edited_total = $('.edited_total').val();			
-			
-												if (confirm('Are you sure you want to proceed?') == true) {
-													$.ajax({
-														url: 'ris_edit_final_r',
-														   method: 'POST',
-														   cache: false,
-														   data:{
-																id:id,                       
-																edited_qty:edited_qty,
-																edited_price:edited_price,
-																edited_total:edited_total,
-																
-																qty_approved:qty_approved
-														   },
-														   success:function(data)
-														   {
-															 bootbox.hideAll();
-														 	 bootbox.alert('Quantity and price successfuly updated.');
-														   }
-													   });
-												}   
-									        }
-									    }
-									}); 
-						     	}
-							});
-							
-							
-						});
-
-   						$('.add_distribution').on('click', function(){
-   							var rosit = $(this).attr('data-id');
-   							 $.ajax({
-								url: 'add_distribution_r',
-								method: 'POST',
-								cache: false,
-								data:{
-									rosit:rosit
-								},
-								success:function(data)
-								{
-									bootbox.confirm({
-										title:'Please enter trucking and actual release',
-									    message: data,
-									    buttons: {
-									        cancel: {
-									            label: 'No',
-									            className: 'btn-danger'
-									        },
-									         confirm: {
-									            label: 'Yes',
-									            className: 'btn-success'
-									        }
-									    },
-									    callback: function (result) {
-									        if(result){
-											
-												var warehouse_id = $('.warehouse_sel').val();
-												var trucking_id  = $('.trucking_sel').val();
-												var plannedRelease = $('.plannedrelease').val();	
-												var actualRelease = $('.actualrelease').val();
-												var remarks = $('.remarks').val();																		
-
-												if(remarks.length === 0 ){
-													alert('Please enter remarks');
-												}
-												if(actualRelease.length === 0){
-													alert('Please enter actual release');
-												}	
-											    else{
-													if(confirm('Are you sure you want to proceed?') == true) {
-														   $.ajax({
-															 		url: 'update_add_distribution_r',
-															 		method: 'POST',
-															 		cache: false,
-															 		data:{
-															 			rosit:rosit,
-																		warehouse_id:warehouse_id,
-																		trucking_id:trucking_id,
-																		plannedRelease:plannedRelease,
-																		actualRelease:actualRelease,
-																		remarks:remarks
-															 		},
-															 		success:function(data)
-															 		{
-															 			bootbox.hideAll();
-																 		bootbox.alert('Trucking and actual release was successfuly added to this RIS');
-															 		}
-															});
-													} 
-												}							        	
-									        }
-									    }
-									}); 
-						     	}
-							});
-							  
-						});	
-
-					
-
-						$('.view_distribution').on('click', function(){
-							var rosit = $(this).attr('data-id');
-							
-							 $.ajax({
-							 	url: 'view_distribution_r',
-								method: 'POST',
-								cache: false,
-								data:{
-									rosit:rosit
-								},
-								success:function(data)
-								{
-									bootbox.dialog({
-										title: 'Distribution',
-									    onEscape: true,
-									    message: data,
-									    size: 'extra-large',
-									    buttons: {
-									        ok: {
-									            label: 'Close',
-									            className: 'btn-info',
-									            callback: function(){
-									               
-									            }
-									        }
-									    }
-									});
-								}
-
-							 });	
-
-
-						});	
-
-					  </script>";
-
 					  echo '<style>
-							.button2 {background-color: #008CBA;} /* Blue */
-							.button3 {background-color: #f44336;} /* Red */ 
+								.button2 {background-color: #008CBA;} /* Blue */
+								.button3 {background-color: #f44336;} /* Red */ 
 							</style>';
-
+							
 			    }
-
-				
-				
 
 		public function ris_edit_mod($id, $qty, $price){
 
@@ -2186,7 +2009,6 @@
 						} 
 			    	});
 				});
-
 				</script>";	
 		}		
 
@@ -4429,6 +4251,48 @@
 						 		    </div>';
 						}		
 
+					}
+
+					public function add_pdf_file_data_mod(){
+						
+						echo '
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>Contact Person*</label>
+										<input type="text" min="0" class="form-control contactperson">
+								</div>
+							</div>';
+						
+						echo '
+							<div class="col-md-12">
+								<div class="form-group">
+									<label>Contact Number*</label>
+										<input type="number" min="0" class="form-control contactnumber">
+								</div>
+							</div>';
+
+						echo '<div class="col-md-12">
+								<div class="form-group">
+									<label>DRN*</label>
+									  <input type="text" min="0" class="form-control drn">
+								</div>
+							</div>';
+
+						echo '<div class="col-md-12">
+								<div class="form-group">
+								  <label>Purpose*</label>
+										<textarea class="form-control purpose"></textarea>
+								</div>
+							 </div>';					
+					}
+
+					public function pdf_gata_data_mod($rosit,$drmd_id){
+							$this->db->select('*');
+							$this->db->from('rros_items as rosit');
+							$this->db->join('refprovince as province','province.provCode = rosit.province_origin','inner');
+							$this->db->where('rosit.id',$rosit);
+							$query = $this->db->get();
+							return $query->row_array();
 					}
     }
 ?>

@@ -156,6 +156,9 @@ $route['su_add_item_r'] = 'drimscontroller/su_add_item_ctrl';
 $route['eterato_r'] = 'drimscontroller/eterato_ctrl';
 $route['fetch_report_r'] = 'drimscontroller/fetch_report_ctrl';
 $route['fetch_more_r'] = 'drimscontroller/fetch_more_ctrl';
+$route['add_pdf_file_data_r'] = 'drimscontroller/add_pdf_file_data_ctrl';
+
+
 //end reports
 $route['update_pass_r'] = 'drimscontroller/update_pass_ctrl';
 //directories
@@ -164,9 +167,9 @@ $route['ris_edit_r'] = 'drimscontroller/ris_edit_ctrl';
 $route['ris_edit_final_r'] = 'drimscontroller/ris_edit_final_ctrl';
 $route['view_edit_history_r'] = 'drimscontroller/view_edit_history_ctrl';
 
-
-
-
 $route['test_r'] = 'drimscontroller/test_ctrl';
 
-$route['testpdf_r'] = 'drimscontroller/testpdf_ctrl';
+$route['ris_get_reporting_r'] = 'drimscontroller/ris_reporting_ctrl'; 
+
+
+

@@ -77,7 +77,7 @@ class drimscontroller extends CI_Controller {
 		
   		$this->load->library('session');
 		$data =	$this->drimsmodel->login_auth_mod($this->input->post('username'),$this->input->post('password'));
-		print_r($data);
+	
 	
 		if($data){
 			if($data['role'] == '1'){
@@ -379,6 +379,7 @@ class drimscontroller extends CI_Controller {
 	}
 
 	public function drmd_view_details_ctrl(){
+		$this->load->view('js/modeljs');
 		if(isset($_POST['drid'])){
 			if( $this->session->userdata('user')['role'] == 5 || $this->session->userdata('user')['role'] == 7 || $this->session->userdata('user')['role'] == 8 || $this->session->userdata('user')['role'] == 9  && $this->session->userdata('user')['status'] == 1){
 				$this->drimsmodel->drrs_dristibution_mod($this->input->post('drid'));
@@ -1084,7 +1085,7 @@ class drimscontroller extends CI_Controller {
 	}
 
 	public function add_stockpile_form_ctrl(){
-			$this->drimsmodel->add_stockpile_form_mod($this->input->post('title'));	
+		$this->drimsmodel->add_stockpile_form_mod($this->input->post('title'));	
 	}
 
 	public function add_stockpile_ctrl(){
@@ -1099,12 +1100,20 @@ class drimscontroller extends CI_Controller {
 		$this->drimsmodel->show_all_mod($this->input->post('province'));
 	}
 
-	public function testpdf_ctrl(){
+	public function ris_reporting_ctrl(){
 		$this->load->view('report/tcpdf/examples/tcpdf_include');
-		$this->load->view('report/ris_report');
+		$this->load->view('report/ris_report');									
 	}
 
+
+	public function add_pdf_file_data_ctrl(){
+		$this->drimsmodel->add_pdf_file_data_mod();
+	}
+	
+	
 }
+
+
 
 
 
