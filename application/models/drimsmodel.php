@@ -1839,36 +1839,42 @@
                   </div>
             	 </div>
                <div>';
-				$grand_total = 0;
-				$button = '';
-				$buttonView = '';
-				
-	    	foreach($data as $key =>  $value){
+
+			   $grand_total = 0;
+			   $button = '';
+			   $buttonView = '';
+			   
+			   foreach($data as $key =>  $value){
 	    		$key ++;
 	    		$grand_total += $value['price'] * $value['qty_released'];
-				$print = '<button class="print_ris button2" data-id="'.$value['rosit'].'"  data-id1="'.$value['rros_drmd_id'].'">Print</button>'; 
-	    		// if($value['rrosit_id']){
-	    		// 	$button = '<button class="view_distribution button2" data-id="'.$value['rosit'].'">V</button>'; 
-	    		// }else{
-	    		// 	$button = '<button class="add_distribution button3" data-id="'.$value['rosit'].'">+</button>';
-	    		// }
+				
+				// $print = '<button class="print_ris button2" data-id="'.$value['rosit'].'"  data-id1="'.$value['rros_drmd_id'].'" data-id2="'.$value['ris_no'].'">Print</button>'; 
+				
+				$print = '<div class="dropdown">
+							<button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+								'.$value['field_office'].'-'.substr($value['provDesc'],0,3).'-'.$value['ris_no'].' By '.$value['f_name'].' '.$value['l_name'].'
+							</button>
+								<div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
+									<a class="view_distribution dropdown-item" data-id="'.$value['rosit'].'" href="#"><i class="mdi mdi-eye"></i>&nbsp;&nbsp;&nbsp;View distribution</a>
+									<a class="add_distribution  dropdown-item" data-id="'.$value['rosit'].'" href="#"><i class="mdi mdi-playlist-plus"></i>&nbsp;&nbsp;&nbsp;Add distribution</a>
+									<a class="print_ris dropdown-item" data-id="'.$value['rosit'].'"  data-id1="'.$value['rros_drmd_id'].'" data-id2="'.$value['ris_no'].'" href="#"><i class="mdi mdi-printer"></i>&nbsp;&nbsp;&nbsp;Print RIS</a>
+								
+								</div>
+						</div>';
 
-				// if($value['actual_release'] >= $value['qty_released']){
-					// $button = '<button class="view_distribution button2" data-id="'.$value['rosit'].'">V</button>'; 
-				// }else{
+	     		//  $button = '<button class="add_distribution button3" data-id="'.$value['rosit'].'">+</button>';
 
-					$button = '<button class="add_distribution button3" data-id="'.$value['rosit'].'">+</button>';
+				// $buttonView = '<button class="view_distribution button3" data-id="'.$value['rosit'].'">Y</button>';
 
-					$buttonView = '<button class="view_distribution button3" data-id="'.$value['rosit'].'">Y</button>';
+				// $button = '';
 
-				// }
+				// $buttonView = '';
 
 				$edit_btn = '<a href="javascript:void(0);" <button data-id="'.$value['rosit'].'" data-id1="'.$value['qty_released'].'" data-id2="'.$value['price'].'" data-id3="'.$value['qty_left'].'" data-id4="'.$value['qty_approved'].'" class="btn_ris_edit"><div class="badge badge-opacity-success">Edit</div></a>';
    				echo '
 	   				 <div class="row">
 				   		<div class="col-md-2">
-				   		  <div class="form-group">
-							 
+				   		  <div class="form-group">			 
 	                        <small>'.$edit_btn.'  '.ucwords(strtolower($value['description'])).'</small>
 	                      </div>
 	                    </div>
@@ -1911,7 +1917,7 @@
 
 	                    <div class="col-md-3">
 	                      <div class="form-group">
-						    <small>'.$button.' | '.$buttonView.' | '.$value['field_office'].'-'.substr($value['provDesc'],0,3).'-'.$value['ris_no'].' By '.$value['f_name'].' '.$value['l_name'].' '.$print.'</small>
+						    <small>'.$button.'  '.$buttonView.'  '.$print.'</small>
 	                      </div>
 	                    </div>
 
@@ -1930,16 +1936,7 @@
 	                      	  <h3>GRAND TOTAL</h3>
 	                      	 </div>
 	                    	</div>
-	              		</div>';	    
-
-	                
-   				
-						
-					  echo '<style>
-								.button2 {background-color: #008CBA;} /* Blue */
-								.button3 {background-color: #f44336;} /* Red */ 
-							</style>';
-							
+	              		</div>';	    							
 			    }
 
 		public function ris_edit_mod($id, $qty, $price){
@@ -3113,7 +3110,7 @@
 					public function rros_update_stand_fund_mod($amount){
 						$data = array(
 								'fund'			=> $amount,
-								'added_by'	=> $this->session->userdata('user')['user_id'],
+								'added_by'	    => $this->session->userdata('user')['user_id'],
 								'created'		=> date('Y-m-d H:i:s'),	
 								'deleted'		=> date('Y-m-d H:i:s')	
 						);
@@ -4267,14 +4264,14 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>Contact Number*</label>
-										<input type="number" min="0" class="form-control contactnumber">
+									   <input type="number" min="0" class="form-control contactnumber">
 								</div>
 							</div>';
 
 						echo '<div class="col-md-12">
 								<div class="form-group">
 									<label>DRN*</label>
-									  <input type="text" min="0" class="form-control drn">
+									   <input type="text" min="0" style="text-transform:uppercase" class="form-control drn">
 								</div>
 							</div>';
 
@@ -4286,13 +4283,38 @@
 							 </div>';					
 					}
 
-					public function pdf_gata_data_mod($rosit,$drmd_id){
+					public function pdf_get_data_mod($rosit,$drmd_id){
 							$this->db->select('*');
 							$this->db->from('rros_items as rosit');
 							$this->db->join('refprovince as province','province.provCode = rosit.province_origin','inner');
-							$this->db->where('rosit.id',$rosit);
+							$this->db->join('warehouse as wr','wr.provCode = rosit.province_origin','inner');
+							$this->db->where('rosit.id', $rosit);
 							$query = $this->db->get();
 							return $query->row_array();
+					}
+
+					public function pdf_get_assessed_mod($ris_no){
+							// $this->db->select('*');
+							// $this->db->from('drrs_items as drs_items');
+							// $this->db->join('items as itms', 'itms.id = drs_items.item','inner');
+							// $this->db->join('uom as om','om.id = drs_items.item_uom','inner');
+							// $this->db->where('drs_items.drmd_id', $drmd_id);
+							// $query = $this->db->get();
+							// return $query->row_array();
+
+							$this->db->select('*,itms.description as itemdescription');
+							$this->db->from('rros_items as rosit');
+							$this->db->join('items as itms', 'itms.id = rosit.item','inner');
+							$this->db->join('uom as om', 'om.id = rosit.item_uom','inner');
+							$this->db->join('drmd_request as drmd_req', 'drmd_req.id = rosit.drmd_id','inner');
+							$this->db->join('refprovince as province', 'province.provCode = drmd_req.province' ,'inner');
+							$this->db->join('refcitymun as municipality','municipality.citymunCode = drmd_req.mucipality','inner');
+							$this->db->where('rosit.ris_no', $ris_no);
+							$query = $this->db->get();
+							return $query->result_array();
+							
+							// echo json_encode($query->result_array());
+							
 					}
     }
 ?>

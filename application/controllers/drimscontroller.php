@@ -1110,6 +1110,10 @@ class drimscontroller extends CI_Controller {
 		$this->drimsmodel->add_pdf_file_data_mod();
 	}
 	
+
+	public function pdf_get_assessed_ctrl(){
+		$this->drimsmodel->pdf_get_assessed_mod('220530-3');
+	}
 	
 }
 

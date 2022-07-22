@@ -170,7 +170,7 @@
         $('.print_ris').on('click', function(){
             var rosit = $(this).attr('data-id');
             var drmd_id = $(this).attr('data-id1');
-            
+            var ris_no = $(this).attr('data-id2');
             $.ajax({
                 url: 'add_pdf_file_data_r',
                 method: 'POST',
@@ -199,7 +199,7 @@
                                     var purpose		   = $('.purpose').val();
                                 
                                     if(confirm('Are you sure you want to proceed?') == true) {
-                                        window.open('ris_get_reporting_r?rosit='+rosit+'&drmd_id='+drmd_id+'&contactperson='+contactperson+'&contactnumber='+contactnumber+'&drn='+drn+'&purpose='+purpose, '_blank');
+                                        window.open('ris_get_reporting_r?rosit='+rosit+'&drmd_id='+drmd_id+'&ris_no='+ris_no+'&contactperson='+contactperson+'&contactnumber='+contactnumber+'&drn='+drn+'&purpose='+purpose, '_blank');
                                     } 
                             }
                         }

@@ -167,7 +167,7 @@ $route['ris_edit_r'] = 'drimscontroller/ris_edit_ctrl';
 $route['ris_edit_final_r'] = 'drimscontroller/ris_edit_final_ctrl';
 $route['view_edit_history_r'] = 'drimscontroller/view_edit_history_ctrl';
 
-$route['test_r'] = 'drimscontroller/test_ctrl';
+$route['test_r'] = 'drimscontroller/pdf_get_assessed_ctrl';
 
 $route['ris_get_reporting_r'] = 'drimscontroller/ris_reporting_ctrl'; 
 
