@@ -70,6 +70,9 @@ $route['login_auth_update_r'] = 'drimscontroller/login_auth_update_ctrl';
 $route['login_auth_r'] = 'drimscontroller/login_auth_ctrl';
 $route['logout_r'] = 'drimscontroller/logout_ctrl';
 $route['dashboard_r'] = 'drimscontroller/dashboard_ctrl';
+
+$route['dashboard_home_r'] = 'drimscontroller/dashboard_home_ctrl';
+
 $route['drmd_request_r'] = 'drimscontroller/drmd_request_ctrl';
 $route['drmd_pending_r'] = 'drimscontroller/drmd_pending_ctrl';
 $route['get_city_r'] = 'drimscontroller/get_city_ctrl';
@@ -158,7 +161,6 @@ $route['fetch_report_r'] = 'drimscontroller/fetch_report_ctrl';
 $route['fetch_more_r'] = 'drimscontroller/fetch_more_ctrl';
 $route['add_pdf_file_data_r'] = 'drimscontroller/add_pdf_file_data_ctrl';
 
-
 //end reports
 $route['update_pass_r'] = 'drimscontroller/update_pass_ctrl';
 //directories
@@ -167,9 +169,7 @@ $route['ris_edit_r'] = 'drimscontroller/ris_edit_ctrl';
 $route['ris_edit_final_r'] = 'drimscontroller/ris_edit_final_ctrl';
 $route['view_edit_history_r'] = 'drimscontroller/view_edit_history_ctrl';
 
-$route['test_r'] = 'drimscontroller/pdf_get_assessed_ctrl';
-
 $route['ris_get_reporting_r'] = 'drimscontroller/ris_reporting_ctrl'; 
-
+$route['save_report_pdf_details_r'] = 'drimscontroller/save_report_pdf_details_ctr';
 
 

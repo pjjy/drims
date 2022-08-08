@@ -175,7 +175,9 @@
                 url: 'add_pdf_file_data_r',
                 method: 'POST',
                 cache: false,
-                
+                data:{
+                    rosit:rosit
+                },
                 success:function(data)
                 {
                     bootbox.confirm({
@@ -197,8 +199,44 @@
                                     var contactnumber  = $('.contactnumber').val();
                                     var drn            = $('.drn').val();
                                     var purpose		   = $('.purpose').val();
-                                
+
+                                    
+
                                     if(confirm('Are you sure you want to proceed?') == true) {
+
+                                        $.ajax({
+                                            url: 'save_report_pdf_details_r',
+                                            method: 'POST',
+                                            cache: false,
+                                            data:{
+                                                rosit:rosit,
+                                                drmd_id:drmd_id,
+                                                ris_no:ris_no,
+                                                contactperson:contactperson,
+                                                contactnumber:contactnumber,
+                                                drn:drn,
+                                                purpose:purpose
+                                            },
+                                            // success:function(data)
+                                            // {
+                                            //     bootbox.dialog({
+                                            //         title: 'Distribution',
+                                            //         onEscape: true,
+                                            //         message: data,
+                                            //         size: 'extra-large',
+                                            //         buttons: {
+                                            //             ok: {
+                                            //                 label: 'Close',
+                                            //                 className: 'btn-info',
+                                            //                 callback: function(){
+                                                                
+                                            //                 }
+                                            //             }
+                                            //         }
+                                            //     });
+                                            // }
+                                        });	
+
                                         window.open('ris_get_reporting_r?rosit='+rosit+'&drmd_id='+drmd_id+'&ris_no='+ris_no+'&contactperson='+contactperson+'&contactnumber='+contactnumber+'&drn='+drn+'&purpose='+purpose, '_blank');
                                     } 
                             }
@@ -206,6 +244,7 @@
                     }); 
                 }
             });
-
         });
+
+      
  </script>

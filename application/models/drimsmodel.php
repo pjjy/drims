@@ -423,13 +423,11 @@
 							$years = $years. 'Yrs';
 						}
 
-
 						if($months == 0){
 							$months = "";
 						}else{
 							$months = $months. 'Months';
 						}
-
 
 						if($days == 0){
 							$days = "";
@@ -437,13 +435,11 @@
 							$days = $days.' Days';
 						}
 
-
 						if($hours == 0){
 							$hours = "";
 						}else{
 							$hours = $hours.' Hours';
 						}
-
 
 						if($minuts == 0){
 							$minuts = "";
@@ -451,13 +447,11 @@
 							$minuts = $minuts.' Minutes';
 						}
 
-
 						if($seconds == 0){
 							$seconds = "";
 						}else{
 							$seconds= $seconds.' Seconds';
 						}
-
 				}
 
 				if($rs_fname != null){
@@ -513,7 +507,7 @@
 						}
 				}
 
-					echo '<div class="row">
+				  echo '<div class="row">
 						  <div class="col-md-4">
 			              <div class="form-group">
 			                   <b><label>DRMD</label></b>
@@ -621,9 +615,9 @@
 				                 </div>
 				               </div>
 				        <div>';
-				        $status = "";
+				   
 				    	foreach($data1 as $value1){     
-           					 echo '<div class="row">
+           					echo '<div class="row">
 				   				  	<div class="col-md-9">                                        
 						              </div>
 						                 <div class="col-md-3">
@@ -766,10 +760,11 @@
 
 	   public function drmd_details_mod($drmd_id){
 	   
-		$this->db->select('drmd_req.remarks as drmdremarks,drmd_req.id as drmd_id, drusr.first_name as drf_name, drusr.last_name as drl_name, drmd_req.created as dr_created , usr.first_name as dr_fname,usr.last_name as dr_lname, drs_req.drmd_id as drs_req_id ,drs_req.added_by as drs_by, drs_req.created as drs_created, ros_req.added_by as rs_by,ros_req.created as rs_created,usrs.first_name as rs_fname,usrs.last_name as rs_lname, rros_it.drmd_id as rros_it_drmd_id');
+		$this->db->select('date_letter_request, date_forwarded_drrs, inci.description as incident_description, drmd_req.incident, drmd_req.typhoonName, drmd_req.remarks as drmdremarks,drmd_req.id as drmd_id, drusr.first_name as drf_name, drusr.last_name as drl_name, drmd_req.created as dr_created , usr.first_name as dr_fname,usr.last_name as dr_lname, drs_req.drmd_id as drs_req_id ,drs_req.added_by as drs_by, drs_req.created as drs_created, ros_req.added_by as rs_by,ros_req.created as rs_created,usrs.first_name as rs_fname,usrs.last_name as rs_lname, rros_it.drmd_id as rros_it_drmd_id');
 		$this->db->from('drmd_request as drmd_req');
 		$this->db->join('users as drusr','drusr.user_id = drmd_req.added_by', 'left');
 		// $this->db->join('drrs_disapprove as drrs_disapp','drrs_disapp.drmd_id = drmd_req.id','left');
+		$this->db->join('incident as inci','inci.id = drmd_req.incident','inner');
 		$this->db->join('drrs_request as drs_req','drs_req.drmd_id = drmd_req.id','left');
 		$this->db->join('users as usr','usr.user_id = drs_req.added_by','left');
 		$this->db->join('rros_request as ros_req','ros_req.drmd_id = drmd_req.id','left');
@@ -979,14 +974,14 @@
 						</div>
 					  </div>
 					<div>';
-			   echo '<div class="row">
-							   <div class="col-md-4">    
-								 <small>'.$drf_name.' '.$drl_name.'</small><br>
+			    echo '<div class="row">
+						<div class="col-md-4">    
+							 <small>'.$drf_name.' '.$drl_name.'</small><br>
 								 <small>'.$dr_created.'</small>
-								 </div>
-							   <div class="col-md-4">
+							 </div>
+						<div class="col-md-4">
 
-							<small>'.$dr_fname.' '.$dr_lname.'</small><br>
+						<small>'.$dr_fname.' '.$dr_lname.'</small><br>
 							<small>'.$drs_created.'</small><br>
 							<small>'.$years.' '.$months.' '.$days.' '.$hours.' '.$minuts.' '.$seconds.'</small><br>
 						</div>
@@ -996,19 +991,35 @@
 							<small>'.$rs_created.'</small><br>
 							<small>'.$rrosyears.' '.$rrosmonths.' '.$rrosdays.' '.$rroshours.' '.$rrosminuts.' '.$rrosseconds.'</small>
 						</div>
-				 <div>';		
-
+				<div>';		
 				
-				echo '<p>Remarks: '.$data['drmdremarks'].'</p>'; 
+				$tyname = "";
+				if($data['incident'] == 1){
+					$tyname = '<p>Typhoon Name: '.$data['typhoonName'].'</p>';
+				}
 				echo '<hr>';
+				echo '<p>Incident: '.$data['incident_description'].'</p>';
+				echo $tyname;
+				echo '<p>Remarks: '.$data['drmdremarks'] .'</p>'; 
+				
+				// $this->db->select('*');
+				// $this->db->from();
+				// $this->db->join();
+				// $this->db->where();
+				// $query = $this->db->get();
+				// $data = $query->result_array();
+				
+				echo '<p>Date letter request recieved: '.date("m/d/y", strtotime($data['date_letter_request'])).'</p>';
+				echo '<p>Date forwarded to DRRS: '.date("m/d/y", strtotime($data['date_forwarded_drrs'])).'</p>';
+				echo '<hr>';
+
 				$this->db->select('*,drmd_itms.id as drid, drmd_itms.drmd_id as drmdid ,itms.description as spec_items,drmd_itms.item as drsItm , drmd_itms.item_requested as drmd_item_req, uom_desc.description as uom_description');
 				$this->db->from('drmd_items as drmd_itms');
 				$this->db->join('drmd_request as drmd_req','drmd_req.id = drmd_itms.drmd_id','inner');
 				$this->db->join('items as itms','itms.id = drmd_itms.item','inner');
 				$this->db->join('uom as uom_desc','uom_desc.id = drmd_itms.item_uom','inner');
 				$this->db->where('drmd_itms.drmd_id', $drmd_id);
-				// $this->db->where('drmd_itms.isdeleted !=','yes');
-				  $this->db->order_by('itms.type', 'desc');
+				$this->db->order_by('itms.type', 'desc');
 				$query = $this->db->get();
 				$data = $query->result_array();
 				   echo '<div class="row">
@@ -1036,11 +1047,11 @@
 									  <div class="col-md-3">                                        
 							  <small>'.$value['spec_items'].'</small>
 						  </div>
-							 <div class="col-md-3">
+							 <div class="col-md-3">	
 							 <small>'.$value['uom_description'].'</small>
 						  </div>
 						  <div class="col-md-4">
-							 <small>'.$value['drmd_item_req'].'</small>
+							 <small>'.number_format($value['drmd_item_req']).'</small>
 									&nbsp;&nbsp;&nbsp;
 									'.(($value['drrs_status'] == '1')? '' :'  
 									<small><a class="drmd_details_edit_item" data-id='.$value['drid'].' data-id1='.$value['drmdid'].' href="javascript:void(0);" style="color:BLUE">EDIT</a></small>&nbsp;	&nbsp;	&nbsp;
@@ -1072,20 +1083,20 @@
 							 </div>
 						   </div>
 					<div>';
-					$status = "";
+				
 					foreach($data1 as $value1){     
 							echo '<div class="row">
 									 <div class="col-md-9">                                        
-								  </div>
+								  </div>    
 									 <div class="col-md-3">
-									 <small>'.$value1['item_qty'].'</small>
-									 '.(($this->session->userdata('user')['role'] != '4')? '' : '
+									 	<small>'.number_format($value1['item_qty']).'</small>
+									 		'.(($this->session->userdata('user')['role'] != '4')? '' : '
 											 <small>  <a class="drrs_edit_qty" data-id='.$value1['drrsid'].' data-id1='.$value1['item_qty'].' href="javascript:void(0);" style="color:BLUE">EDIT</a></small>').'
-											</div>	           	     
-								 </div>';	
+										</div>	           	     
+								  </div>';
 				   }
 
-				 echo "<script>
+				   echo "<script>
 						 $('.drmd_details_remove_item').on('click', function(){
 								var drid = $(this).attr('data-id');								
 								bootbox.confirm({
@@ -1117,11 +1128,11 @@
 														}
 													});
 												},
-											});		
+											});
 								   }
 								}
 							});
-						});
+					});
 
 					$('.drrs_edit_qty').on('click',function(){
 						var drrsid = $(this).attr('data-id');
@@ -1215,7 +1226,9 @@
 							 }
 						  });					  
 					});	
-				  </script>";			  
+				  </script>";			
+				  
+				  
        }
 
 	   public function drrs_update_quatity_mod($drrsid,$quantity){
@@ -1318,7 +1331,7 @@
 		}			
 
 
-	    public function save_drmd_mod($incident,$province,$municipality,$requester,$otherrequester,$otherincident,$remarks,$datepicker,$datepicker1, $food_item, $food_qty, $food_uom, $non_food_item, $non_food_qty, $non_food_uom,$user_id){
+	    public function save_drmd_mod($incident,$typhoonName,$province,$municipality,$requester,$otherrequester,$otherincident,$remarks,$datepicker,$datepicker1, $food_item, $food_qty, $food_uom, $non_food_item, $non_food_qty, $non_food_uom,$user_id){
 	    		$last_id = 0;
 				$this->db->select('id');
 				$this->db->from('drmd_request as dr');
@@ -1344,6 +1357,7 @@
 				
 		    	$data = array(
 						'incident'		 			=> $incident,
+						'typhoonName'				=> $typhoonName,
 						'reference_no' 	 			=> substr($prov_name,0,3).'-'.strtoupper($incident_name).'-'.date("Ymd").'-'.$last_id,
 						'province' 		 			=> $province,
 						'mucipality'	 			=> $municipality,
@@ -1772,7 +1786,7 @@
 
 	    public function drrs_dristibution_mod($drid){   	    	
 
-	    	$this->db->select('*, um.description as uom_desc , rrosit.drmd_id as rros_drmd_id , rrosit.id as rosit ,rrosit.created as rosb_created , usr_det1.first_name as f_name, usr_det1.last_name as l_name');
+			$this->db->select('*, um.description as uom_desc , rrosit.drmd_id as rros_drmd_id , rrosit.id as rosit ,rrosit.created as rosb_created , usr_det1.first_name as f_name, usr_det1.last_name as l_name');
 	    	$this->db->from('rros_items as rrosit');
 	    	$this->db->join('uom as um','um.id = rrosit.item_uom','inner');
 	    	$this->db->join('items as itm','itm.id = rrosit.item','inner');
@@ -1780,7 +1794,7 @@
 	    	$this->db->join('users as usr_det1', 'usr_det1.user_id = rrosit.added_by','inner');
 	    	$this->db->join('drmd_request as drmd_req','drmd_req.id = rrosit.drmd_id','inner');
 			$this->db->join('refprovince as province','province.provCode = rrosit.province_origin','inner');
-	    	$this->db->order_by('rrosit.id', 'asc');
+	    	// $this->db->order_by('rrosit.id', 'asc');
 	    	$this->db->where('rrosit.drmd_id', $drid);
 	    	$this->db->where('rrosit.qty_released !=', 0);
 	    	$query = $this->db->get();
@@ -1798,7 +1812,6 @@
                    <b><label>UOM</label></b>
                 </div>
                 </div>
-
                 <div class="col-md-1">
                  <div class="form-group">
                    <b><label>QTY REQUESTED</label></b>
@@ -1815,7 +1828,6 @@
                    <b><label>QTY RELEASED</label></b>
                  </div>
             	 </div>
-
             	 <div class="col-md-1">
                  <div class="form-group">
                    <b><label>PRICE</label></b>
@@ -1826,13 +1838,11 @@
                    <b><label>TOTAL</label></b>
                  </div>
             	 </div>
-
             	 <div class="col-md-3">
                   <div class="form-group">
                    <b><label>RIS NUMBER</label></b>
                   </div>
             	 </div>
-
             	 <div class="col-md-1">
                   <div class="form-group">
                    <b><label>DATE PROCESSED</label></b>
@@ -1855,30 +1865,26 @@
 								'.$value['field_office'].'-'.substr($value['provDesc'],0,3).'-'.$value['ris_no'].' By '.$value['f_name'].' '.$value['l_name'].'
 							</button>
 								<div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3" style="">
-									<a class="view_distribution dropdown-item" data-id="'.$value['rosit'].'" href="#"><i class="mdi mdi-eye"></i>&nbsp;&nbsp;&nbsp;View distribution</a>
+								    <a class="view_distribution dropdown-item" data-id="'.$value['rosit'].'" href="#"><i class="mdi mdi-eye"></i>&nbsp;&nbsp;&nbsp;View distribution</a>
 									<a class="add_distribution  dropdown-item" data-id="'.$value['rosit'].'" href="#"><i class="mdi mdi-playlist-plus"></i>&nbsp;&nbsp;&nbsp;Add distribution</a>
 									<a class="print_ris dropdown-item" data-id="'.$value['rosit'].'"  data-id1="'.$value['rros_drmd_id'].'" data-id2="'.$value['ris_no'].'" href="#"><i class="mdi mdi-printer"></i>&nbsp;&nbsp;&nbsp;Print RIS</a>
-								
 								</div>
 						</div>';
+					
 
-	     		//  $button = '<button class="add_distribution button3" data-id="'.$value['rosit'].'">+</button>';
-
-				// $buttonView = '<button class="view_distribution button3" data-id="'.$value['rosit'].'">Y</button>';
-
-				// $button = '';
-
-				// $buttonView = '';
-
-				$edit_btn = '<a href="javascript:void(0);" <button data-id="'.$value['rosit'].'" data-id1="'.$value['qty_released'].'" data-id2="'.$value['price'].'" data-id3="'.$value['qty_left'].'" data-id4="'.$value['qty_approved'].'" class="btn_ris_edit"><div class="badge badge-opacity-success">Edit</div></a>';
-   				echo '
+					if($this->session->userdata('user')['role'] != '7'){
+						$edit_btn = '<a href="javascript:void(0);" <button data-id="'.$value['rosit'].'" data-id1="'.$value['qty_released'].'" data-id2="'.$value['price'].'" data-id3="'.$value['qty_left'].'" data-id4="'.$value['qty_approved'].'" class="btn_ris_edit"><div class="badge badge-opacity-success">Edit</div></a>';
+   				    }else{
+						$edit_btn = "";
+					}
+					
+				echo '
 	   				 <div class="row">
 				   		<div class="col-md-2">
 				   		  <div class="form-group">			 
 	                        <small>'.$edit_btn.'  '.ucwords(strtolower($value['description'])).'</small>
 	                      </div>
 	                    </div>
-
 	                    <div class="col-md-1">
 	                      <div class="form-group">
 	                        <small>'.$value['uom_desc'].'</small>
@@ -1908,19 +1914,16 @@
 	                        <small>₱'.number_format($value['price'],2).'</small>
 	                      </div>
 	                    </div>
-
 	                    <div class="col-md-1">
 	                      <div class="form-group">
 	                        <small>₱'.number_format($value['price'] * $value['qty_released'],2).'</small>
 	                      </div>
 	                    </div>
-
 	                    <div class="col-md-3">
 	                      <div class="form-group">
 						    <small>'.$button.'  '.$buttonView.'  '.$print.'</small>
 	                      </div>
 	                    </div>
-
 	                    <div class="col-md-1">
 	                      <div class="form-group">
 	                    	<small>'.date('m/d/Y h:i:s a', strtotime($value['rosb_created'])).'</small>
@@ -1936,8 +1939,9 @@
 	                      	  <h3>GRAND TOTAL</h3>
 	                      	 </div>
 	                    	</div>
-	              		</div>';	    							
-			    }
+	              		</div>';	    			
+			
+		}
 
 		public function ris_edit_mod($id, $qty, $price){
 
@@ -2659,7 +2663,6 @@
 
 								//   }
 									
-//
 									$data1 = array(
 										'item_uom'			=> $item_uom[$q],
 										'item'				=> $items[$q],
@@ -2715,11 +2718,12 @@
 							$this->db->select('*,drs_req.no_beneficiaries as drs_no_bene ,drmd_req.incident as inci_num ,ros_it.id as rosb_id , ros_it.created as rosb_created, drmd_req.id as drid  , inci.description as incidesc , req.description as  reqdesc');
 							$this->db->from('drmd_request as drmd_req');
 							$this->db->join('drrs_request as drs_req','drs_req.drmd_id = drmd_req.id', 'left');
+							$this->db->join('refcitymun as rcity','rcity.citymunCode = drmd_req.mucipality','left');
 							$this->db->join('incident as inci','inci.id = drmd_req.incident', 'left');
 							$this->db->join('requester as req','req.id = drmd_req.requester', 'left');
 							$this->db->join('drrs_items as drrs_it','drrs_it.drmd_id = drmd_req.id','left');
 							$this->db->join('rros_items as ros_it','ros_it.drmd_id = drmd_req.id','left');
-							
+							$this->db->join('drmd_date_response as d_response','d_response.drmd_id = drmd_req.id','left');
 							// $this->db->join('drrs_request_distri as drs_liq','drs_liq.drmd_id = drmd_req.id','left');						
 							$this->db->join('refprovince as prov', 'prov.provCode = drmd_req.province', 'left');
 							$this->db->join('refcitymun as muni', 'muni.citymunCode = drmd_req.mucipality', 'left');
@@ -2746,23 +2750,38 @@
 							foreach($data as $key => $value){
     		  				$key++;
 							$remarks = "";	
-       		        								    
+
 							if($value['inci_num'] == 1){
 								$remarks = '-'.$value['remarks'];
-							}  
+							}else if($value['response_date'] != null){
+								
+							}
+							
+							// $noDaysResponded = $value['response_date'] - $value['date_approval'];
 
+							$datetime1 = date_create($value['response_date']);
+							$datetime2 = date_create($value['date_approval']);
+							
+							
+							$interval = date_diff($datetime1, $datetime2);
+		
 							echo '<tr>
 								  	<td><p>'.$key.'.</p></td>
+									<td><p>'.$value['disctrictcode'].'</p></td>
 								 	<td><p>'.$value['provDesc'].'</p></td>
 								 	<td><p>'.$value['citymunDesc'].'</p></td>
-								 	<td><p>'.$value['incidesc'].' '.$remarks.'</p></td>
+								 	
 									<td><p>'.$value['drs_no_bene'].'</p></th>
 								 	<td><p>'.date_format(new DateTime($value['date_letter_request']), 'd-m-Y').'</p></td>
-							  	 	<td><p>'.number_format($value['item_requested'],2).'</p></td>
-								 	<td><p>'.number_format($value['item_qty'],2).'</p></td>
+							  	 	<td><p>'.number_format($value['item_requested']).'</p></td>
+								 	<td><p>'.number_format($value['item_qty']).'</p></td>
+
+									<td><p>'.$value['response_date'].'</p></td>
+									<td><p>'.$interval->format('%R%y years %m months %R%a days').'</p></td>
+
 								 	<td><p>'.date_format(new DateTime($value['date_approval']), 'd-m-Y').'</p></td>
 									<td><p>'.date_format(new DateTime($value['rosb_created']), 'd-m-Y').'</p></td>
-								 	
+							 	
 								 </tr>';		 
 	    	 		        }   
 	      	}
@@ -3629,18 +3648,18 @@
 							</div>
 								<div class="col-md-2">
 								<div class="form-group">
-									<b><label>Remarks</label></b>
+									<b><label>RIS #</label></b>
 								</div>
 							</div>
 							<div class="col-md-2">
 							<div class="form-group">
-								<b><label>RIS #</label></b>
+								<b><label></label></b>
 							</div>
 							</div>
 					 	<div>';
 						
 						if(empty($data)){
-							echo 'No data yet for this now.';
+							echo '<h4 style="color: red;"> No data yet for this now. </h4>';
 						}
 																		
 						foreach($data as $key => $value){
@@ -4230,7 +4249,7 @@
 						                </div> 
 						            <div>';
 						if(empty($data)){
-							echo 'No data yet for this now.';
+							echo '<h4 style="color: red;"> No data yet for this now. </h4>';
 						}
 						foreach($data as $value){
 								echo '<div class="row">
@@ -4250,35 +4269,43 @@
 
 					}
 
-					public function add_pdf_file_data_mod(){
+					public function add_pdf_file_data_mod($rros_id){
 						
+						$this->db->select('*');
+						$this->db->from('rros_pdf_save_data as ros_pdf_data');
+						$this->db->where('ros_pdf_data.rros_id',$rros_id);
+						$this->db->order_by('ros_pdf_data.id','desc');
+						$this->db->limit(1);
+						$query = $this->db->get();
+						$data = $query->row_array();	
+						// echo $rros_id;
 						echo '
 							<div class="col-md-12">
 								<div class="form-group">
 									<label>Contact Person*</label>
-										<input type="text" min="0" class="form-control contactperson">
+										<input type="text" value="'.$data['contactperson'].'" min="0" class="form-control contactperson">
 								</div>
 							</div>';
 						
 						echo '
-							<div class="col-md-12">
-								<div class="form-group">
-									<label>Contact Number*</label>
-									   <input type="number" min="0" class="form-control contactnumber">
-								</div>
-							</div>';
-
+							 <div class="col-md-12">
+							 	<div class="form-group">
+							 		<label>Contact Number*</label>
+							 		   <input type="number" value="'.$data['contactnumber'].'" min="0" class="form-control contactnumber">
+							 	</div>
+							 </div>';
+                        
 						echo '<div class="col-md-12">
-								<div class="form-group">
-									<label>DRN*</label>
-									   <input type="text" min="0" style="text-transform:uppercase" class="form-control drn">
-								</div>
-							</div>';
-
+							 	<div class="form-group">
+							 		<label>DRN*</label>
+							 		   <input type="text" min="0" value="'.$data['drn'].'" style="text-transform:uppercase" class="form-control drn">
+							 	</div>
+							 </div>';
+                        
 						echo '<div class="col-md-12">
 								<div class="form-group">
 								  <label>Purpose*</label>
-										<textarea class="form-control purpose"></textarea>
+										<textarea class="form-control purpose" value="'.$data['purpose'].'">'.$data['purpose'].'</textarea>
 								</div>
 							 </div>';					
 					}
@@ -4315,6 +4342,20 @@
 							
 							// echo json_encode($query->result_array());
 							
+					}
+
+
+					public function save_report_pdf_details_mod($rosit,$drmd_id,$ris_no,$contactperson,$contactnumber,$drn,$purpose){
+						
+						$data = array(
+							'rros_id' => $rosit,
+							'drmd_id' => $drmd_id,
+							'contactperson' =>  $contactperson,
+							'contactnumber' => $contactnumber,
+							'drn' => $drn,
+							'purpose' => $purpose	
+						);
+						$this->db->insert('rros_pdf_save_data', $data);
 					}
     }
 ?>

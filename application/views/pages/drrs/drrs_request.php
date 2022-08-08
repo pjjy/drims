@@ -118,14 +118,14 @@
                                               <span class="input-group-addon input-group-prepend border-right">
                                                 <span class="icon-calendar input-group-text calendar-icon"></span>
                                               </span>
-                                            <input type="text" class="form-control date_letter_req_rec_from_drmd" id="datepicker2" readonly>
+                                             <input type="text" value="hello" class="form-control date_letter_req_rec_from_drmd" id="datepicker2" readonly>
                                            </div>
                                           </div>
                                         </div>
 
                                         <div class="col-md-3">
                                           <div class="form-group">
-                                            <label for="exampleFormControlSelect2">DATE RECEIVED FROM DRMD</label>
+                                            <label for="exampleFormControlSelect2">DATE APPROVED FROM DRMD</label>
                                              <div id="datepicker-popup" class="input-group date datepicker navbar-date-picker">
                                               <span class="input-group-addon input-group-prepend border-right">
                                                 <span class="icon-calendar input-group-text calendar-icon"></span>

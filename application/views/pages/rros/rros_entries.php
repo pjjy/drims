@@ -42,10 +42,10 @@
                                                     $incident_name = $value['incidesc'];
                                                     $requester_name = $value['reqsdesc'];
                                                     if($value['inci_num'] == 13){
-                                                      $incident_name = 'u.s: '.$value['ot_inci'];
+                                                      $incident_name = $value['ot_inci'];
                                                     }
                                                     if($value['req_num'] == 11){
-                                                      $requester_name = 'u.s: '.$value['ot_req_desc'];
+                                                      $requester_name = $value['ot_req_desc'];
                                                     }
                                                     $key++;
                                                     echo 

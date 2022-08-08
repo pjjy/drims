@@ -32,6 +32,8 @@ $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',
 $this->load->model('drimsmodel'); //drimsmodel
 $data = $this->drimsmodel->pdf_get_data_mod($_GET['rosit'], $_GET['drmd_id']); //drimsmodel to pull all data
 $data1 = $this->drimsmodel->pdf_get_assessed_mod($_GET['ris_no']);
+// $this->drimsmodel->save_report_pdf_details_mod($_GET['rosit'],$_GET['drmd_id'],$_GET['ris_no'],$_GET['contactperson'],$_GET['contactnumber'],$_GET['drn'],$_GET['purpose']);
+
 
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
@@ -200,7 +202,7 @@ $html = '
     <tr>
         <th style="width:17% ; text-align:left;"><small><b>Printed Name:</b></small></th>
         <th style="width:20% ; text-align:center;"><small><b>LILIBETH A. CABIARA</b></small></th>
-        <th style="width:25% ; text-align:center;"><small><b>SHALAINE MARIE S. LUCERO</b></small></th>
+        <th style="width:25% ; text-align:center;"><small><b>SHALAINE MARIE S. LUCERO, CESO IV</b></small></th>
         <th style="width:20% ; text-align:center;"><small><b>AIMEE FEI V. BINONGO</b></small></th>
         <th style="width:18% ; text-align:center;"></th>
     </tr>

@@ -194,6 +194,85 @@ class drimscontroller extends CI_Controller {
 		$sideData['cound_drmd_entry']			= $this->drimsmodel->cound_drmd_entry_mod();
 		$sideData['count_ris_dr_mod']			= $this->drimsmodel->count_ris_dr_mod();
 
+    	// $dashData['total_assistance']			= $this->drimsmodel->get_overall_ass_mod();
+    	// $dashData['total_ffp']			    	= $this->drimsmodel->get_overall_ffp_mod();
+    	// $dashData['total_to_distribute']		= $this->drimsmodel->get_overall_to_distri_ffp_mod();
+    	// $dashData['get_segregated_province']	= $this->drimsmodel->get_segregated_province_mod();
+    	// $dashData['get_running_data'] 		  	= $this->drimsmodel->get_running_data_mod();
+    	// $dashData['get_cost_food'] 			  	= $this->drimsmodel->get_cost_food();
+    	// $dashData['get_cost_non_food'] 		  	= $this->drimsmodel->get_cost_non_food();
+
+    	// $dashData['get_latest_fund'] 			= $this->drimsmodel->get_latest_fund_mod(); //standby fund
+
+		// $dashData['get_incident'] 	    		= $this->drimsmodel->get_incident_mod();
+		// $dashData['get_province'] 	    		= $this->drimsmodel->get_province_mod();
+		// // $dashData['get_default_city']   		= $this->drimsmodel->get_default_city_mod('0712');
+		// $dashData['get_requester']	    		= $this->drimsmodel->get_requester();
+		// $dashData['get_labangon_wr']			= $this->drimsmodel->get_labangon_wr_mod();
+		// $dashData['get_bohol_wr']				= $this->drimsmodel->get_bohol_wr_mod();
+		// $dashData['get_negros_wr']				= $this->drimsmodel->get_negros_wr_mod();
+
+
+    	if($this->session->userdata('user')['status'] == 1){
+			$this->load->view('header/header');
+
+			if($this->session->userdata('user')['role'] == '1'){
+				$this->load->view('sidebar/susidebar', $sideData);
+			}
+			if($this->session->userdata('user')['role'] == '3'){
+				$this->load->view('sidebar/drmdsidebar', $sideData);
+			}
+			if($this->session->userdata('user')['role'] == '4'){
+				$this->load->view('sidebar/drrssidebar', $sideData);
+			}
+			if($this->session->userdata('user')['role'] == '5'){
+				$this->load->view('sidebar/rrossidebar', $sideData);
+			}
+			if($this->session->userdata('user')['role'] == '6'){
+				$this->load->view('sidebar/drimssidebar', $sideData);
+			}
+			if($this->session->userdata('user')['role'] == '7' || $this->session->userdata('user')['role'] == '8' || $this->session->userdata('user')['role'] == '9'){
+				$this->load->view('sidebar/warehousesidebar', $sideData);
+			}
+
+			$this->load->view('dashboard/dashboard');
+			$this->load->view('footer/footer');
+			$this->load->view('js/js');		
+    	}
+		else if(empty($this->session->userdata('user'))){
+			$this->load->view('header/header');
+			$this->load->view('sidebar/allsidebar');
+			$this->load->view('dashboard/dashboard');
+			$this->load->view('footer/footer');
+			$this->load->view('js/js');
+		}
+    	else if($this->session->userdata('user')['status'] == 0){
+     		redirect('log_in_check_r');
+     	}
+    	else{
+			redirect('/');
+    	}
+    }
+
+	public function dashboard_home_ctrl(){
+		$this->load->library('session');
+		$dashData['get_drmd_request'] = $this->drimsmodel->get_drmd_request_dash_mod();
+		$dashData['get_drrs_disap_request'] = $this->drimsmodel->get_drrs_disap_request_mod();
+		$sideData['first_name']					= $this->session->userdata('user')['first_name'];
+    	$sideData['user_id']					= $this->session->userdata('user')['user_id'];
+		$sideData['last_name'] 					= $this->session->userdata('user')['last_name'];
+		$sideData['count_pending'] 				= $this->drimsmodel->count_pending_mod();
+		$sideData['count_disapproved']  		= $this->drimsmodel->count_disapproved();
+		$sideData['count_processed'] 			= $this->drimsmodel->count_processed();
+		$sideData['count_delinquent'] 			= $this->drimsmodel->count_delinquent();
+
+		$sideData['count_pending_dr_mod'] 		= $this->drimsmodel->count_pending_dr_mod();
+		$sideData['count_processed_dr_mod'] 	= $this->drimsmodel->count_processed_dr_mod();
+		$sideData['count_ris_dr_mod'] 			= $this->drimsmodel->count_ris_dr_mod();
+
+		$sideData['cound_drmd_entry']			= $this->drimsmodel->cound_drmd_entry_mod();
+		$sideData['count_ris_dr_mod']			= $this->drimsmodel->count_ris_dr_mod();
+
     	$dashData['total_assistance']			= $this->drimsmodel->get_overall_ass_mod();
     	$dashData['total_ffp']			    	= $this->drimsmodel->get_overall_ffp_mod();
     	$dashData['total_to_distribute']		= $this->drimsmodel->get_overall_to_distri_ffp_mod();
@@ -235,14 +314,14 @@ class drimscontroller extends CI_Controller {
 				$this->load->view('sidebar/warehousesidebar', $sideData);
 			}
 
-			$this->load->view('dashboard/dashboard', $dashData);
+			$this->load->view('dashboard/dashboard_home', $dashData);
 			$this->load->view('footer/footer');
 			$this->load->view('js/js');		
     	}
 		else if(empty($this->session->userdata('user'))){
 			$this->load->view('header/header');
 			$this->load->view('sidebar/allsidebar');
-			$this->load->view('dashboard/dashboard', $dashData);
+			$this->load->view('dashboard/dashboard_home', $dashData);
 			$this->load->view('footer/footer');
 			$this->load->view('js/js');
 		}
@@ -252,7 +331,7 @@ class drimscontroller extends CI_Controller {
     	else{
 			redirect('/');
     	}
-    }
+	}
 
     public function drmd_request_ctrl(){
     	$this->load->library('session');
@@ -298,6 +377,7 @@ class drimscontroller extends CI_Controller {
 		if(isset($_POST['incident'])){
 			$this->drimsmodel->save_drmd_mod(
 				$this->input->post('incident'),
+				$this->input->post('typhoonName'),
 				$this->input->post('province'),
 				$this->input->post('municipality'),
 				$this->input->post('requester'),
@@ -1107,18 +1187,17 @@ class drimscontroller extends CI_Controller {
 
 
 	public function add_pdf_file_data_ctrl(){
-		$this->drimsmodel->add_pdf_file_data_mod();
+		$this->drimsmodel->add_pdf_file_data_mod($this->input->post('rosit'));
 	}
 	
+	public function save_report_pdf_details_ctr(){
+		if(isset($_POST['rosit'])){
+			 
+			$this->drimsmodel->save_report_pdf_details_mod($this->input->post('rosit'),$this->input->post('drmd_id'),$this->input->post('ris_no'),$this->input->post('contactperson'),$this->input->post('contactnumber'),$this->input->post('drn'),$this->input->post('purpose'));
+			
+		}
+	}
 
-	public function pdf_get_assessed_ctrl(){
-		$this->drimsmodel->pdf_get_assessed_mod('220530-3');
-	}
-	
 }
-
-
-
-
 
 

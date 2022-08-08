@@ -1,4 +1,5 @@
 <script>
+
 	$(document).ready(function(){
 			var req_id;
 			var both;
@@ -7,6 +8,10 @@
 
 			// showGraph();
 
+			var otherIncidentBool = false;
+			var otherRequesterBool = false;
+			var typhoonNameBool = true;
+
 			$('.input-images').imageUploader();
 			$('.non-food-items').hide();
 			$('.food-items').hide();
@@ -14,7 +19,11 @@
 			$('.autofilled_disapprove').hide();
 			$('.more_details').hide();
 			$('.report_tbl').hide();
-			$('.windy').hide();
+			$('.others').hide();
+			$('.otherrequester').hide();
+			$('.typhoonName').show();
+
+			// $('.windy').hide();
 			// $('.others').hide();
 			// $('.otherrequester').hide();
 
@@ -35,29 +44,48 @@
 			$(document).ready(function() {
     			$('#drrs_table2').DataTable();
 			});
-			
+					
+
 			$('#incident').on('change',function(){
 				
-				 if($(this).val() == '13'){
-					$('#otherincident').removeAttr('disabled'); 
-				 }else{
-				 	$('#otherincident').attr('disabled', 'enabled'); 
-				 	$('#otherincident').val(''); 
-				 }
+				if($(this).val() == '13'){ 
+					$('.others').fadeIn();
+					$('.typhoonName').fadeOut();
+					$('#typhoonName').val('');
+					$('#otherincident').val('');
+					otherIncidentBool = true;	
+				}				
+				else if($(this).val() == '1'){
+					$('.others').fadeOut();
+					$('.typhoonName').fadeIn();
+					typhoonNameBool = true;
+				}else{
+
+					$('.others').fadeOut();
+					$('.others').val('');
+					typhoonNameBool = false;
+
+				 	$('.typhoonName').fadeOut();
+					$('#typhoonName').val('');
+					$('#otherincident').val('');
+					otherIncidentBool = false; 
+				}				
 			});	
 
 			$('#requester').on('change',function(){
-					// alert($(this).val()); 
-				 if($(this).val() == '11'){
-					$('#otherrequester').removeAttr('disabled'); 
-				 }else{
-				 	$('#otherrequester').attr('disabled', 'enabled'); 
-				 	$('#otherrequester').val(''); 
-				 }
+				if($(this).val() == '11'){
+					$('.otherrequester').fadeIn();
+					otherRequesterBool = true
+				}else{
+					$('.otherrequester').fadeOut();
+					$('#otherrequester').val('');
+					otherRequesterBool = false;
+				}
+				console.log("other requester-"+otherRequesterBool);
 			});	
 
 			$('#province').on('change',function(){
-			   var province_id = $('#province option:selected').val();
+			     var province_id = $('#province option:selected').val();
 			 	 $.ajax({
 		            url:'get_city_r',
 		            method:'POST',
@@ -94,19 +122,29 @@
 			    });
 			});	
 
+		
 
 		
 			$('#save_bt').on('click',function(){
 
+				var incident 	    = $("#incident").val();
+				var typhoonName 	= $("#typhoonName").val();
+				var otherincident   = $("#otherincident").val();
+				var province 	    = $("#province").val();
+				var municipality    = $("#municipality").val();
+				var requester 	    = $("#requester").val();
+				var otherrequester  = $("#otherrequester").val();	
+				var remarks 	    = $("#remarks").val();
+				var datepicker 	    = $("#datepicker").val();
+				var datepicker1     = $("#datepicker1").val();
+				
 				var food_item		= [];
 				var food_qty 		= [];
 				var food_uom 		= [];
 			
-
 				var non_food_item   = [];
 				var non_food_qty 	= [];
 				var non_food_uom 	= [];
-	
 
 				$('.food_item').each(function(){
 					food_item.push($(this).attr('data-id'));
@@ -126,7 +164,6 @@
 					non_food_item.push($(this).attr('data-id'));
 				});
 
-
 				$('.non-food-uom').each(function(){
 					non_food_uom.push($(this).val());	
 				});
@@ -135,21 +172,6 @@
 					non_food_qty.push($(this).val());
 				});
 
-
-				var incident 	    = $("#incident").val();
-				var otherincident   = $("#otherincident").val();
-				var province 	    = $("#province").val();
-				var municipality    = $("#municipality").val();
-				var requester 	    = $("#requester").val();
-				var otherrequester  = $("#otherrequester").val();	
-				var remarks 	    = $("#remarks").val();
-				var datepicker 	    = $("#datepicker").val();
-				var datepicker1     = $("#datepicker1").val();
-
-				//if(requester.length <= 0 || datepicker.length <= 0 || datepicker1.length <= 0){
-				// bootbox.alert("Hello, please enter some valid values");
-				//}
-
 				if(datepicker.length <= 0){
 					bootbox.alert("Notice, please enter valid value in date letter request");
 				}
@@ -157,13 +179,36 @@
 					bootbox.alert("Notice, please enter valid values in date forwarded in drrs");
 				}
 				else if(remarks.trim().length <= 0){
-					bootbox.alert("Notice, Empty remarks!");
+					bootbox.alert("Notice, Please enter remarks!");
 				}
-				// else if(food_item == ""){
-				// 	alert();
-				// }
+				else if(otherIncidentBool == true){
+					if(otherincident.length <= 0){
+						bootbox.alert("Notice, Please enter specific incident!");
+					}else{
+						saveAlertFunction(incident,typhoonName,otherincident,province,municipality,requester,otherrequester,remarks,datepicker,datepicker1,food_item,food_qty,food_uom,non_food_item,non_food_qty,non_food_uom);
+					}
+				}	
+				else if(typhoonNameBool == true){
+					if(typhoonName.length <= 0){
+						bootbox.alert("Notice, Please enter specific typhoon name!")
+					}else{
+						saveAlertFunction(incident,typhoonName,otherincident,province,municipality,requester,otherrequester,remarks,datepicker,datepicker1,food_item,food_qty,food_uom,non_food_item,non_food_qty,non_food_uom);
+					}
+				}
+				else if(otherRequesterBool == true){
+					if(otherrequester.length <= 0){
+						bootbox.alert("Notice, Please enter specific requester!")
+					}else{
+						saveAlertFunction(incident,typhoonName,otherincident,province,municipality,requester,otherrequester,remarks,datepicker,datepicker1,food_item,food_qty,food_uom,non_food_item,non_food_qty,non_food_uom);
+					}
+				}
 				else{
-					bootbox.confirm({
+					saveAlertFunction(incident,typhoonName,otherincident,province,municipality,requester,otherrequester,remarks,datepicker,datepicker1,food_item,food_qty,food_uom,non_food_item,non_food_qty,non_food_uom);
+				}
+			});	
+			
+			function saveAlertFunction(incident,typhoonName,otherincident,province,municipality,requester,otherrequester,remarks,datepicker,datepicker1,food_item,food_qty,food_uom,non_food_item,non_food_qty,non_food_uom){
+				bootbox.confirm({
 					    title: "Hello!",
 					    message: "Please review you entry before proceeding, thank you",
 					    buttons: {
@@ -182,6 +227,7 @@
 								            cache: true,
 								            data:{
 								                incident       		: incident,
+												typhoonName			: typhoonName,
 												province       		: province,
 											    municipality   		: municipality,
 											    otherincident  		: otherincident,
@@ -207,8 +253,7 @@
 					         }
 					    }
 					});
-				}
-			});	
+			}
 
 			$('.drrs_process').on('click',function(){
 				$('.autofilled').fadeOut(300);

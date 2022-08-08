@@ -31,7 +31,6 @@
                                                      <!-- <th>Drmd</th> -->
                                                      <!-- <th>More</th> -->
                                                      <th>Action</th>
-                                                    
                                                   </tr>
                                                </thead>
                                               <tbody>
@@ -42,19 +41,18 @@
 
                                                       $d = '<a href="javascript:void(0);" <button="" data-id="'.$value['drid'].'" class="btn_add_response_letter"><div class="badge badge-opacity-warning">Add date of response letter</div></a>';
                                                     
-
                                                       $e =  '';
                                                      
                                                       if($value['inci_num'] == 13){
                                                         $incident_name = 'u.s: '.$value['ot_inci'];
                                                       }
+
                                                       if($value['req_num'] == 11){
                                                         $requester_name = 'u.s: '.$value['ot_req_desc'];
                                                       }
                                                       if($value['response_id']){
                                                         $d = '<a href="javascript:void(0);" <button="" data-id="'.$value['drid'].'" class="btn_view_response_letter"><div class="badge badge-opacity-success">View response letter date</div></a>';
                                                         $e = '<a href="javascript:void(0);" <button="" data-id="'.$value['drid'].'" class="btn_add_response_letter"><div class="badge badge-opacity-success">Edit date</div></a>';
-                                                     
                                                       }
 
                                                        $key++;

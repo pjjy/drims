@@ -27,15 +27,23 @@
                                          <?php
                                               foreach($get_incident as $value){ 
                                                   echo '<option value ='.$value['id'].'>'.$value['description'].'</option>';
-                                               }
+                                              }
                                          ?>
                                     </select>
                                     </div>
                                   </div>
+
+                                  <div class="col-md-3 typhoonName">
+                                   <div class="form-group">
+                                    <label for="">TYPHOON NAME*</label>
+                                        <input type="text" placeholder="Typhoon name" class="form-control" id="typhoonName" />
+                                    </div>
+                                  </div>
+
                                    <div class="col-md-3 others">
                                     <div class="form-group">
                                       <label for="exampleFormControlSelect2">PLEASE SPECIFY</label>
-                                        <input type="text" placeholder="Please specify incident" class="form-control" id="otherincident" disabled="true"/>
+                                        <input type="text" placeholder="Please specify incident" class="form-control" id="otherincident" />
                                       </div>
                                    </div>
 
@@ -82,11 +90,11 @@
                                  <div class="col-md-3 otherrequester">
                                    <div class="form-group">
                                     <label for="exampleFormControlSelect2">SPECIFY REQUESTER</label>
-                                      <input type="text" placeholder="Please specify requester" class="form-control" id="otherrequester" disabled="true"/>
+                                      <input type="text" placeholder="Please specify requester" class="form-control" id="otherrequester" />
                                     </div>
                                   </div>
 
-                                   <div class="col-md-4 otherrequester">
+                                   <div class="col-md-4 remarks">
                                       <div class="form-group">
                                         <label for="exampleFormControlSelect2">REMARKS*</label>
                                           <textarea type="text" placeholder="Enter remarks if available" class="form-control" id="remarks" ></textarea>    
