@@ -30,7 +30,7 @@
     		return $query->result_array();
 		}
 		
-		 public function get_default_city_mod($id_sa_bohol){
+		public function get_default_city_mod($id_sa_bohol){
 	    	$this->db->select('*');
 	    	$this->db->from('refcitymun as city');
 			$this->db->where('city.provCode', $id_sa_bohol);
@@ -38,7 +38,14 @@
     		return $query->result_array();
 	    }
 
-		
+		public function get_default_brgy_mod($id_sa_albur){
+	    	$this->db->select('*');
+			$this->db->from('refbrgy as brgy');
+			$this->db->where('brgy.citymunCode', $id_sa_albur);
+			$query = $this->db->get();
+    		return $query->result_array();
+	    }
+
 		
 	    public function dash_get_city_mod($post_province_id){
 			// echo $post_province_id;
@@ -56,14 +63,13 @@
    			}
 	    }
 
-
 	    public function get_city_mod($post_province_id){
 	    	$this->db->select('*');
 	    	$this->db->from('refcitymun as city');
 	    	$this->db->where('city.provCode', $post_province_id);
 	    	$query = $this->db->get();
 	    	$data = $query->result_array();
-			echo '<option value="">ALL</option>';
+			// echo '<option value="">ALL</option>';
 	   		foreach ($data as $value){
    				echo 
    				'
@@ -71,6 +77,20 @@
    				';
    			}
 	    }
+
+		public function get_barangay_mod($municipality_id){
+			$this->db->select('*');
+			$this->db->from('refbrgy as brgy');
+			$this->db->where('brgy.citymunCode', $municipality_id);
+			$query = $this->db->get();
+			$data = $query->result_array();
+			foreach($data as $value){
+				echo
+				'
+					<option value='.$value['brgyCode'].'>'.$value['brgyDesc'].'</option>
+				';
+			}
+		}
 
 	    public function btn_drmd_disapp_details_mod($drmd_id){
 			$this->db->select('*,drmd_req.id as drid,reqs.description as requester_desc , drmdrusr.first_name as drf_name, drmdrusr.last_name as drl_name , inci.description as incident_desc,other_req.requester as other_req, ot_inci.incident as other_inci,drmd_req.incident as inci_num,drmd_req.requester as req_num , drmd_req.created as dr_created , drusr.first_name as dr_fname,drusr.last_name as dr_lname, drrs_disapp.created as drs_created, drmd_req.remarks as drmdremarks');
@@ -2749,22 +2769,30 @@
 														
 							foreach($data as $key => $value){
     		  				$key++;
-							$remarks = "";	
-
-							if($value['inci_num'] == 1){
-								$remarks = '-'.$value['remarks'];
-							}else if($value['response_date'] != null){
-								
+						
+							$response_data = $value['response_date'];
+							
+							// $date_approval = date('Y-m-d', strtotime($value['date_approval']));
+							// $datediff = $response_data - $date_approval;
+							$response_date = 0;
+							$date_approval = 0;
+							$days = "";
+							if(date('Y-m-d', strtotime($value['date_approval'])) != '1970-01-01')
+							{
+							   $date_approval = date('Y-m-d', strtotime($value['date_approval']));
+							}
+							if(date('Y-m-d', strtotime($value['response_date'])) != '1970-01-01')
+							{
+							   $response_date = date('Y-m-d', strtotime($value['response_date']));
+							//    $datediff = $response_date - $date_approval;
 							}
 							
-							// $noDaysResponded = $value['response_date'] - $value['date_approval'];
-
-							$datetime1 = date_create($value['response_date']);
-							$datetime2 = date_create($value['date_approval']);
-							
-							
-							$interval = date_diff($datetime1, $datetime2);
-		
+							$time1 = strtotime($response_date);
+							$time2 = strtotime($date_approval);
+							//balikan ni nako
+							if(floor(($time1 - $time2)/(60 * 60 * 24)) != '-19079' && floor(($time1 - $time2)/(60 * 60 * 24)) > 0){
+								$days = floor(($time1 - $time2)/(60 * 60 * 24));
+							}							
 							echo '<tr>
 								  	<td><p>'.$key.'.</p></td>
 									<td><p>'.$value['disctrictcode'].'</p></td>
@@ -2772,17 +2800,16 @@
 								 	<td><p>'.$value['citymunDesc'].'</p></td>
 								 	
 									<td><p>'.$value['drs_no_bene'].'</p></th>
-								 	<td><p>'.date_format(new DateTime($value['date_letter_request']), 'd-m-Y').'</p></td>
+								 	<td><p>'.$date_approval.'</p></td>
 							  	 	<td><p>'.number_format($value['item_requested']).'</p></td>
 								 	<td><p>'.number_format($value['item_qty']).'</p></td>
-
-									<td><p>'.$value['response_date'].'</p></td>
-									<td><p>'.$interval->format('%R%y years %m months %R%a days').'</p></td>
-
-								 	<td><p>'.date_format(new DateTime($value['date_approval']), 'd-m-Y').'</p></td>
-									<td><p>'.date_format(new DateTime($value['rosb_created']), 'd-m-Y').'</p></td>
-							 	
-								 </tr>';		 
+								     
+									<td><p>'.$response_date.'</p></td>
+									<td><p>'.$days.'</p></td>
+                                                               
+								 	<td><p>'.date_format(new DateTime($value['date_approval']), 'Y-m-d').'</p></td>
+									<td><p>'.date_format(new DateTime($value['rosb_created']), 'Y-m-d').'</p></td>
+							 	 </tr>';		 
 	    	 		        }   
 	      	}
 			  						// <td><p>'.number_format($value['total'], 0).'</p></td>

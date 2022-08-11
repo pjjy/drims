@@ -20,7 +20,7 @@
                                 <hr>
                                 <br>
                                 <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                    <div class="form-group">
                                     <label for="">TYPE OF INCIDENT*</label>
                                     <select class="form-control" id="incident">
@@ -33,21 +33,21 @@
                                     </div>
                                   </div>
 
-                                  <div class="col-md-3 typhoonName">
+                                  <div class="col-md-2 typhoonName">
                                    <div class="form-group">
                                     <label for="">TYPHOON NAME*</label>
                                         <input type="text" placeholder="Typhoon name" class="form-control" id="typhoonName" />
                                     </div>
                                   </div>
 
-                                   <div class="col-md-3 others">
+                                   <div class="col-md-2 others">
                                     <div class="form-group">
                                       <label for="exampleFormControlSelect2">PLEASE SPECIFY</label>
                                         <input type="text" placeholder="Please specify incident" class="form-control" id="otherincident" />
                                       </div>
                                    </div>
 
-                                   <div class="col-md-3">
+                                   <div class="col-md-2">
                                      <div class="form-group">
                                       <label for="">PROVINCE*</label>
                                         <select class="form-control" id="province">
@@ -60,7 +60,7 @@
                                      </div>
                                    </div>
 
-                                  <div class="col-md-3">
+                                  <div class="col-md-2">
                                    <div class="form-group">
                                     <label for="">MUNICIPALITY*</label>
                                          <select class="form-control" id="municipality">
@@ -72,10 +72,34 @@
                                          </select>
                                     </div>
                                   </div>
+
+                                  <div class="col-md-2">
+                                   <div class="form-group">
+                                    <label for="">BARANGAY*</label>
+                                         <select class="form-control" id="barangay">
+                                             <?php
+                                                  foreach($get_default_brgy as $value){ 
+                                                      echo '<option value='.$value['brgyCode'].'>'.$value['brgyDesc'].'</option>';
+                                                  } 
+                                             ?>
+                                         </select>
+                                    </div>
+                                  </div>
+                                  
+                                  <div class="col-md-2">
+                                   <div class="form-group">
+                                        <label>With brgy?</label>
+                                        <select class="form-control" id="withbarangay">
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                    </div>
+                                  </div>
+                                  
                                 </div>
                                 <div class="row">
                                  
-                                 <div class="col-md-3">
+                                 <div class="col-md-2">
                                     <div class="form-group">
                                     <label for="">REQUESTER*</label>
                                          <select class="form-control" id="requester">
@@ -87,7 +111,7 @@
                                          </select>
                                     </div>
                                  </div>
-                                 <div class="col-md-3 otherrequester">
+                                 <div class="col-md-2 otherrequester">
                                    <div class="form-group">
                                     <label for="exampleFormControlSelect2">SPECIFY REQUESTER</label>
                                       <input type="text" placeholder="Please specify requester" class="form-control" id="otherrequester" />

@@ -340,8 +340,9 @@ class drimscontroller extends CI_Controller {
     	$data['get_incident'] 	       = $this->drimsmodel->get_incident_mod();
     	$data['get_province'] 	       = $this->drimsmodel->get_province_mod();
     	$data['get_default_city']      = $this->drimsmodel->get_default_city_mod('0712');
+		$data['get_default_brgy']	   = $this->drimsmodel->get_default_brgy_mod('071201');
 
-    	$data['get_food_items'] 	   =	$this->drimsmodel->get_item_mod();
+    	$data['get_food_items'] 	   = $this->drimsmodel->get_item_mod();
 		$data['get_non_food_items']    = $this->drimsmodel->get_non_food_item_mod();
 		$data['get_food_item_uom']     = $this->drimsmodel->get_item_uom_mod();
 
@@ -367,10 +368,12 @@ class drimscontroller extends CI_Controller {
 		$this->drimsmodel->get_city_mod($this->input->post('post_province_id'));
 	}
 
+	public function get_barangay_ctrl(){
+		$this->drimsmodel->get_barangay_mod($this->input->post('municipality_id'));
+	}
+
 	public function dash_get_city_ctrl(){
-	
-		$this->drimsmodel->dash_get_city_mod($_POST['post_province_id']);
-	  
+		$this->drimsmodel->dash_get_city_mod($_POST['post_province_id']);  
 	}
 
 	public function save_drmd_ctrl(){
@@ -932,6 +935,7 @@ class drimscontroller extends CI_Controller {
 		$data['get_incident'] 	    	= $this->drimsmodel->get_incident_mod();
 		$data['get_province'] 	    	= $this->drimsmodel->get_province_mod();
 		$data['get_default_city']   	= $this->drimsmodel->get_default_city_mod('0712');
+		$data['get_default_brgy']		= $this->drimsmodel->get_default_brgy_mod('071201');
 		$data['get_requester']	    	= $this->drimsmodel->get_requester();
 		$sideData['first_name']     	= $this->session->userdata('user')['first_name'];
 		$sideData['last_name']      	= $this->session->userdata('user')['last_name'];

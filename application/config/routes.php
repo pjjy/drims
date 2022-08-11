@@ -92,6 +92,8 @@ $route['drmd_remove_r']	= 'drimscontroller/drmd_remove_ctrl';
 $route['drmd_add_response_letter_r'] = 'drimscontroller/drmd_response_letter_ctrl';
 $route['drmd_save_response_letter_r'] = 'drimscontroller/drmd_save_response_letter_ctrl';
 $route['drmd_view_response_letter_r'] = 'drimscontroller/drmd_view_response_letter_ctrl';
+
+$route['get_barangay_r'] = 'drimscontroller/get_barangay_ctrl';
 //drmd
 
 //drrs

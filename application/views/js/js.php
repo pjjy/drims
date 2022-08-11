@@ -96,12 +96,44 @@
 		            success:function(data)
 		            { 
 		              if(data){
-		              	$("#municipality").html(data);
+					  	$("#municipality").html(data);
 		              }
 		            }
 			    });
+				get_brgy();
 			});	
 
+			function get_brgy(){
+				var municipality_id = $('#municipality option:selected').val();
+				$.ajax({
+		            url:'get_barangay_r',
+		            method:'POST',
+		            cache: false,
+		            data:{
+						municipality_id:municipality_id
+		            },
+		            success:function(data)
+		            { 
+		              if(data){
+						// alert(data);
+		              	$("#barangay").html(data);
+		              }
+		            }
+			    });
+			}
+
+			$('#municipality').on('change',function(){
+				get_brgy();
+			});
+
+			$('#withbarangay').on('change',function(){
+				var choice = $(this).val();
+				if(choice=='0'){
+					$("#barangay").val("");
+				}elese{
+					///tiwason
+				}
+			});
 			
 
 			$('#dash_province').on('change',function(){
@@ -1696,7 +1728,7 @@
 					success:function(data)
 					{	
 					 bootbox.confirm({
-					    title: " ",
+					    title: "Add Response Letter",
 					    message: data,
 					    buttons: {
 					        cancel: {
